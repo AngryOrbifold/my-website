@@ -8,14 +8,30 @@
     a.button {
       display: inline-block;
       padding: 10px 20px;
-      background: #007bff;
+      background: #0070ba;
       color: white;
       text-decoration: none;
       border-radius: 5px;
     }
     a.button:hover {
-      background: #0056b3;
+      background: #005c99;
     }
+
+    .paypal-button {
+      font-size: 20px;
+      padding: 10px 20px;
+      background-color: #0070ba;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      display: inline-block;
+      transition: background-color 0.3s ease;
+    }
+
+    .paypal-button:hover {
+      background-color: #005c99;
+    }
+    
     body {
       font-family: Arial, sans-serif;
       background: white;
@@ -23,7 +39,13 @@
     }
     p {
       text-align: center;
-      margin-top: 20px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 10px;
       margin-bottom: 20px;
     }
     h2 {
@@ -31,14 +53,14 @@
       margin-top: 100px;
     }
     table {
-      width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
+      width: 100%;
+      font-family: sans-serif;
     }
     th, td {
-      padding: 8px;
+      border: 1px solid #ddd;
+      padding: 10px 16px;
       text-align: center;
-      border-bottom: 1px solid #ddd;
     }
     tr:hover {
       background-color: #f2f2f2;
@@ -47,32 +69,18 @@
 </head>
 <body>
   <h1>Nydegger Automatic Intelligence Test</h1>
-  <p>
-    The NAIT is an untimed, self-scored IQ assessment consisting of 120 items designed to measure cognitive ability beyond the range of standard IQ tests.<br>
-    The items—spanning numerical, verbal, logical, abstract, and spatial reasoning—are approximately arranged in order of increasing difficulty.<br>
-    While not a substitute for professionally administered psychological evaluations, the NAIT aims to serves as a complementary tool for cognitive measurement.<br>
-    Participation is free of charge. Please do not share or discuss the test items with others.
-  </p>
+  <p>The NAIT is an untimed, self-scored IQ assessment consisting of 120 items designed to measure cognitive ability beyond the range of standard IQ tests.</p>
+  <p>The items—spanning numerical, verbal, logical, abstract, and spatial reasoning—are approximately arranged in order of increasing difficulty.  </p>
+  <p>While not a substitute for professionally administered psychological evaluations, the NAIT aims to serves as a complementary tool for cognitive measurement. </p>
+  <p>Participation is free of charge. Please do not share or discuss the test items with others. </p>
   <hr>
   <p>Click the button below to download NAIT.</p>
-  <a class="button" href="https://dl.dropbox.com/scl/fi/g1qwz5a6u15l5ek9e3rqs/NAIT.zip?rlkey=npgdzo9mv7r7b90ch5h11r1id&dl=0" download>NAIT</a>
+  <a class="button" href="https://dl.dropbox.com/scl/fi/g1qwz5a6u15l5ek9e3rqs/NAIT.zip?rlkey=npgdzo9mv7r7b90ch5h11r1id&dl=0" style="font-size: 20px;" download>Download</a>
   <hr>
-  <h2>Leaderboard</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Rank</th>
-        <th>Name</th>
-        <th>Raw score</th>
-        <th>IQ (Wechsler scale)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td>1</td><td>x</td><td>x</td><td>100</td></tr>
-      <tr><td>2</td><td>x</td><td>x</td><td>100</td></tr>
-      <tr><td>3</td><td>x</td><td>x</td><td>100</td></tr>
-    </tbody>
-  </table>
-
+  <p>After completing the test, if you would like to receive a score certificate, please submit a $3 payment via the link below, along with your name and email address.</p>
+  <a href="report_for_NAIT.pdf" target="_blank" style="font-size: 20px;">  Score certificate example  </a>
+  <a href="https://paypal.me/OrbifoldAnswers?country.x=CH&locale.x=en_US" target="_blank" rel="noopener noreferrer" style="font-size: 20px;" class="paypal-button">  Pay with PayPal  </a>
+  <hr>
+  <a href="leaderboard.html" target="_blank" style="font-size: 20px;"> Leaderboard </a>
 </body>
 </html>
