@@ -1,61 +1,80 @@
-<style>
-  .leaderboard-container {
-    width: fit-content;
-    margin: 20px auto;
-    padding: 20px;
-    border: 2px solid #007acc;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaderboard</title>
 
-  .leaderboard-container h2 {
-    text-align: center;
-    color: #007acc;
-    margin-bottom: 16px;
-  }
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XHMB3NM73"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-3XHMB3NM73');
+  </script>
 
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    font-family: sans-serif;
-  }
+  <style>
+    .leaderboard-container {
+      width: fit-content;
+      margin: 20px auto;
+      padding: 20px;
+      border: 2px solid #007acc;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
 
-  th, td {
-    border: 1px solid #ddd;
-    padding: 10px 16px;
-    text-align: center;
-  }
+    .leaderboard-container h2 {
+      text-align: center;
+      color: #007acc;
+      margin-bottom: 16px;
+    }
 
-  thead {
-    background-color: #007acc;
-    color: white;
-  }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-family: sans-serif;
+    }
 
-  tbody tr:nth-child(even) {
-    background-color: #eef6fb;
-  }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px 16px;
+      text-align: center;
+    }
 
-  tbody tr:hover {
-    background-color: #d8ecf7;
-  }
-</style>
+    thead {
+      background-color: #007acc;
+      color: white;
+    }
 
-<div class="leaderboard-container">
-  <h2>Leaderboard</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Rank</th>
-        <th>Name</th>
-        <th>Raw score</th>
-        <th>IQ (Wechsler scale)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td>1</td><td>x</td><td>x</td><td>100</td></tr>
-      <tr><td>2</td><td>x</td><td>x</td><td>100</td></tr>
-      <tr><td>3</td><td>x</td><td>x</td><td>100</td></tr>
-    </tbody>
-  </table>
-</div>
+    tbody tr:nth-child(even) {
+      background-color: #eef6fb;
+    }
+
+    tbody tr:hover {
+      background-color: #d8ecf7;
+    }
+  </style>
+</head>
+<body>
+  <div class="leaderboard-container">
+    <h2>Leaderboard</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Raw score</th>
+          <th>IQ (Wechsler scale)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>x</td><td>x</td><td>100</td></tr>
+        <tr><td>2</td><td>x</td><td>x</td><td>100</td></tr>
+        <tr><td>3</td><td>x</td><td>x</td><td>100</td></tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
