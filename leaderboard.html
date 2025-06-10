@@ -15,11 +15,19 @@
   </script>
 
   <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 30px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
     .leaderboard-container {
       width: fit-content;
       margin: 20px auto;
       padding: 20px;
-      border: 2px solid #007acc;
+      border: 2px solid #000000;
       border-radius: 10px;
       background-color: #f9f9f9;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -58,6 +66,10 @@
   </style>
 </head>
 <body>
+  <div class="section">
+    <p>Preliminary norm data used.</p>
+  </div>
+
   <div class="leaderboard-container">
     <h2>Leaderboard</h2>
     <table>
@@ -66,13 +78,14 @@
           <th>Rank</th>
           <th>Name</th>
           <th>Raw score</th>
+          <th>Weighed score</th>
           <th>IQ (Wechsler scale)</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td>1</td><td>x</td><td>x</td><td>100</td></tr>
-        <tr><td>2</td><td>x</td><td>x</td><td>100</td></tr>
-        <tr><td>3</td><td>x</td><td>x</td><td>100</td></tr>
+        <tr><td>1</td><td>Andrei Udriste</td><td>105</td><td>835</td><td>176</td></tr>
+        <tr><td>2</td><td>x</td><td>x</td><td>x</td><td>N/A</td></tr>
+        <tr><td>3</td><td>x</td><td>x</td><td>x</td><td>N/A</td></tr>
       </tbody>
     </table>
   </div>
