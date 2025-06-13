@@ -56,6 +56,10 @@
       background-color: #007acc;
       color: white;
     }
+    a {
+      text-decoration: none;
+      font-size: 18px;
+    }
 
     tbody tr:nth-child(even) {
       background-color: #eef6fb;
@@ -64,6 +68,20 @@
     tbody tr:hover {
       background-color: #d8ecf7;
     }
+    .button {
+      display: inline-block;
+      padding: 12px 28px;
+      font-size: 20px;
+      border-radius: 8px;
+      color: white;
+      background-color: #0070ba;
+      transition: background-color 0.3s ease;
+    } 
+
+    .button:hover {
+      background-color: #005c99;
+    }
+
   </style>
 </head>
 <body>
@@ -94,6 +112,9 @@
   <div class="section">
     <p>The leaderboard is refreshed every 3 days, showcasing the current scores of participants who opted to be listed.</p>
     <p>If you order a certificate and choose to be listed, your score will appear faster on the leaderboard.</p>
+  </div>
+  <div class="section">
+    <a class="button" href="index.html" >Back to main page</a>
   </div>
 </body>
 </html>
