@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaderboard</title>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XHMB3NM73"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-3XHMB3NM73');
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 30px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .leaderboard-container {
+      width: fit-content;
+      margin: 20px auto;
+      padding: 20px;
+      border: 2px solid #000000;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .leaderboard-container h2 {
+      text-align: center;
+      color: #007acc;
+      margin-bottom: 16px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-family: sans-serif;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px 16px;
+      text-align: center;
+    }
+
+    thead {
+      background-color: #007acc;
+      color: white;
+    }
+
+    a {
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #eef6fb;
+    }
+
+    tbody tr:hover {
+      background-color: #d8ecf7;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 28px;
+      font-size: 20px;
+      border-radius: 8px;
+      color: white;
+      background-color: #0070ba;
+      transition: background-color 0.3s ease;
+    } 
+
+    .button:hover {
+      background-color: #005c99;
+    } 
+  </style>
+</head>
+<body>
+  <div class="section">
+    <p>Preliminary norm data used.</p>
+  </div>
+
+  <div class="leaderboard-container">
+    <h2>Leaderboard</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Raw score</th>
+          <th>IQ (Wechsler scale)</th>
+          <th>Contest participant</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Andrei Udriște</td><td>112</td><td>182</td><td>No</td></tr>
+<tr><td>2</td><td>Marco Falchi</td><td>103</td><td>179</td><td>No</td></tr>
+<tr><td>3</td><td>jebi441990</td><td>100</td><td>171</td><td>No</td></tr>
+<tr><td>4</td><td>Andrew Hayles</td><td>91</td><td>163</td><td>No</td></tr>
+
+      </tbody>
+    </table>
+  </div>
+  <div class="section">
+    <p>The leaderboard is refreshed every few days, showcasing the current scores of participants who opted to be listed.</p>
+    <p>If you order a certificate and choose to be listed, your score will appear faster on the leaderboard.</p>
+  </div>
+  <div class="section">
+    <a class="button" href="index.html" >Back to main page</a>
+  </div>
+</body>
+</html>
