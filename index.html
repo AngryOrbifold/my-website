@@ -23,8 +23,9 @@
 
     p {
       max-width: 1000px;
-      margin: 20px auto;
+      margin: 10px auto;
       font-size: 18px;
+      text-align: justify;
     }
 
     a {
@@ -33,15 +34,10 @@
     }
 
     .section {
-      margin: 30px auto;
+      margin: 50px auto;
     }
 
-    .bold {
-      font-weight: bold;
-    }
-
-    .button,
-    .paypal-button {
+    .button {
       display: inline-block;
       padding: 12px 28px;
       font-size: 20px;
@@ -49,10 +45,10 @@
       color: white;
       background-color: #0070ba;
       transition: background-color 0.3s ease;
+      margin: 5px;
     }
 
-    .button:hover,
-    .paypal-button:hover {
+    .button:hover {
       background-color: #005c99;
     }
 
@@ -62,6 +58,21 @@
       background-color: #ccc;
       margin: 60px auto;
       width: 80%;
+    }
+
+    .paypal-button {
+      display: inline-block;
+      padding: 12px 28px;
+      font-size: 20px;
+      border-radius: 8px;
+      color: white;
+      background-color: #0070ba;
+      transition: background-color 0.3s ease;
+      margin: 5px;
+    }
+
+    .paypal-button:hover {
+      background-color: #005c99;
     }
 
     table {
@@ -93,7 +104,7 @@
 <body>
   <h1>Nydegger Automatic Intelligence Test</h1>
 
-  <div class="section">
+  <div class="section" style="max-width: 1000px;">
     <p>The NAIT is an untimed, computerized, self-scoring IQ assessment consisting of 120 items designed to measure cognitive ability beyond the range of standard IQ tests.</p>
     <p>The items cover numerical, verbal, logical, abstract, and spatial reasoning, and are approximately arranged in order of increasing difficulty.</p>
     <p>While not a replacement for professionally administered psychological evaluations, the NAIT is intended as a complementary tool for measuring cognitive ability.</p>
@@ -101,19 +112,21 @@
   </div>
 
   <hr>
-  <div class="section">
-    <p>Participation is free of charge. Do not share and discuss the test items with others or use any form of AI. </p>
+
+  <div class="section" style="max-width: 1000px;">
+    <p>Participation is free of charge. Do not share and discuss the test items with others or use any form of AI.</p>
     <p>To download the test use one of the links below, know that you will need to authenticate yourself by sending a photo of your ID card or passport through the app.</p>
-    <p>Your name and date of birth must be visible, you can mask the picture.</p>
+    <p>Your name and date of birth must be visible; you can mask the picture.</p>
     <a class="button" href="https://dl.dropboxusercontent.com/scl/fi/c0ob0y3owpjc14oki06zj/Launcher.zip?rlkey=akcv756mge82cy4yq3k91lrad&dl=1" download="Launcher.zip">Download Link 1</a>
     <a class="button" href="https://nait.filecloudonline.com/core/downloadfile?disposition=attachment&filename=Launcher.zip&filepath=%2FSHARED%2F%213VKUOXhRDB8mis8BIemUDQsZnEIJujwmdCenPcYz2QMbQ%2FLAUNCHER&redirect=1" download="Launcher.zip">Download Link 2</a>
     <a class="button" href="https://pixeldrain.com/api/file/jcyKG3Me?download" download="Launcher.zip">Download Link 3</a>
     <p>Links 2 and 3 should work in China. For a more stable connection, it is recommended to use a VPN if possible.</p>
     <p>Last version 4.7.0</p>
   </div>
+
   <hr>
 
-  <div class="section">
+  <div class="section" style="max-width: 1000px;">
     <p>After completing the test, if you would like to receive a score certificate, please submit a 6€ payment via the link below, along with your name and email address. You will receive an updated certificate for free after each new norm. For certificate updates requested outside of scheduled norm releases, a 2€ processing fee applies.</p>
     <a href="NAIT_certificate.pdf" target="_blank">Score certificate example</a><br><br>
     <a href="https://paypal.me/OrbifoldAnswers?country.x=CH&locale.x=en_US" target="_blank" rel="noopener noreferrer" class="paypal-button">Pay with PayPal</a>
@@ -122,20 +135,22 @@
   <hr>
 
   <div class="section">
-    <a class="button" href="leaderboard.html" >Leaderboard</a>
-    <a class="button" href="stats.html" >Statistics</a><br><br>
+    <a class="button" href="leaderboard.html">Leaderboard</a>
+    <a class="button" href="stats.html">Statistics</a><br><br>
     <a href="https://nsl36.netlify.app/all/" target="_blank">Tests by Andrei Udriște</a><br><br>
     <a href="https://ivec.ultimaiq.net/" target="_blank">Tests by Ivan Ivec</a>
   </div>
 
-  <hr>  
+  <hr>
 
   <div class="section">
-    <a href="mailto:orbifoldanswers@ikmail.com" target="_blank">Contact</a><br><br>
+    <a href="mailto:orbifoldanswers@ikmail.com" target="_blank">Contact</a>
   </div>
 
   <div class="section">
-  <a href="https://info.flagcounter.com/nyOL"><img src="https://s05.flagcounter.com/count2/nyOL/bg_FFFFFF/txt_000000/border_1400CC/columns_3/maxflags_18/viewers_0/labels_0/pageviews_0/flags_0/percent_0/" alt="Flag Counter" border="0"></a>
+    <a href="https://info.flagcounter.com/nyOL">
+      <img src="https://s05.flagcounter.com/count2/nyOL/bg_FFFFFF/txt_000000/border_1400CC/columns_3/maxflags_18/viewers_0/labels_0/pageviews_0/flags_0/percent_0/" alt="Flag Counter" border="0">
+    </a>
   </div>
 </body>
 </html>
