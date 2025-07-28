@@ -23,20 +23,50 @@
       line-height: 1.6;
     }
 
+    h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    p {
+      max-width: 1000px;
+      margin: 10px auto;
+      font-size: 18px;
+      text-align: justify;
+    }
+
+    a {
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    .section {
+      margin: 25px auto;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 28px;
+      font-size: 20px;
+      border-radius: 8px;
+      color: white;
+      background-color: #0070ba;
+      transition: background-color 0.3s ease;
+      margin: 5px;
+    }
+
+    .button:hover {
+      background-color: #005c99;
+    }
+
     .leaderboard-container {
-      width: fit-content;
-      margin: 20px auto;
+      max-width: 1000px;
+      margin: 0 auto;
       padding: 20px;
-      border: 2px solid #000000;
+      border: 2px solid #000;
       border-radius: 10px;
       background-color: #f9f9f9;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .leaderboard-container h2 {
-      text-align: center;
-      color: #007acc;
-      margin-bottom: 16px;
     }
 
     table {
@@ -56,12 +86,6 @@
       color: white;
     }
 
-    a {
-      text-decoration: none;
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-
     tbody tr:nth-child(even) {
       background-color: #eef6fb;
     }
@@ -70,19 +94,6 @@
       background-color: #d8ecf7;
     }
 
-    .button {
-      display: inline-block;
-      padding: 12px 28px;
-      font-size: 20px;
-      border-radius: 8px;
-      color: white;
-      background-color: #0070ba;
-      transition: background-color 0.3s ease;
-    } 
-
-    .button:hover {
-      background-color: #005c99;
-    }
     .orange-header {
       background-color: rgb(243, 174, 45) !important;
       color: white;
@@ -109,10 +120,10 @@
       </thead>
       <tbody>
         <tr><td>1</td><td>Andrei Udriște</td><td>114</td><td>179</td><td> </td><td> </td></tr>
-<tr><td>2</td><td>Tianxiang Shao</td><td>111</td><td>172</td><td>July 01 2025 / July 14 2025</td><td>1</td></tr>
+<tr><td>2</td><td>Tianxiang Shao</td><td>111</td><td>172</td><td>01 July 2025 / 14 July 2025</td><td>1</td></tr>
 <tr><td>3</td><td>Marco Falchi</td><td>105</td><td>169</td><td> </td><td> </td></tr>
-<tr><td>4</td><td>José Enrique Benlloch Izquierdo</td><td>100</td><td>165</td><td>July 01 2025 / July 01 2025</td><td>2</td></tr>
-<tr><td>5</td><td>Andrew Hayles</td><td>93</td><td>156</td><td>July 01 2025 / July 17 2025</td><td>3</td></tr>
+<tr><td>4</td><td>José Enrique Benlloch Izquierdo</td><td>100</td><td>165</td><td>01 July 2025 / 01 July 2025</td><td>2</td></tr>
+<tr><td>5</td><td>Andrew Hayles</td><td>93</td><td>156</td><td>01 July 2025 / 17 July 2025</td><td>3</td></tr>
 <tr><td>6</td><td>Göran Åhlander</td><td>81</td><td>146</td><td> </td><td> </td></tr>
 <tr><td>7</td><td>Claus</td><td>63</td><td>138</td><td> </td><td> </td></tr>
 <tr><td>8</td><td>Gao Zeyuan</td><td>53</td><td>133</td><td> </td><td> </td></tr>
@@ -120,14 +131,19 @@
       </tbody>
     </table>
   </div>
+
   <div class="section">
     <p>The leaderboard is refreshed every few days, showcasing the current scores of participants who opted to be listed.</p>
     <p>If you order a certificate and choose to be listed, your score will appear faster on the leaderboard.</p>
     <p>Click on the button below for more information about the contest.</p>
   </div>
-  <a class="button" href="https://nsl36.netlify.app/competition2025" >Contest Information</a>
+
   <div class="section">
-    <a class="button" href="index.html" >Back to main page</a>
+    <a class="button" href="https://nsl36.netlify.app/competition2025">Contest Information</a>
+  </div>
+
+  <div class="section">
+    <a class="button" href="index.html">Back to main page</a>
   </div>
 </body>
 </html>
