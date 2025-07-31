@@ -47,7 +47,7 @@
       background-color: #0070ba;
       transition: background-color 0.3s ease;
       margin: 5px;
-      min-width: 150px;  /* new */
+      min-width: 150px;
     }
 
     .button:hover {
@@ -64,6 +64,7 @@
 
     table {
       border-collapse: collapse;
+      border: 4px solid #000;
       width: 100%;
       font-family: sans-serif;
     }
@@ -74,8 +75,25 @@
       text-align: center;
     }
 
+    th h3 {
+      font-size: 18px;
+      margin: 0;
+      color: white;
+    }
+
     tr:hover {
       background-color: #f2f2f2;
+    }
+    th {
+      background-color: #0070ba;
+    }
+    td:nth-child(2) {
+      font-weight: bold;
+    }
+    .table-container {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch; 
+      max-width: 100%;
     }
   </style>
 </head>
@@ -92,11 +110,113 @@
   <h1>Statistics and normalisation</h1>
 
   <div class="section" style="max-width: 1000px; margin: 0 auto; font-family: Arial, sans-serif;">
-  <p style="text-align: justify;">    <strong>Number of people authenticated:</strong> a = 43  </p>
-  <p style="text-align: justify;">    <strong>Number of candidates attempting the test:</strong> n = 22  </p>
-  <p style="text-align: justify;">    <strong>Completed test sessions:</strong> N = 11 </p>
-  <p style="text-align: justify;">    <strong>Items solved by everyone:</strong> 13  </p>
-  <p style="text-align: justify;">    <strong>Items never solved by anyone:</strong> 3  </p>
+
+  <div class="table-container">
+  <table style="width: 100%; border-collapse: collapse; text-align: left;">
+  <thead>
+    <tr>
+      <th colspan="2">
+        <h3>General</h3>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 6px 8px; width: 60%;"><strong>Number of people authenticated</strong></td>
+      <td style="padding: 6px 8px;">43</td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 8px;"><strong>Number of candidates attempting a test</strong></td>
+      <td style="padding: 6px 8px;">22</td>
+    </tr>
+  </tbody>
+
+  <thead>
+    <tr>
+      <th colspan="2">
+        <h3>NAIT Statistics</h3>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 6px 8px;"><strong>Completed test sessions (N)</strong></td>
+      <td style="padding: 6px 8px;">11</td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 8px;"><strong>Lowest raw score</strong></td>
+      <td style="padding: 6px 8px;">35</td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 8px;"><strong>Highest raw score</strong></td>
+      <td style="padding: 6px 8px;">114</td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 8px;"><strong>Mean raw score</strong></td>
+      <td style="padding: 6px 8px;">89.5</td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 8px;"><strong>Median raw score</strong></td>
+      <td style="padding: 6px 8px;">95</td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 8px;"><strong>Raw score standard deviation</strong></td>
+      <td style="padding: 6px 8px;">23.3</td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 8px;"><strong>Skewness</strong></td>
+      <td style="padding: 6px 8px;">-1.44</td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 8px;"><strong>Excess Kurtosis</strong></td>
+      <td style="padding: 6px 8px;">0.08</td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 8px;"><strong>Items solved by everyone</strong></td>
+      <td style="padding: 6px 8px;">13</td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 8px;"><strong>Items never solved by anyone</strong></td>
+      <td style="padding: 6px 8px;">3</td>
+    </tr>
+  </tbody>
+  </table>
+  </div>
+
+  <h2 style="text-align: justify;"><strong>Correlations between NAIT and other tests:</strong></h2>
+
+  <div style="display: flex; justify-content: center;">
+  <ol style="max-width: 1000px; text-align: left; list-style-position: inside; padding-left: 0;">   
+    <li><strong>Wechsler Intelligence Scale for Adults</strong>: r = 1.000 with 2 pairs</li>        
+    <li><strong>MCST 32</strong>: r = 1.000 with 2 pairs</li>
+    <li><strong>Simplex</strong>: r = 1.000 with 2 pairs</li>
+    <li><strong>LSHR</strong>: r = 1.000 with 2 pairs</li>
+    <li><strong>LSHR Light</strong>: r = 1.000 with 2 pairs</li>
+    <li><strong>LSHR Classic</strong>: r = 1.000 with 2 pairs</li>
+    <li><strong>Numerus</strong>: r = 1.000 with 2 pairs</li>
+    <li><strong>Associative LIMIT</strong>: r = 1.000 with 2 pairs</li>
+    <li><strong>CLM39</strong>: r = 1.000 with 2 pairs</li>
+    <li><strong>Lexiq</strong>: r = 1.000 with 2 pairs</li>
+    <li><strong>Algebrica</strong>: r = 1.000 with 2 pairs</li>
+    <li><strong>VTPR 26</strong>: r = 0.997 with 3 pairs</li>
+    <li><strong>Simtollect</strong>: r = 0.975 with 3 pairs</li>
+    <li><strong>Einplex</strong>: r = 0.961 with 3 pairs</li>
+    <li><strong>NIT-Form 1</strong>: r = 0.922 with 3 pairs</li>
+    <li><strong>SAT 36</strong>: r = 0.788 with 4 pairs</li>
+    <li><strong>Mathema</strong>: r = -0.797 with 3 pairs</li>
+    <li><strong>World Intelligence Test</strong>: r = -0.840 with 3 pairs</li>
+  </ol>
+  </div>
+
+  <div class="section" style="max-width: 1000px; margin: 0 auto; font-family: Arial, sans-serif;">
+    <p style="text-align: justify;">
+      If you have completed the NAIT and have previously taken other IQ tests, please consider sharing your earlier scores with the test author at <a href="mailto:orbifoldanswers@ikmail.com" target="_blank">email</a>.
+      This will allow the computation of correlations and g-loadings.
+      Thank you in advance.
+    </p>
+  </div>
+
+  <h2 style="text-align: justify;"><strong>Norming information:</strong></h2>
   
   <p style="text-align: justify;">
     In the initial preliminary norm, scores were weighted based on estimated item difficulty. The norm was then estimated from this weighted score.
@@ -106,7 +226,7 @@
   <p style="text-align: justify;">
     June 26, 2025. The enhanced first preliminary norm has been published, significantly reducing inflation at the extremes of the range. It remains an estimate, however.
   </p>
-  <a href="norm.pdf" target="_blank">Current norm</a>
+  <a href="norm.pdf" target="_blank">Current NAIT norm</a>
   
   <p style="text-align: justify;"><strong>Norming roadmap:</strong></p>
 
@@ -118,33 +238,6 @@
       <li><strong>N = 200</strong>: Second official norm</li>
       <li><strong>N = 450</strong>: Final norm</li>
     </ul>
-  </div>
-
-  <p style="text-align: justify;"><strong>Correlations with other tests:</strong></p>
-
-  <div style="display: flex; justify-content: center;">
-    <ol style="max-width: 1000px; text-align: left; list-style-position: inside; padding-left: 0;">
-      <li><strong>Wechsler Intelligence Scale for Adults (aggregate)</strong>: r = 1.000 with N = 2</li>
-      <li><strong>Calculus Luminis Mensura 39</strong>: r = 1.000 with N = 2</li>
-      <li><strong>Multiple Choice Spatial Test 32</strong>: r = 1.000 with N = 2</li>
-      <li><strong>Simplex</strong>: r = 1.000 with N = 2</li>
-      <li><strong>LSHR</strong>: r = 1.000 with N = 2</li>
-      <li><strong>Simtollect</strong>: r = 1.000 with N = 2</li>
-      <li><strong>Associative LIMIT</strong>: r = 1.000 with N = 2</li>
-      <li><strong>Verbal Test of Pattern Recognition 26</strong>: r = 0.997 with N = 3</li>
-      <li><strong>Nydegger Intelligence Test - Form 1</strong>: r = 0.922 with N = 3</li>
-      <li><strong>Spatial Assessment Test 36</strong>: r = 0.788 with N = 4</li>
-      <li><strong>World Intelligence Test</strong>: r = -0.840 with N = 3</li>
-      <li><strong>Mathema</strong>: r = -1.000 with N = 2</li>
-    </ol>
-  </div>
-
-  <div class="section" style="max-width: 1000px; margin: 0 auto; font-family: Arial, sans-serif;">
-    <p style="text-align: justify;">
-      If you have completed the NAIT and have previously taken other IQ tests, please consider sharing your earlier scores with the test author at <a href="mailto:orbifoldanswers@ikmail.com" target="_blank">email</a>.
-      This will allow the computation of correlations and g-loadings.
-      Thank you in advance.
-    </p>
   </div>
 
   <div class="section">
