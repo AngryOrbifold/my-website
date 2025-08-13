@@ -1,0 +1,4 @@
+1.0.2
+-attempts increased to 4
+-item 9 revised to be more precise
+-norm improved
