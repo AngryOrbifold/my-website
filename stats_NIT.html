@@ -103,6 +103,23 @@
     tbody tr:first-child td {
       font-weight: bold;
     }
+
+    .default-table table,
+    .default-table table th,
+    .default-table table td {
+      font-size: 16px;
+      font-weight: normal; 
+    }
+
+    .default-table thead tr:first-child th {    
+      font-weight: normal;  
+      color: revert;           
+      background-color: revert; 
+    }
+
+    .default-table tbody tr:first-child td {
+      font-weight: normal;  
+    }
   </style>
 </head>
 <!-- Google tag (gtag.js) -->
@@ -129,7 +146,6 @@
   <div class="section">
 
     <div class="table-container">
-      <!-- Statistical Summary -->
       <table>
         <caption>Statistical Summary</caption>
         <thead>
@@ -161,7 +177,6 @@
     </div>
 
     <div class="table-container">
-      <!-- Ivec's Quality -->
       <table>
         <caption>Ivec's Quality</caption>
         <thead>
@@ -188,7 +203,6 @@
     </div>
 
     <div class="table-container">
-      <!-- Cooijmans Stats -->
       <table>
         <caption>Cooijmans Statistics</caption>
         <thead>
@@ -210,6 +224,46 @@
           <tr><td>Spatial</td><td>20.5</td><td>6</td><td>0.55</td><td>0.65</td><td>1.84</td></tr>
         </tbody>
       </table>
+    </div>
+
+    <div class="default-table">
+      <table>
+        <caption>Correlations matrix between subtests</caption>
+        <thead>
+          <tr>
+            <th> </th>
+            <th>Abstract</th>
+            <th>Numerical</th>
+            <th>Verbal</th>
+            <th>Spatial</th>
+            <th>Logical</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Abstract</td><td>1</td><td>0.666</td><td>0.670</td><td>0.527</td><td>0.474</td></tr>
+          <tr><td>Numerical</td><td>0.666</td><td>1</td><td>0.685</td><td>0.785</td><td>0.755</td></tr>
+          <tr><td>Verbal</td><td>0.670</td><td>0.685</td><td>1</td><td>0.732</td><td>0.779</td></tr>
+          <tr><td>Spatial</td><td>0.527</td><td>0.785</td><td>0.732</td><td>1</td><td>0.380</td></tr>
+          <tr><td>Logical</td><td>0.474</td><td>0.755</td><td>0.779</td><td>0.380</td><td>1</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="default-table">
+      <table>
+        <caption>g-loadings</caption>
+        <tbody>
+          <tr><td>Numerical subtest</td><td>0.920</td></tr>
+          <tr><td>Verbal subtest</td><td>0.914</td></tr>
+          <tr><td>Spatial subtest</td><td>0.812</td></tr>
+          <tr><td>Logical subtest</td><td>0.803</td></tr>
+          <tr><td>Abstract subtest</td><td>0.783</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="section" style="max-width: 1000px;">
+    <p>Variance explained by g (first principal component): 0.720, meaning 72% of the total variance in subtests is accounted for by the general factor.</p>
+    <p>Method used for computing g-loadings: Principal Component Analysis (PCA) applied to the subtest correlation matrix; the first unrotated principal component was interpreted as g.</p>
     </div>
 
   <div class="section">
