@@ -81,6 +81,12 @@
       color: white;
     }
 
+    th h2 {
+      font-size: 14px;
+      margin: 0;
+      color: white;
+    }
+   
     tr:hover {
       background-color: #f2f2f2;
     }
@@ -107,92 +113,230 @@
   gtag('config', 'G-3XHMB3NM73');
 </script>
 <body>
-  <h1>Statistics and normalisation</h1>
+  <h1>Statistics and Normalisation</h1>
 
-  <div class="section" style="max-width: 1000px; margin: 0 auto; font-family: Arial, sans-serif;">
+<div class="section" style="max-width: 1000px; margin: 0 auto; font-family: Arial, sans-serif;">
 
+  <!-- General Statistics Table -->
+  <div class="table-container" style="margin-bottom: 20px;">
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+      <thead>
+        <tr>
+          <th colspan="2" style="padding: 8px; border-bottom: 2px solid #000;">
+            <h3>General</h3>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: 6px 8px; width: 60%;">Number of people authenticated</td>
+          <td style="padding: 6px 8px;">44</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Number of candidates attempting or having attempted the NAIT</td>
+          <td style="padding: 6px 8px;">24</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Number of candidates attempting or having attempted the NAIT-ES</td>
+          <td style="padding: 6px 8px;">7</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- NAIT Statistics Table -->
   <div class="table-container">
-  <table style="width: 100%; border-collapse: collapse; text-align: left;">
-  <thead>
-    <tr>
-      <th colspan="2">
-        <h3>General</h3>
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="padding: 6px 8px; width: 60%;"><strong>Number of people authenticated</strong></td>
-      <td style="padding: 6px 8px;">45</td>
-    </tr>
-  </tbody>
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+      <thead>
+        <tr>
+          <th colspan="2" style="padding: 8px; border-bottom: 2px solid #000;">
+            <h3>NAIT Statistics</h3>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
 
-  <thead>
-    <tr>
-      <th colspan="2">
-        <h3>NAIT Statistics</h3>
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="padding: 6px 8px;"><strong>Number of candidates attempting or having attempted the NAIT</strong></td>
-      <td style="padding: 6px 8px;">23</td>
-    </tr>
-    <tr>
-      <td style="padding: 6px 8px;"><strong>Completed test sessions (N)</strong></td>
-      <td style="padding: 6px 8px;">13</td>
-    </tr>
-    <tr>
-      <td style="padding: 6px 8px;"><strong>Lowest raw score</strong></td>
-      <td style="padding: 6px 8px;">35</td>
-    </tr>
-    <tr>
-      <td style="padding: 6px 8px;"><strong>Highest raw score</strong></td>
-      <td style="padding: 6px 8px;">114</td>
-    </tr>
-    <tr>
-      <td style="padding: 6px 8px;"><strong>Mean raw score</strong></td>
-      <td style="padding: 6px 8px;">89.1</td>
-    </tr>
-    <tr>
-      <td style="padding: 6px 8px;"><strong>Median raw score</strong></td>
-      <td style="padding: 6px 8px;">93</td>
-    </tr>
-    <tr>
-      <td style="padding: 6px 8px;"><strong>Raw score standard deviation</strong></td>
-      <td style="padding: 6px 8px;">21.5</td>
-    </tr>
-    <tr>
-      <td style="padding: 6px 8px;"><strong>Skewness</strong></td>
-      <td style="padding: 6px 8px;">-1.39</td>
-    </tr>
-    <tr>
-      <td style="padding: 6px 8px;"><strong>Excess Kurtosis</strong></td>
-      <td style="padding: 6px 8px;">2.44</td>
-    </tr>
-    <tr>
-      <td style="padding: 6px 8px;"><strong>Cronbach's alpha</strong></td>
-      <td style="padding: 6px 8px;">0.981</td>
-    </tr>
-    <tr>
-      <td style="padding: 6px 8px;"><strong>Split Half Reliability Index*</strong></td>
-      <td style="padding: 6px 8px;">0.971</td>
-    </tr>
-    <tr>
-      <td style="padding: 6px 8px;"><strong>Items solved by everyone</strong></td>
-      <td style="padding: 6px 8px;">14</td>
-    </tr>
-    <tr>
-      <td style="padding: 6px 8px;"><strong>Items never solved by anyone</strong></td>
-      <td style="padding: 6px 8px;">3</td>
-    </tr>
-  </tbody>
-  </table>
+        <tr>
+          <th colspan="2" style="padding: 8px; background: #8a8a8a; border-top: 2px solid #000000;">
+            <h2>Sample Data</h2>
+          </th>
+        </tr>
+        
+        <tr>
+          <td style="padding: 6px 8px;">Completed test sessions (N)</td>
+          <td style="padding: 6px 8px;">15</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Lowest raw score</td>
+          <td style="padding: 6px 8px;">35</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Highest raw score</td>
+          <td style="padding: 6px 8px;">114</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Range</td>
+          <td style="padding: 6px 8px;">80</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Resolution</td>
+          <td style="padding: 6px 8px;">15.5</td>
+        </tr>
+        <tr>
+          <th colspan="2" style="padding: 8px; background: #8a8a8a; border-top: 2px solid #000000;">
+            <h2>Central Tendency and Dispersion</h2>
+          </th>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Mean raw score</td>
+          <td style="padding: 6px 8px;">85.67</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Median raw score</td>
+          <td style="padding: 6px 8px;">86</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Raw score mode</td>
+          <td style="padding: 6px 8px;">-</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Raw score standard deviation</td>
+          <td style="padding: 6px 8px;">21.46</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Quartile deviation</td>
+          <td style="padding: 6px 8px;">12.25</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Raw score standard error of measurement</td>
+          <td style="padding: 6px 8px;">3.19</td>
+        </tr>
+
+        <tr>
+          <th colspan="2" style="padding: 8px; background: #8a8a8a; border-top: 2px solid #000000;">
+            <h2>Distribution Shape</h2>
+          </th>
+        </tr>
+
+        <tr>
+          <td style="padding: 6px 8px;">Skewness</td>
+          <td style="padding: 6px 8px;">-0.9</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Excess Kurtosis</td>
+          <td style="padding: 6px 8px;">0.5</td>
+        </tr>
+
+        <tr>
+          <th colspan="2" style="padding: 8px; background: #8a8a8a; border-top: 2px solid #000000;">
+            <h2>Reliability</h2>
+          </th>
+        </tr>
+
+        <tr>
+          <td style="padding: 6px 8px;">McDonald's omega</td>
+          <td style="padding: 6px 8px;">0.9683</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Cronbach's alpha</td>
+          <td style="padding: 6px 8px;">0.978</td>
+        </tr>        
+        <tr>
+          <td style="padding: 6px 8px;">Split Half Reliability Index *</td>
+          <td style="padding: 6px 8px;">0.9668</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Spearman–Brown corrected</td>
+          <td style="padding: 6px 8px;">0.9831</td>
+        </tr>
+
+        <tr>
+          <th colspan="2" style="padding: 8px; background: #8a8a8a; border-top: 2px solid #000000;">
+            <h2>Difficulty</h2>
+          </th>
+        </tr>
+
+        <tr>
+          <td style="padding: 6px 8px;">Sample-dependent hardness</td>
+          <td style="padding: 6px 8px;">0.28</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Sample-independent hardness **</td>
+          <td style="padding: 6px 8px;">0.29</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Items solved by everyone</td>
+          <td style="padding: 6px 8px;">14</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Items never solved by anyone</td>
+          <td style="padding: 6px 8px;">3</td>
+        </tr>
+        <tr>
+          <th colspan="2" style="padding: 8px; background: #8a8a8a; border-top: 2px solid #000000;">
+            <h2>Candidates</h2>
+          </th>
+        </tr>
+
+        <tr>
+          <td style="padding: 6px 8px;">Youngest candidate (years)</td>
+          <td style="padding: 6px 8px;">20</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Oldest candidate (years)</td>
+          <td style="padding: 6px 8px;">75</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Mean age (years)</td>
+          <td style="padding: 6px 8px;">37.0</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Median age (years)</td>
+          <td style="padding: 6px 8px;">35</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Age standard deviation (years)</td>
+          <td style="padding: 6px 8px;">15.9</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Percentage of males</td>
+          <td style="padding: 6px 8px;">93.3</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Percentage of females</td>
+          <td style="padding: 6px 8px;">0</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">Percentage of unknown or other sex</td>
+          <td style="padding: 6px 8px;">6.7</td>
+        </tr>
+        <tr>
+          <th colspan="2" style="padding: 8px; background: #8a8a8a; border-top: 2px solid #000000;">
+            <h2>Candidates by Country (listed only if more than 2)</h2>
+          </th>
+        </tr>
+
+        <tr>
+          <td style="padding: 6px 8px;">United States of America</td>
+          <td style="padding: 6px 8px;">2</td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 8px;">China</td>
+          <td style="padding: 6px 8px;">2</td>
+        </tr>
+
+      </tbody>
+    </table>
   </div>
 
   <p style="text-align: justify;">
-    *Average over 100 random two-part splits of the test's item set.
+    * Average over 100 random two-part splits of the test's item set.
+  </p>
+  <p style="text-align: justify;">
+    ** Based on the norm computed from all the current data (not "official" norms necessarily) and a median IQ of 138.5.
+  </p>
+  <p style="text-align: justify;">
+    *** Only countries with 2 or more candidates are listed.
   </p>
 
   <h2 style="text-align: justify;"><strong>Correlations between NAIT and other tests:</strong></h2>
@@ -204,7 +348,8 @@
   </div>
 
 <div style="display: flex; justify-content: center;">
-  <table border="1" cellpadding="8" style="border-collapse: collapse; max-width: 700px; text-align: center; font-family: Arial, sans-serif;">
+  <table border="1" cellpadding="8" style="border-collapse: collapse; max-width: 700px; text-align: center; font-family: Arial, 
+sans-serif;">
     <thead>
       <tr style="background-color: #0070ba; color: white;">
         <th>Test Name</th>
@@ -214,7 +359,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr><td>VTPR 26</td><td>1.000</td><td>0.991</td><td>5</td></tr><tr><td>Simtollect</td><td>1.000</td><td>0.982</td><td>4</td></tr><tr><td>LSHR</td><td>1.000</td><td>1.000</td><td>3</td></tr><tr><td>Numerus</td><td>1.000</td><td>0.976</td><td>3</td></tr><tr><td>CLM39</td><td>1.000</td><td>0.941</td><td>3</td></tr><tr><td>MCST 32</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>Simplex</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>SLSE I</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>SLSE II</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>SPEED</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>LSHR Classic</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>Triplex Light</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>Numerus Light</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>Associative LIMIT</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>VTPR II</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>MVA28</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>Lexiq</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>Algebrica</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>Hieroglyphica</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>SAT 36</td><td>0.949</td><td>0.788</td><td>4</td></tr><tr><td>Wechsler Adult Intelligence Scale (aggregate)</td><td>0.800</td><td>0.961</td><td>4</td></tr><tr><td>Einplex</td><td>0.800</td><td>0.932</td><td>4</td></tr><tr><td>NIT-Form 1</td><td>0.500</td><td>0.913</td><td>3</td></tr><tr><td>LSHR Light</td><td>0.500</td><td>0.980</td><td>3</td></tr><tr><td>World Intelligence Test</td><td>-0.200</td><td>-0.599</td><td>4</td></tr><tr><td>Mathema</td><td>-0.866</td><td>-0.806</td><td>3</td></tr><tr><td>9I6 Test</td><td>-1.000</td><td>-1.000</td><td>2</td></tr><tr><td>SLSE 48</td><td>-1.000</td><td>-1.000</td><td>2</td></tr>
+      <tr><td>VTPR 26</td><td>1.000</td><td>0.991</td><td>5</td></tr><tr><td>Simtollect</td><td>1.000</td><td>0.982</td><td>4</td></tr><tr><td>LSHR</td><td>1.000</td><td>1.000</td><td>3</td></tr><tr><td>Numerus</td><td>1.000</td><td>0.976</td><td>3</td></tr><tr><td>CLM39</td><td>1.000</td><td>0.941</td><td>3</td></tr><tr><td>MCST 32</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>Simplex</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>SLSE I</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>SLSE II</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>SPEED</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>LSHR Classic</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>Triplex Light</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>Numerus Light</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>Associative LIMIT</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>VTPR II</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>MVA28</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>Lexiq</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>Algebrica</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>Hieroglyphica</td><td>1.000</td><td>1.000</td><td>2</td></tr><tr><td>SAT 36</td><td>0.949</td><td>0.788</td><td>4</td></tr><tr><td>Wechsler Adult Intelligence Scale (aggregate)</td><td>0.800</td><td>0.961</td><td>4</td></tr><tr><td>Einplex</td><td>0.800</td><td>0.932</td><td>4</td></tr><tr><td>NIT-Form 1</td><td>0.500</td><td>0.913</td><td>3</td></tr><tr><td>LSHR Light</td><td>0.500</td><td>0.980</td><td>3</td></tr><tr><td>World Intelligence Test</td><td>-0.200</td><td>-0.579</td><td>4</td></tr><tr><td>Mathema</td><td>-0.866</td><td>-0.806</td><td>3</td></tr><tr><td>9I6 Test</td><td>-1.000</td><td>-1.000</td><td>2</td></tr><tr><td>SLSE 48</td><td>-1.000</td><td>-1.000</td><td>2</td></tr>
     </tbody>
   </table>
 </div>
@@ -227,7 +372,7 @@
     Therefore, until sufficient data is available to accurately estimate item difficulty (beginning at N = 100), norms will be temporarily based on raw scores as is standard practice for most tests, even if not ideal.
   </p>
   <p style="text-align: justify;">
-    June 26, 2025. The enhanced first preliminary norm has been published, significantly reducing inflation at the extremes of the range.
+    June 26, 2025. The enhanced first preliminary norm has been published, significantly reducing inflation at the extremes of the range. It remains an estimate.
   </p>
   <a href="norm.pdf" target="_blank">Current NAIT norm</a>
   <p style="text-align: justify;">
@@ -252,5 +397,3 @@
   </div>
 </body>
 </html>
-
-
