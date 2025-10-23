@@ -102,7 +102,6 @@
       max-width: 100%;
     }
   </style>
-</head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XHMB3NM73"></script>
 <script>
@@ -110,8 +109,12 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-3XHMB3NM73');
+  gtag('config', 'G-3XHMB3NM73', {
+    'send_page_view': true,
+    'allow_google_signals': true
+  });
 </script>
+</head>
 <body>
   <h1>Statistics and Normalisation</h1>
 
@@ -410,4 +413,5 @@
   </div>
 </body>
 </html>
+
 
