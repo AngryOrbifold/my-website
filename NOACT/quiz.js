@@ -236,9 +236,8 @@ async function updateDB({ answerSubmitted = false, extraUpdate = {} } = {}) {
     ...extraUpdate
   };
 
-  if (answerSubmitted) updateObj.answerSubmitted = true; // internal flag, NOT a DB column
-
-  const payload = { email: cleanEmail, update: updateObj };
+  // send answerSubmitted separately, not in updateObj
+  const payload = { email: cleanEmail, update: updateObj, answerSubmitted };
 
   try {
     const res = await fetch(UPDATE_USER_URL, {
@@ -499,3 +498,4 @@ setInterval(resyncFromServer, 60_000);
 
 /* ----------------- INIT ----------------- */
 loadUserProgress();
+
