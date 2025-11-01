@@ -225,33 +225,20 @@ async function updateDB({ answerSubmitted = false, extraUpdate = {} } = {}) {
   }
 
   const cleanEmail = String(email || "").trim().toLowerCase();
-  if (!cleanEmail) {
-    console.error("updateDB: missing email (localStorage/email is empty)");
-    return;
-  }
+  if (!cleanEmail) return;
 
-  const solvedNums = Array.isArray(solved)
-    ? solved.map(x => {
-        const n = Number(x);
-        return Number.isFinite(n) ? Math.trunc(n) : x;
-      })
-    : [];
+  const solvedNums = Array.isArray(solved) ? solved.map(x => Number.isFinite(Number(x)) ? Math.trunc(Number(x)) : x) : [];
 
   const updateObj = {
     solved_ids: solvedNums,
-    score: Number.isFinite(Number(solvedNums.length)) ? Math.trunc(solvedNums.length) : 0,
+    score: solvedNums.length,
     iq: iq !== null ? Number(iq) : null,
     ...extraUpdate
   };
 
-  if (answerSubmitted) updateObj.answer_submitted = true;
+  if (answerSubmitted) updateObj.answerSubmitted = true; // internal flag, NOT a DB column
 
-  const payload = {
-    email: cleanEmail,
-    update: updateObj
-  };
-
-  console.log("updateDB payload ->", payload);
+  const payload = { email: cleanEmail, update: updateObj };
 
   try {
     const res = await fetch(UPDATE_USER_URL, {
@@ -260,9 +247,7 @@ async function updateDB({ answerSubmitted = false, extraUpdate = {} } = {}) {
       body: JSON.stringify(payload)
     });
 
-    const txt = await res.text().catch(() => "");
-    let body;
-    try { body = txt ? JSON.parse(txt) : null; } catch (e) { body = txt; }
+    const body = await res.json().catch(() => ({}));
 
     if (!res.ok) {
       console.error("update_user failed:", res.status, body);
@@ -270,24 +255,9 @@ async function updateDB({ answerSubmitted = false, extraUpdate = {} } = {}) {
       return;
     }
 
-    console.log("update_user success:", body);
-
-    // Apply server authoritative time if present
-    if (body?.server_time && typeof body?.remaining_seconds !== "undefined") {
-      applyServerTiming(body.server_time, body.remaining_seconds);
-    }
-
-    // Sync solved + attempts from server authoritative row
     if (body?.user) {
       const u = body.user;
-      if (Array.isArray(u.solved_ids)) {
-        solved = u.solved_ids.map(x => Number.isFinite(Number(x)) ? Number(x) : x);
-      } else if (typeof u.solved_ids === "string") {
-        try {
-          const parsed = JSON.parse(u.solved_ids);
-          if (Array.isArray(parsed)) solved = parsed;
-        } catch {}
-      }
+      solved = Array.isArray(u.solved_ids) ? u.solved_ids.map(x => Number.isFinite(Number(x)) ? Number(x) : x) : solved;
       attempts = u.attempts ?? attempts;
       updateTopBar();
     }
