@@ -1,0 +1,207 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #f7f9fc;
+  font-family: Arial, sans-serif;
+  color: #222;
+}
+
+.container {
+  width: 100%;
+  max-width: 1000px;       
+  min-height: 60vh;        
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: 20px auto;       
+  box-sizing: border-box;
+  transition: background 0.3s, color 0.3s;
+}
+
+.question-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* horizontal centering */
+  justify-content: flex-start; /* don't stretch vertically */
+  width: 100%;
+}
+
+.question-container img {
+  max-width: 100%;
+  max-height: 70vh;
+  border-radius: 8px;
+  border: 5px solid #000;
+  object-fit: contain;
+  margin: 10px 0; /* small top/bottom margin only */
+}
+
+.top-bar {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  font-weight: bold;
+}
+
+input[type="text"], input[type="email"] {
+  padding: 8px;
+  font-size: 16px;
+  width: 300px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 8px 32px;
+  background: #0b5cff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+button:hover {
+  background: #084fc1;
+  transform: scale(1.05);
+}
+
+.answer-container {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+#status {
+  margin-top: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.question-navigation {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.question-navigation button {
+  flex: 1;
+  max-width: 120px;
+}
+
+/* Dark mode */
+body.dark-mode {
+  background: #1e1e1e;
+  color: #eee;
+}
+
+body.dark-mode .container {
+  background: #2a2a2a;
+  color: #eee;
+  
+}
+
+body.dark-mode input[type="text"],
+body.dark-mode input[type="email"] {
+  background: #444;
+  color: #eee;
+  border: 1px solid #666;
+}
+
+body.dark-mode button {
+  background: #555;
+  color: #fff;
+}
+
+body.dark-mode button:hover {
+  background: #777;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;                    /* top:0; right:0; bottom:0; left:0 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* dark translucent backdrop */
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(2px);
+}
+
+/* modal box */
+.modal-box {
+  position: relative;
+  width: 95%;
+  max-width: 420px;
+  background: #fff;
+  color: #222;
+  border-radius: 10px;
+  padding: 18px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  z-index: 1;
+  transform: translateY(0);
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+
+/* modal layout */
+.modal-box h3 {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+  text-align: center;
+}
+.modal-box input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 12px;
+}
+.modal-actions button {
+  padding: 8px 14px;
+  min-width: 100px;
+}
+
+/* status message */
+.status-msg {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+  color: #2a7a2a;
+}
+
+/* dark mode styling for modal */
+body.dark-mode .modal-box {
+  background: #2a2a2a;
+  color: #eee;
+}
+body.dark-mode .modal-box input {
+  background: #3a3a3a;
+  border: 1px solid #555;
+  color: #eee;
+}
+
+/* make sure .hidden hides the whole overlay */
+.hidden {
+  display: none !important;
+}

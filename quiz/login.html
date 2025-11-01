@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NOACT – Login</title>
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+
+<div class="login-wrapper">
+  <div class="login-box">
+
+    <h1>Nydegger Online Automatic Cognitive Test</h1>
+
+    <!-- LOGIN -->
+    <div id="loginSection">
+      <input id="email" class="login-input" type="email" placeholder="Email" required>
+      <input id="username" class="login-input hidden" placeholder="Username">
+      <button id="loginBtn">Login</button>
+      <p id="loginMsg"></p>
+    </div>
+
+    <!-- INSTRUCTIONS -->
+    <section id="instructionsSection" class="hidden instructions">
+        <p><strong>Instructions:</strong><br>
+            NOACT is a timed, high-range cognitive test.<br>
+            You have 360 hours to work on 50 items. A timer will display how much time remains.<br>
+            Items are presented in roughly increasing order of difficulty, but you may answer them in any order you choose.<br>
+            Throughout the test, you have 30 attempts. Each incorrect answer costs one attempt.<br>
+            The test ends when either the timer reaches 0 or your remaining attempts reach 0.<br>
+            Answers are case-insensitive, and spaces between words are not required. Synonyms are allowed.
+        </p>
+        <p><strong>Important:</strong><br>
+            Once you click "Start Test", the countdown begins.<br>
+            You cannot restart or return to this page.<br>
+            Your time and attempts will continue to run even if you close your browser.<br>
+            So please make sure you are properly prepared and motivated to finish before starting.
+         </p>
+
+      <button id="startTestBtn">Start Test</button>
+    </section>
+
+  </div>
+</div>
+
+<script src="auth.js"></script>
+</body>
+</html>

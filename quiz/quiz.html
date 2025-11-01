@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NOACT</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+
+  <h1 style="text-align:center;">Nydegger Online Automatic Cognitive Test</h1>
+
+  <section id="gameSection">
+
+    <div class="top-bar">
+      <span id="scoreEl">Score: 0</span>
+      <span id="attemptsEl">Attempts left: 0</span>
+      <span id="timerEl">Time left:</span>
+    </div>
+
+    <div class="question-container">
+      <img id="questionImg" alt="Loading question...">
+    </div>
+
+    <div class="question-navigation">
+      <button id="prevBtn">Previous</button>
+      <button id="nextBtn">Next</button>
+    </div>
+
+    <div class="answer-container">
+      <input id="answerInput" type="text" placeholder="Your answer...">
+      <button id="submitBtn">Submit</button>
+    </div>
+
+    <div style="text-align:center; margin-top:20px;">
+      <button id="darkModeBtn">Dark Mode</button>
+      <button id="changeUsernameBtn">Change Username</button>
+    </div>
+
+    <div id="changeUsernameModal" class="modal hidden" aria-hidden="true" role="dialog" aria-labelledby="changeUsernameTitle">
+      <div class="modal-backdrop"></div>
+      <div class="modal-box" role="document">
+        <h3 id="changeUsernameTitle">Change username</h3>
+        <input id="newUsernameInput" type="text" placeholder="New username" autocomplete="off">
+        <div class="modal-actions">
+          <button id="saveUsernameBtn">Save</button>
+          <button id="cancelUsernameBtn">Cancel</button>
+        </div>
+        <p id="usernameStatus" class="status-msg" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <p id="status"></p>
+
+  </section>
+
+</div>
+
+<script src="quiz.js"></script>
+</body>
+</html>
