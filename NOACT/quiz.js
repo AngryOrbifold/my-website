@@ -273,8 +273,8 @@ async function updateDB({ incorrectAnswer = false, extraUpdate = {} } = {}) {
 
 /* ----------------- Submit flow (check answer then sync) ----------------- */
 if (submitBtn) submitBtn.onclick = async () => {
-  const rawAns = answerInput.value;
-  if (!rawAns || !rawAns.trim()) return;
+  const rawAns = answerInput.value?.trim();
+  if (!rawAns) return;
 
   try {
     const res = await fetch(GET_ANSWER_URL, {
@@ -282,41 +282,40 @@ if (submitBtn) submitBtn.onclick = async () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question: currentIndex, answer: rawAns })
     });
-
-    if (!res.ok) {
-      const txt = await res.text().catch(()=>"");
-      console.error("get_answer failed:", txt);
-      statusEl.innerText = "Error checking answer";
-      return;
-    }
-
     const payload = await res.json().catch(()=>({}));
     const correct = payload?.correct === true;
 
     if (correct) {
-      // add to solved locally and then persist (server will not decrement attempts)
       if (!solved.includes(currentIndex)) solved.push(currentIndex);
-      await updateDB(); // no flag needed for correct answers
+      // update DB normally (no attempts decrement)
+      await updateDB();
       updateTopBar();
       statusEl.style.color = "#2a7a2a";
       statusEl.innerText = "Correct";
       answerInput.value = "";
-      setTimeout(()=> {
+      setTimeout(() => {
         statusEl.innerText = "";
         loadNextQuestion();
       }, 1000);
       return;
     }
 
-    // Incorrect answer: decrement attempts on server
+    // INCORRECT ANSWER: call a special endpoint to decrement attempts
+    const resAttempts = await fetch(UPDATE_USER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, decrement_attempt: true })
+    });
+    const body = await resAttempts.json().catch(() => ({}));
+    if (body?.user?.attempts !== undefined) attempts = body.user.attempts;
+
     statusEl.style.color = "crimson";
     statusEl.innerText = "Incorrect";
-    setTimeout(()=> statusEl.innerText = "", 2000);
+    setTimeout(() => statusEl.innerText = "", 2000);
 
-    await updateDB({ incorrectAnswer: true });
     if (attempts <= 0) return endGame();
-
     answerInput.value = "";
+
   } catch (err) {
     console.error("Submit error:", err);
     statusEl.innerText = "Network/server error";
@@ -501,3 +500,4 @@ setInterval(resyncFromServer, 60_000);
 
 /* ----------------- INIT ----------------- */
 loadUserProgress();
+
