@@ -2,7 +2,8 @@ const UPDATE_USER_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/u
 const GET_ANSWER_URL  = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/get_answer";
 const TOTAL_ITEMS = 50;
 const TOTAL_ATTEMPTS = 30;
-const TOTAL_TIME_SECONDS = 360 * 3600; 
+const TOTAL_TIME_SECONDS = 360 * 3600; // keep same as server
+
 // DOM
 const scoreEl       = document.getElementById("scoreEl");
 const attemptsEl    = document.getElementById("attemptsEl");
@@ -22,6 +23,7 @@ const saveUsernameBtn = document.getElementById("saveUsernameBtn");
 const cancelUsernameBtn = document.getElementById("cancelUsernameBtn");
 const usernameStatus = document.getElementById("usernameStatus");
 
+// app state
 let email = localStorage.getItem("email");
 let username = localStorage.getItem("username") || "";
 if (!email) {
@@ -31,13 +33,14 @@ if (!email) {
 let solved = [];
 let attempts = TOTAL_ATTEMPTS;
 let currentIndex = 1;
-let startTimeUTC = Date.now();
-let timerInterval = null;
 let normoCache = null;
 
-let serverReceivedAt = null;
-let serverRemainingSeconds = null;
+// --- server-authoritative timer globals ---
+let serverReceivedAt = null;        // ms when we last received server response
+let serverRemainingSeconds = null;  // seconds remaining at serverReceivedAt
+let timerInterval = null;
 
+// load theme
 const savedTheme = localStorage.getItem("darkMode");
 if (savedTheme === "enabled") {
   document.body.classList.add("dark-mode");
@@ -75,6 +78,7 @@ if (activeTab && activeTab !== TAB_ID) {
   lockTab();
 }
 
+// Listen for other tabs activating themselves
 channel.onmessage = (msg) => {
   if (msg.data?.type === "ACTIVE" && msg.data?.id !== TAB_ID) {
     blockUI();
@@ -98,12 +102,13 @@ async function loadNormo() {
 }
 loadNormo();
 
+// --- utilities ---
 function normalizeClient(s) {
   if (s === undefined || s === null) return "";
   let t = String(s);
-  t = t.replace(/[\u200B-\u200D\uFEFF]/g, "");     
-  t = t.replace(/^[\s"']+|[\s"']+$/g, "");        
-  return t.toLowerCase().replace(/\s+/g, "");      
+  t = t.replace(/[\u200B-\u200D\uFEFF]/g, "");
+  t = t.replace(/^[\s"']+|[\s"']+$/g, "");
+  return t.toLowerCase().replace(/\s+/g, "");
 }
 
 function findNextUnsolved(start, forward = true) {
@@ -115,6 +120,36 @@ function findNextUnsolved(start, forward = true) {
   return null;
 }
 
+// --- server timing helpers ---
+function applyServerTiming(server_time_iso, remaining_seconds_from_server) {
+  serverReceivedAt = Date.now();
+  serverRemainingSeconds = Number.isFinite(Number(remaining_seconds_from_server))
+    ? Math.max(0, Math.trunc(Number(remaining_seconds_from_server)))
+    : TOTAL_TIME_SECONDS;
+  console.log("applyServerTiming:", { serverReceivedAt, serverRemainingSeconds, server_time_iso });
+}
+
+function startTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(()=> {
+    if (serverRemainingSeconds === null || serverReceivedAt === null) {
+      timerEl.innerText = "Time left: --";
+      return;
+    }
+    const elapsedSinceReceive = Math.floor((Date.now() - serverReceivedAt) / 1000);
+    const remaining = serverRemainingSeconds - elapsedSinceReceive;
+    if (remaining <= 0) {
+      if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+      return endGame();
+    }
+    const h = Math.floor(remaining/3600);
+    const m = Math.floor((remaining%3600)/60);
+    const s = remaining%60;
+    timerEl.innerText = `Time left: ${h} h ${m} m ${s} s`;
+  }, 1000);
+}
+
+// --- load and sync progress (uses server timing) ---
 async function loadUserProgress() {
   try {
     const res = await fetch(UPDATE_USER_URL, {
@@ -122,8 +157,9 @@ async function loadUserProgress() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email })
     });
+
     if (!res.ok) {
-      console.error("loadUserProgress: failed", await res.text().catch(()=>""));
+      console.error("loadUserProgress: failed", await res.text().catch(()=> ""));
       statusEl.innerText = "Failed to load user data.";
       return;
     }
@@ -131,24 +167,27 @@ async function loadUserProgress() {
     const payload = await res.json().catch(()=>({}));
     const user = payload.user ?? payload;
 
-    // existing state sync...
+    // sync state
     solved = Array.isArray(user?.solved_ids) ? user.solved_ids : (user?.solved_ids ?? []);
     attempts = (user?.attempts ?? TOTAL_ATTEMPTS);
     username = localStorage.getItem("username") || user?.name || username;
     if (username) localStorage.setItem("username", username);
     updateTopBar();
 
-    // --- server timing ---
-    // payload.server_time is ISO string from server, payload.remaining_seconds is authoritative seconds left
-    if (payload.server_time) {
+    // server authoritative timing if present
+    if (typeof payload.remaining_seconds !== "undefined") {
+      applyServerTiming(payload.server_time, payload.remaining_seconds);
+    } else if (user?.start) {
+      // fallback compute from DB start timestamp (less preferred)
+      const startMs = new Date(user.start).getTime();
       serverReceivedAt = Date.now();
-      // store authoritative remaining seconds (fallback to full time if server didn't return)
-      serverRemainingSeconds = Number.isFinite(Number(payload.remaining_seconds)) ? Number(payload.remaining_seconds) : TOTAL_TIME_SECONDS;
+      serverRemainingSeconds = Math.max(0, TOTAL_TIME_SECONDS - Math.floor((Date.now() - startMs) / 1000));
+      console.warn("Using fallback timing computed from user.start.");
     } else {
-      // fallback: if server didn't return timing, use client-side start as before
-      const startTimeUTC = user?.start ? new Date(user.start).getTime() : Date.now();
+      // default: full time (user hasn't started)
       serverReceivedAt = Date.now();
-      serverRemainingSeconds = Math.max(0, TOTAL_TIME_SECONDS - Math.floor((Date.now() - startTimeUTC) / 1000));
+      serverRemainingSeconds = TOTAL_TIME_SECONDS;
+      console.warn("No timing info from server; defaulting to full time.");
     }
 
     if (solved.length >= TOTAL_ITEMS || attempts <= 0) {
@@ -167,26 +206,7 @@ async function loadUserProgress() {
   }
 }
 
-// --- Timer ---
-function startTimer() {
-  if (timerInterval) clearInterval(timerInterval);
-  timerInterval = setInterval(()=> {
-    if (serverRemainingSeconds === null || serverReceivedAt === null) {
-      // fallback: show something or stop
-      timerEl.innerText = "Time left: --";
-      return;
-    }
-    const elapsedSinceReceive = Math.floor((Date.now() - serverReceivedAt) / 1000);
-    const remaining = serverRemainingSeconds - elapsedSinceReceive;
-    if (remaining <= 0) return endGame();
-    const h = Math.floor(remaining/3600);
-    const m = Math.floor((remaining%3600)/60);
-    const s = remaining%60;
-    timerEl.innerText = `Time left: ${h} h ${m} m ${s} s`;
-  }, 1000);
-}
-
-// --- Question loading ---
+// --- question loading ---
 function loadQuestionByIndex(index) {
   statusEl.innerText = "";
   currentIndex = index;
@@ -212,6 +232,84 @@ if (nextBtn) nextBtn.onclick = () => {
   loadQuestionByIndex(next);
 };
 
+// --- updateDB() (full version) ---
+async function updateDB() {
+  let iq = null;
+  if (normoCache && solved.length > 0) {
+    const maybe = normoCache[solved.length];
+    if (!isNaN(maybe)) iq = Number(maybe);
+  }
+
+  const cleanEmail = String(email || "").trim().toLowerCase();
+  if (!cleanEmail) {
+    console.error("updateDB: missing email (localStorage/email is empty)");
+    return;
+  }
+
+  const solvedNums = Array.isArray(solved)
+    ? solved.map(x => {
+        const n = Number(x);
+        return Number.isFinite(n) ? Math.trunc(n) : x;
+      })
+    : [];
+
+  const payload = {
+    email: cleanEmail,
+    update: {
+      solved_ids: solvedNums,
+      score: Number.isFinite(Number(solvedNums.length)) ? Math.trunc(solvedNums.length) : 0,
+      attempts: Number.isFinite(Number(attempts)) ? Math.trunc(attempts) : null,
+      iq: iq !== null ? Number(iq) : null
+    }
+  };
+
+  console.log("updateDB payload ->", payload);
+
+  try {
+    const res = await fetch(UPDATE_USER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const txt = await res.text().catch(() => "");
+    let body;
+    try { body = txt ? JSON.parse(txt) : null; } catch (e) { body = txt; }
+
+    if (!res.ok) {
+      console.error("update_user failed:", res.status, body);
+      statusEl && (statusEl.innerText = "Could not save progress (server).");
+      return;
+    }
+
+    console.log("update_user success:", body);
+
+    // Apply authoritative timing if server returned it
+    if (body?.server_time && typeof body?.remaining_seconds !== "undefined") {
+      applyServerTiming(body.server_time, body.remaining_seconds);
+    }
+
+    // Sync server authoritative user state
+    if (body?.user) {
+      const u = body.user;
+      if (Array.isArray(u.solved_ids)) {
+        solved = u.solved_ids.map(x => Number.isFinite(Number(x)) ? Number(x) : x);
+      } else if (typeof u.solved_ids === "string") {
+        try {
+          const parsed = JSON.parse(u.solved_ids);
+          if (Array.isArray(parsed)) solved = parsed;
+        } catch {}
+      }
+      attempts = u.attempts ?? attempts;
+      updateTopBar();
+    }
+  } catch (err) {
+    console.error("updateDB network error:", err);
+    statusEl && (statusEl.innerText = "Network error saving progress.");
+  }
+}
+
+// --- submit / answer checking ---
 if (submitBtn) submitBtn.onclick = async () => {
   const rawAns = answerInput.value;
   if (!rawAns || !rawAns.trim()) return;
@@ -261,82 +359,6 @@ if (submitBtn) submitBtn.onclick = async () => {
     statusEl.innerText = "Network/server error";
   }
 };
-async function updateDB() {
-  let iq = null;
-  if (normoCache && solved.length > 0) {
-    const maybe = normoCache[solved.length];
-    if (!isNaN(maybe)) iq = Number(maybe);
-  }
-
-  const cleanEmail = String(email || "").trim().toLowerCase();
-  if (!cleanEmail) {
-    console.error("updateDB: missing email (localStorage/email is empty)");
-    return;
-  }
-  const solvedNums = Array.isArray(solved)
-    ? solved.map(x => {
-        const n = Number(x);
-        return Number.isFinite(n) ? Math.trunc(n) : x;
-      })
-    : [];
-
-  const payload = {
-    email: cleanEmail,
-    update: {
-      solved_ids: solvedNums,
-      score: solvedNums.length,
-      attempts,
-      iq
-    }
-  };
-  console.log("updateDB payload ->", payload);
-  try {
-    const res = await fetch(UPDATE_USER_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    const txt = await res.text().catch(() => "");
-    let body;
-    try { body = txt ? JSON.parse(txt) : null; } catch (e) { body = txt; }
-
-    if (!res.ok) {
-      console.error("update_user failed:", res.status, body);
-      statusEl && (statusEl.innerText = "Could not save progress (server).");
-      return;
-    }
-
-    console.log("update_user success:", body);
-
-    if (body?.server_time && typeof body?.remaining_seconds !== "undefined") {
-      serverReceivedAt = Date.now();
-      serverRemainingSeconds = Number(body.remaining_seconds);
-      console.log("Time sync:", {
-        serverRemainingSeconds,
-        serverReceivedAt
-      });
-    }
-    if (body?.user) {
-      const u = body.user;
-      if (Array.isArray(u.solved_ids)) {
-        solved = u.solved_ids.map(x => Number.isFinite(Number(x)) ? Number(x) : x);
-      } else if (typeof u.solved_ids === "string") {
-        try {
-          const parsed = JSON.parse(u.solved_ids);
-          if (Array.isArray(parsed)) solved = parsed;
-        } catch {}
-      }
-
-      attempts = u.attempts ?? attempts;
-      updateTopBar();
-    }
-
-  } catch (err) {
-    console.error("updateDB network error:", err);
-    statusEl && (statusEl.innerText = "Network error saving progress.");
-  }
-}
 
 // --- Top bar update (IQ + score) ---
 function updateTopBar() {
@@ -371,7 +393,7 @@ async function loadLeaderboardState() {
 }
 
 function showFinalResults() {
-  clearInterval(timerInterval);
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
   const iq = normoCache?.[solved.length] ?? "N/A";
 
   document.querySelector(".container").innerHTML = `
@@ -390,9 +412,9 @@ function showFinalResults() {
   const checkbox = document.getElementById("leaderboardCheckbox");
   const statusMsg = document.getElementById("leaderboardStatus");
 
-  loadLeaderboardState().then(isOnBoard => { checkbox.checked = isOnBoard; });
+  loadLeaderboardState().then(isOnBoard => { if (checkbox) checkbox.checked = isOnBoard; });
 
-  checkbox.addEventListener("change", async () => {
+  checkbox?.addEventListener("change", async () => {
     const wantLeaderboard = checkbox.checked;
     try {
       const r = await fetch(UPDATE_USER_URL, {
@@ -412,7 +434,7 @@ function showFinalResults() {
 }
 
 function endGame() {
-  clearInterval(timerInterval);
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
   attempts = 0;
   updateDB();
   showFinalResults();
@@ -487,7 +509,40 @@ darkModeBtn?.addEventListener("click", () => {
   darkModeBtn.textContent = isDark ? "Light Mode" : "Dark Mode";
 });
 
+window.addEventListener("focus", () => {
+  setTimeout(() => {
+    fetch(UPDATE_USER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email })
+    }).then(r => r.ok ? r.json() : null).then(p => {
+      if (p?.remaining_seconds !== undefined) applyServerTiming(p.server_time, p.remaining_seconds);
+    }).catch(e => console.warn("Focus resync failed:", e));
+  }, 200);
+});
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    fetch(UPDATE_USER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email })
+    }).then(r => r.ok ? r.json() : null).then(p => {
+      if (p?.remaining_seconds !== undefined) applyServerTiming(p.server_time, p.remaining_seconds);
+    }).catch(e => console.warn("Visibility resync failed:", e));
+  }
+});
+
+// periodic resync every 60s
+setInterval(() => {
+  if (!email) return;
+  fetch(UPDATE_USER_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  }).then(r => r.ok ? r.json() : null).then(p => {
+    if (p?.remaining_seconds !== undefined) applyServerTiming(p.server_time, p.remaining_seconds);
+  }).catch(e => console.warn("Periodic resync failed:", e));
+}, 60_000);
+
 // --- INIT ---
 loadUserProgress();
-
-
