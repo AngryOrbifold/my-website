@@ -217,7 +217,7 @@ if (nextBtn) nextBtn.onclick = () => {
   loadQuestionByIndex(next);
 };
 
-async function updateDB({ incorrectAnswer = false, extraUpdate = {} } = {}) {
+async function updateDB({ extraUpdate = {}, decrementAttempt = false } = {}) {
   let iq = null;
   if (normoCache && solved.length > 0) {
     const maybe = normoCache[solved.length];
@@ -238,9 +238,8 @@ async function updateDB({ incorrectAnswer = false, extraUpdate = {} } = {}) {
     ...extraUpdate
   };
 
-  if (incorrectAnswer) updateObj.incorrectAnswer = true; // <-- flag triggers attempt decrement in edge function
-
   const payload = { email: cleanEmail, update: updateObj };
+  if (decrementAttempt) payload.decrement_attempt = true;
 
   try {
     const res = await fetch(UPDATE_USER_URL, {
@@ -262,7 +261,7 @@ async function updateDB({ incorrectAnswer = false, extraUpdate = {} } = {}) {
       solved = Array.isArray(u.solved_ids)
         ? u.solved_ids.map(x => Number.isFinite(Number(x)) ? Number(x) : x)
         : solved;
-      attempts = u.attempts ?? attempts; // <-- update attempts from server
+      attempts = u.attempts ?? attempts;
       updateTopBar();
     }
   } catch (err) {
@@ -271,10 +270,10 @@ async function updateDB({ incorrectAnswer = false, extraUpdate = {} } = {}) {
   }
 }
 
-/* ----------------- Submit flow (check answer then sync) ----------------- */
+/* ----------------- Submit flow ----------------- */
 if (submitBtn) submitBtn.onclick = async () => {
-  const rawAns = answerInput.value?.trim();
-  if (!rawAns) return;
+  const rawAns = answerInput.value;
+  if (!rawAns || !rawAns.trim()) return;
 
   try {
     const res = await fetch(GET_ANSWER_URL, {
@@ -282,13 +281,21 @@ if (submitBtn) submitBtn.onclick = async () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question: currentIndex, answer: rawAns })
     });
+
+    if (!res.ok) {
+      const txt = await res.text().catch(()=>"");
+      console.error("get_answer failed:", txt);
+      statusEl.innerText = "Error checking answer";
+      return;
+    }
+
     const payload = await res.json().catch(()=>({}));
     const correct = payload?.correct === true;
 
     if (correct) {
+      // Correct answer: add to solved locally and persist
       if (!solved.includes(currentIndex)) solved.push(currentIndex);
-      // update DB normally (no attempts decrement)
-      await updateDB();
+      await updateDB({ extraUpdate: {} }); // server does not decrement attempts
       updateTopBar();
       statusEl.style.color = "#2a7a2a";
       statusEl.innerText = "Correct";
@@ -300,22 +307,16 @@ if (submitBtn) submitBtn.onclick = async () => {
       return;
     }
 
-    // INCORRECT ANSWER: call a special endpoint to decrement attempts
-    const resAttempts = await fetch(UPDATE_USER_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, decrement_attempt: true })
-    });
-    const body = await resAttempts.json().catch(() => ({}));
-    if (body?.user?.attempts !== undefined) attempts = body.user.attempts;
-
+    // Incorrect answer: decrement attempts in server
     statusEl.style.color = "crimson";
     statusEl.innerText = "Incorrect";
     setTimeout(() => statusEl.innerText = "", 2000);
 
-    if (attempts <= 0) return endGame();
-    answerInput.value = "";
+    await updateDB({ extraUpdate: {}, decrementAttempt: true });
 
+    if (attempts <= 0) return endGame();
+
+    answerInput.value = "";
   } catch (err) {
     console.error("Submit error:", err);
     statusEl.innerText = "Network/server error";
@@ -500,4 +501,5 @@ setInterval(resyncFromServer, 60_000);
 
 /* ----------------- INIT ----------------- */
 loadUserProgress();
+
 
