@@ -2,9 +2,9 @@ const UPDATE_USER_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/u
 const GET_ANSWER_URL  = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/get_answer";
 const TOTAL_ITEMS = 50;
 const TOTAL_ATTEMPTS = 30;
-const TOTAL_TIME_SECONDS = 360 * 3600; // keep same as server
+const FALLBACK_TOTAL_TIME_SECONDS = 360 * 3600; // only used as fallback if server doesn't provide timing
 
-// DOM
+/* ----------------- DOM ----------------- */
 const scoreEl       = document.getElementById("scoreEl");
 const attemptsEl    = document.getElementById("attemptsEl");
 const timerEl       = document.getElementById("timerEl");
@@ -23,7 +23,7 @@ const saveUsernameBtn = document.getElementById("saveUsernameBtn");
 const cancelUsernameBtn = document.getElementById("cancelUsernameBtn");
 const usernameStatus = document.getElementById("usernameStatus");
 
-// app state
+/* ----------------- APP STATE ----------------- */
 let email = localStorage.getItem("email");
 let username = localStorage.getItem("username") || "";
 if (!email) {
@@ -35,12 +35,11 @@ let attempts = TOTAL_ATTEMPTS;
 let currentIndex = 1;
 let normoCache = null;
 
-// --- server-authoritative timer globals ---
-let serverReceivedAt = null;        // ms when we last received server response
-let serverRemainingSeconds = null;  // seconds remaining at serverReceivedAt
+/* ----------------- SERVER-AUTHORIZED TIMER ----------------- */
+let serverReceivedAt = null;       
+let serverRemainingSeconds = null;  
 let timerInterval = null;
 
-// load theme
 const savedTheme = localStorage.getItem("darkMode");
 if (savedTheme === "enabled") {
   document.body.classList.add("dark-mode");
@@ -52,14 +51,11 @@ if (savedTheme === "enabled") {
 const APP_CHANNEL = "NOACT_channel";
 const channel = new BroadcastChannel(APP_CHANNEL);
 const TAB_ID = Math.random().toString(36).slice(2);
-
 let activeTab = localStorage.getItem("activeTab");
-
 function lockTab() {
   localStorage.setItem("activeTab", TAB_ID);
   channel.postMessage({ type: "ACTIVE", id: TAB_ID });
 }
-
 function blockUI() {
   document.body.innerHTML = `
     <div style="
@@ -71,20 +67,16 @@ function blockUI() {
     </div>
   `;
 }
-
 if (activeTab && activeTab !== TAB_ID) {
   blockUI();
 } else {
   lockTab();
 }
-
-// Listen for other tabs activating themselves
 channel.onmessage = (msg) => {
   if (msg.data?.type === "ACTIVE" && msg.data?.id !== TAB_ID) {
     blockUI();
   }
 };
-
 window.addEventListener("beforeunload", () => {
   if (localStorage.getItem("activeTab") === TAB_ID) {
     localStorage.removeItem("activeTab");
@@ -102,7 +94,6 @@ async function loadNormo() {
 }
 loadNormo();
 
-// --- utilities ---
 function normalizeClient(s) {
   if (s === undefined || s === null) return "";
   let t = String(s);
@@ -110,7 +101,6 @@ function normalizeClient(s) {
   t = t.replace(/^[\s"']+|[\s"']+$/g, "");
   return t.toLowerCase().replace(/\s+/g, "");
 }
-
 function findNextUnsolved(start, forward = true) {
   let i = start;
   for (let step = 0; step < TOTAL_ITEMS; step++) {
@@ -120,12 +110,11 @@ function findNextUnsolved(start, forward = true) {
   return null;
 }
 
-// --- server timing helpers ---
 function applyServerTiming(server_time_iso, remaining_seconds_from_server) {
   serverReceivedAt = Date.now();
   serverRemainingSeconds = Number.isFinite(Number(remaining_seconds_from_server))
     ? Math.max(0, Math.trunc(Number(remaining_seconds_from_server)))
-    : TOTAL_TIME_SECONDS;
+    : FALLBACK_TOTAL_TIME_SECONDS;
   console.log("applyServerTiming:", { serverReceivedAt, serverRemainingSeconds, server_time_iso });
 }
 
@@ -149,7 +138,7 @@ function startTimer() {
   }, 1000);
 }
 
-// --- load and sync progress (uses server timing) ---
+/* ----------------- Load user progress (authoritative) ----------------- */
 async function loadUserProgress() {
   try {
     const res = await fetch(UPDATE_USER_URL, {
@@ -174,19 +163,17 @@ async function loadUserProgress() {
     if (username) localStorage.setItem("username", username);
     updateTopBar();
 
-    // server authoritative timing if present
+    // authoritative server timing if present
     if (typeof payload.remaining_seconds !== "undefined") {
       applyServerTiming(payload.server_time, payload.remaining_seconds);
     } else if (user?.start) {
-      // fallback compute from DB start timestamp (less preferred)
       const startMs = new Date(user.start).getTime();
       serverReceivedAt = Date.now();
-      serverRemainingSeconds = Math.max(0, TOTAL_TIME_SECONDS - Math.floor((Date.now() - startMs) / 1000));
+      serverRemainingSeconds = Math.max(0, FALLBACK_TOTAL_TIME_SECONDS - Math.floor((Date.now() - startMs) / 1000));
       console.warn("Using fallback timing computed from user.start.");
     } else {
-      // default: full time (user hasn't started)
       serverReceivedAt = Date.now();
-      serverRemainingSeconds = TOTAL_TIME_SECONDS;
+      serverRemainingSeconds = FALLBACK_TOTAL_TIME_SECONDS;
       console.warn("No timing info from server; defaulting to full time.");
     }
 
@@ -206,21 +193,19 @@ async function loadUserProgress() {
   }
 }
 
-// --- question loading ---
 function loadQuestionByIndex(index) {
   statusEl.innerText = "";
   currentIndex = index;
   questionImg.src = `https://qlmlvtohtkiycwtohqwk.supabase.co/storage/v1/object/public/questions/Base-${index}.jpg`;
   answerInput.focus();
 }
-
 function loadNextQuestion() {
   const next = findNextUnsolved(currentIndex, true);
   if (!next) return endGame();
   loadQuestionByIndex(next);
 }
 
-// navigation buttons
+/* navigation */
 if (prevBtn) prevBtn.onclick = () => {
   const prev = findNextUnsolved(currentIndex, false);
   if (!prev) return endGame();
@@ -232,8 +217,7 @@ if (nextBtn) nextBtn.onclick = () => {
   loadQuestionByIndex(next);
 };
 
-// --- updateDB() (full version) ---
-async function updateDB() {
+async function updateDB({ answerSubmitted = false, extraUpdate = {} } = {}) {
   let iq = null;
   if (normoCache && solved.length > 0) {
     const maybe = normoCache[solved.length];
@@ -253,14 +237,18 @@ async function updateDB() {
       })
     : [];
 
+  const updateObj = {
+    solved_ids: solvedNums,
+    score: Number.isFinite(Number(solvedNums.length)) ? Math.trunc(solvedNums.length) : 0,
+    iq: iq !== null ? Number(iq) : null,
+    ...extraUpdate
+  };
+
+  if (answerSubmitted) updateObj.answer_submitted = true;
+
   const payload = {
     email: cleanEmail,
-    update: {
-      solved_ids: solvedNums,
-      score: Number.isFinite(Number(solvedNums.length)) ? Math.trunc(solvedNums.length) : 0,
-      attempts: Number.isFinite(Number(attempts)) ? Math.trunc(attempts) : null,
-      iq: iq !== null ? Number(iq) : null
-    }
+    update: updateObj
   };
 
   console.log("updateDB payload ->", payload);
@@ -284,12 +272,12 @@ async function updateDB() {
 
     console.log("update_user success:", body);
 
-    // Apply authoritative timing if server returned it
+    // Apply server authoritative time if present
     if (body?.server_time && typeof body?.remaining_seconds !== "undefined") {
       applyServerTiming(body.server_time, body.remaining_seconds);
     }
 
-    // Sync server authoritative user state
+    // Sync solved + attempts from server authoritative row
     if (body?.user) {
       const u = body.user;
       if (Array.isArray(u.solved_ids)) {
@@ -309,7 +297,7 @@ async function updateDB() {
   }
 }
 
-// --- submit / answer checking ---
+/* ----------------- Submit flow (check answer then sync) ----------------- */
 if (submitBtn) submitBtn.onclick = async () => {
   const rawAns = answerInput.value;
   if (!rawAns || !rawAns.trim()) return;
@@ -332,8 +320,9 @@ if (submitBtn) submitBtn.onclick = async () => {
     const correct = payload?.correct === true;
 
     if (correct) {
+      // add to solved locally and then persist (server will not decrement attempts)
       if (!solved.includes(currentIndex)) solved.push(currentIndex);
-      await updateDB();
+      await updateDB({ answerSubmitted: false });
       updateTopBar();
       statusEl.style.color = "#2a7a2a";
       statusEl.innerText = "Correct";
@@ -341,18 +330,20 @@ if (submitBtn) submitBtn.onclick = async () => {
       setTimeout(()=> {
         statusEl.innerText = "";
         loadNextQuestion();
-      }, 2000);
+      }, 1000);
       return;
     }
 
-    attempts--;
+    // Incorrect: do not decrement attempts locally.
+    // Tell the server that this tab submitted an (incorrect) answer so the server decrements attempts once.
     statusEl.style.color = "crimson";
     statusEl.innerText = "Incorrect";
-    setTimeout(()=> statusEl.innerText = "", 4000);
+    setTimeout(()=> statusEl.innerText = "", 2000);
+
+    await updateDB({ answerSubmitted: true });
+    // server response will update `attempts` value for all tabs.
     if (attempts <= 0) return endGame();
 
-    await updateDB();
-    updateTopBar();
     answerInput.value = "";
   } catch (err) {
     console.error("Submit error:", err);
@@ -360,7 +351,7 @@ if (submitBtn) submitBtn.onclick = async () => {
   }
 };
 
-// --- Top bar update (IQ + score) ---
+/* ----------------- Top bar update ----------------- */
 function updateTopBar() {
   scoreEl.innerText = `Score: ${solved.length}`;
   attemptsEl.innerText = `Attempts left: ${attempts}`;
@@ -375,7 +366,7 @@ function updateTopBar() {
   iqEl.innerText = `IQ: ${iqVal} (Wechsler Scale)`;
 }
 
-// --- Leaderboard toggle in results (uses update_user) ---
+/* ----------------- Leaderboard toggle in results ----------------- */
 async function loadLeaderboardState() {
   try {
     const res = await fetch(UPDATE_USER_URL, {
@@ -433,14 +424,16 @@ function showFinalResults() {
   });
 }
 
+/* ----------------- End / finish ----------------- */
 function endGame() {
   if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
   attempts = 0;
-  updateDB();
+  // persist final state; note: we do not request answerSubmitted here
+  updateDB({ answerSubmitted: false });
   showFinalResults();
 }
 
-// --- Change username modal logic (keeps original UX) ---
+/* ----------------- Change username modal (UX) ----------------- */
 function openUsernameModal() {
   newUsernameInput.value = localStorage.getItem("username") || "";
   usernameStatus.textContent = "";
@@ -501,7 +494,7 @@ saveUsernameBtn?.addEventListener("click", async (e) => {
   }
 });
 
-// --- Dark mode toggle persist ---
+/* ----------------- Dark mode toggle ----------------- */
 darkModeBtn?.addEventListener("click", () => {
   document.body.classList.toggle("dark-mode");
   const isDark = document.body.classList.contains("dark-mode");
@@ -509,31 +502,9 @@ darkModeBtn?.addEventListener("click", () => {
   darkModeBtn.textContent = isDark ? "Light Mode" : "Dark Mode";
 });
 
-window.addEventListener("focus", () => {
-  setTimeout(() => {
-    fetch(UPDATE_USER_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email })
-    }).then(r => r.ok ? r.json() : null).then(p => {
-      if (p?.remaining_seconds !== undefined) applyServerTiming(p.server_time, p.remaining_seconds);
-    }).catch(e => console.warn("Focus resync failed:", e));
-  }, 200);
-});
-document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "visible") {
-    fetch(UPDATE_USER_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email })
-    }).then(r => r.ok ? r.json() : null).then(p => {
-      if (p?.remaining_seconds !== undefined) applyServerTiming(p.server_time, p.remaining_seconds);
-    }).catch(e => console.warn("Visibility resync failed:", e));
-  }
-});
-
-// periodic resync every 60s
-setInterval(() => {
+/* ----------------- Resync logic ----------------- */
+// resync when window gains focus or tab becomes visible
+function resyncFromServer() {
   if (!email) return;
   fetch(UPDATE_USER_URL, {
     method: "POST",
@@ -541,8 +512,20 @@ setInterval(() => {
     body: JSON.stringify({ email })
   }).then(r => r.ok ? r.json() : null).then(p => {
     if (p?.remaining_seconds !== undefined) applyServerTiming(p.server_time, p.remaining_seconds);
-  }).catch(e => console.warn("Periodic resync failed:", e));
-}, 60_000);
+    if (p?.user) {
+      const u = p.user;
+      if (Array.isArray(u.solved_ids)) solved = u.solved_ids;
+      attempts = u.attempts ?? attempts;
+      updateTopBar();
+    }
+  }).catch(e => console.warn("Resync failed:", e));
+}
+window.addEventListener("focus", () => setTimeout(resyncFromServer, 200));
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") setTimeout(resyncFromServer, 200);
+});
+// periodic resync every 60s
+setInterval(resyncFromServer, 60_000);
 
-// --- INIT ---
+/* ----------------- INIT ----------------- */
 loadUserProgress();
