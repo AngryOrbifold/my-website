@@ -31,19 +31,16 @@ async function login() {
     }
 
     if (!payload.user) {
-      // authenticated (present in auth table) but no online_data row yet
       usernameInput.classList.remove("hidden");
       loginMsg.innerText = "Authenticated. Please pick a username to continue.";
       loginBtn.onclick = register; 
       return;
     }
 
-    // existing user
     username = payload.user.name;
     localStorage.setItem("email", email);
     localStorage.setItem("username", username);
 
-    // If user already started, go directly to quiz — use replace so back button won't return
     if (payload.user.started) {
       location.replace("quiz.html");
     } else {
@@ -60,8 +57,6 @@ function showInstructions() {
   instructionsSection.classList.remove("hidden");
 }
 
-// register: create row but DO NOT set start.
-// we pass only the fields we want to initialize.
 async function register() {
   username = usernameInput.value.trim();
   if (!username) {
@@ -79,7 +74,6 @@ async function register() {
         score: 0,
         iq: null,
         leaderboard: false,
-        // do NOT include start or started here
       }
     };
 
@@ -127,7 +121,6 @@ startTestBtn?.addEventListener("click", async () => {
       return;
     }
 
-    // navigate using replace so Back doesn't allow double-start
     location.replace("quiz.html");
   } catch (err) {
     console.error("Network error starting test:", err);
@@ -138,4 +131,5 @@ startTestBtn?.addEventListener("click", async () => {
 });
 
 document.getElementById("loginBtn").onclick = login;
+
 
