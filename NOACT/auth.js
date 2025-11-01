@@ -1,5 +1,6 @@
 const LOGIN_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/login";
 const UPDATE_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/update_user";
+
 const loginSection = document.getElementById("loginSection");
 const instructionsSection = document.getElementById("instructionsSection");
 const loginMsg = document.getElementById("loginMsg");
@@ -10,19 +11,9 @@ const startTestBtn = document.getElementById("startTestBtn");
 let email = "";
 let username = "";
 
-// --- LOGIN ---
 async function login() {
   email = document.getElementById("email").value.trim();
-  if (!email) {
-    loginMsg.innerText = "Enter email.";
-    return;
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    loginMsg.innerText = "Invalid email format.";
-    return;
-  }
+  if (!email) return loginMsg.innerText = "Enter email.";
 
   try {
     const res = await fetch(LOGIN_URL, {
@@ -40,46 +31,37 @@ async function login() {
     }
 
     if (!payload.user) {
+      // authenticated (present in auth table) but no online_data row yet
       usernameInput.classList.remove("hidden");
       loginMsg.innerText = "Authenticated. Please pick a username to continue.";
       loginBtn.onclick = register; 
       return;
     }
 
-    // Existing user
+    // existing user
     username = payload.user.name;
     localStorage.setItem("email", email);
     localStorage.setItem("username", username);
 
+    // If user already started, go directly to quiz — use replace so back button won't return
     if (payload.user.started) {
-      // User already started, go directly to quiz
-      window.location.href = "quiz.html";
+      location.replace("quiz.html");
     } else {
-      // Show instructions page
-      showInstructions(payload.user.started);
+      showInstructions();
     }
-
   } catch (err) {
     console.error("Network error during login:", err);
     loginMsg.innerText = "Network error. Try again.";
   }
 }
 
-// --- SHOW INSTRUCTIONS ---
-function showInstructions(started) {
+function showInstructions() {
   loginSection.classList.add("hidden");
   instructionsSection.classList.remove("hidden");
-
-  if (started) {
-    startTestBtn.disabled = true;
-    loginMsg.innerText = "You have already started the test.";
-  } else {
-    startTestBtn.disabled = false;
-    loginMsg.innerText = "";
-  }
 }
 
-// --- REGISTER NEW USER ---
+// register: create row but DO NOT set start.
+// we pass only the fields we want to initialize.
 async function register() {
   username = usernameInput.value.trim();
   if (!username) {
@@ -90,7 +72,15 @@ async function register() {
   try {
     const payload = {
       email,
-      update: { name: username, solved_ids: [], attempts: 30, score: 0, started: false }
+      update: {
+        name: username,
+        solved_ids: [],
+        attempts: 30,
+        score: 0,
+        iq: null,
+        leaderboard: false,
+        // do NOT include start or started here
+      }
     };
 
     const res = await fetch(UPDATE_URL, {
@@ -100,7 +90,7 @@ async function register() {
     });
 
     if (!res.ok) {
-      const text = await res.text().catch(() => "");
+      const text = await res.text().catch(()=>"");
       console.error("Registration failed:", res.status, text);
       loginMsg.innerText = text || "Failed to register user";
       return;
@@ -109,45 +99,44 @@ async function register() {
     localStorage.setItem("email", email);
     localStorage.setItem("username", username);
 
-    showInstructions(false);
-
+    showInstructions();
   } catch (err) {
     console.error("Registration error:", err);
     loginMsg.innerText = "Failed to register. Try again later.";
   }
 }
 
-// --- START TEST BUTTON ---
-startTestBtn.onclick = async () => {
+// Start Test: signal 'started: true' to server — server sets start only if it wasn't set already.
+// use location.replace to avoid creating a history entry for the instructions page.
+startTestBtn?.addEventListener("click", async () => {
+  startTestBtn.disabled = true;
+  startTestBtn.innerText = "Starting…";
   try {
-    // Fetch current user data to check if already started
     const res = await fetch(UPDATE_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email })
+      body: JSON.stringify({ email, update: { started: true } })
     });
-    const payload = await res.json().catch(() => ({}));
-    const user = payload.user ?? payload;
 
-    if (user.started) {
-      loginMsg.innerText = "Test already started.";
+    const payload = await res.json().catch(()=>({}));
+
+    if (!res.ok || payload?.error) {
+      console.error("Start failed:", res.status, payload);
+      loginMsg.innerText = payload?.error || "Failed to start test.";
+      startTestBtn.disabled = false;
+      startTestBtn.innerText = "Start the Test";
       return;
     }
 
-    // Update DB: set start timestamp and mark started = true
-    const start = new Date().toISOString();
-    await fetch(UPDATE_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, update: { start, started: true } })
-    });
-
-    window.location.href = "quiz.html";
-
+    // Success — navigate using replace so Back won't go to instructions
+    localStorage.setItem("email", email);
+    location.replace("quiz.html");
   } catch (err) {
-    console.error("Error starting test:", err);
-    loginMsg.innerText = "Could not start test. Try again.";
+    console.error("Network error starting test:", err);
+    loginMsg.innerText = "Network error. Try again.";
+    startTestBtn.disabled = false;
+    startTestBtn.innerText = "Start the Test";
   }
-};
+});
 
-loginBtn.onclick = login;
+document.getElementById("loginBtn").onclick = login;
