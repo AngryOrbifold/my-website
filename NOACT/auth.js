@@ -106,11 +106,10 @@ async function register() {
   }
 }
 
-// Start Test: signal 'started: true' to server — server sets start only if it wasn't set already.
-// use location.replace to avoid creating a history entry for the instructions page.
 startTestBtn?.addEventListener("click", async () => {
   startTestBtn.disabled = true;
   startTestBtn.innerText = "Starting…";
+
   try {
     const res = await fetch(UPDATE_URL, {
       method: "POST",
@@ -128,8 +127,7 @@ startTestBtn?.addEventListener("click", async () => {
       return;
     }
 
-    // Success — navigate using replace so Back won't go to instructions
-    localStorage.setItem("email", email);
+    // navigate using replace so Back doesn't allow double-start
     location.replace("quiz.html");
   } catch (err) {
     console.error("Network error starting test:", err);
@@ -140,3 +138,4 @@ startTestBtn?.addEventListener("click", async () => {
 });
 
 document.getElementById("loginBtn").onclick = login;
+
