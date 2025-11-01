@@ -217,7 +217,7 @@ if (nextBtn) nextBtn.onclick = () => {
   loadQuestionByIndex(next);
 };
 
-async function updateDB({ answerSubmitted = false, extraUpdate = {} } = {}) {
+async function updateDB({ incorrectAnswer = false, extraUpdate = {} } = {}) {
   let iq = null;
   if (normoCache && solved.length > 0) {
     const maybe = normoCache[solved.length];
@@ -227,7 +227,9 @@ async function updateDB({ answerSubmitted = false, extraUpdate = {} } = {}) {
   const cleanEmail = String(email || "").trim().toLowerCase();
   if (!cleanEmail) return;
 
-  const solvedNums = Array.isArray(solved) ? solved.map(x => Number.isFinite(Number(x)) ? Math.trunc(Number(x)) : x) : [];
+  const solvedNums = Array.isArray(solved)
+    ? solved.map(x => Number.isFinite(Number(x)) ? Math.trunc(Number(x)) : x)
+    : [];
 
   const updateObj = {
     solved_ids: solvedNums,
@@ -236,8 +238,9 @@ async function updateDB({ answerSubmitted = false, extraUpdate = {} } = {}) {
     ...extraUpdate
   };
 
-  // send answerSubmitted separately, not in updateObj
-  const payload = { email: cleanEmail, update: updateObj, answerSubmitted };
+  if (incorrectAnswer) updateObj.incorrectAnswer = true; // <-- flag triggers attempt decrement in edge function
+
+  const payload = { email: cleanEmail, update: updateObj };
 
   try {
     const res = await fetch(UPDATE_USER_URL, {
@@ -256,8 +259,10 @@ async function updateDB({ answerSubmitted = false, extraUpdate = {} } = {}) {
 
     if (body?.user) {
       const u = body.user;
-      solved = Array.isArray(u.solved_ids) ? u.solved_ids.map(x => Number.isFinite(Number(x)) ? Number(x) : x) : solved;
-      attempts = u.attempts ?? attempts;
+      solved = Array.isArray(u.solved_ids)
+        ? u.solved_ids.map(x => Number.isFinite(Number(x)) ? Number(x) : x)
+        : solved;
+      attempts = u.attempts ?? attempts; // <-- update attempts from server
       updateTopBar();
     }
   } catch (err) {
@@ -291,7 +296,7 @@ if (submitBtn) submitBtn.onclick = async () => {
     if (correct) {
       // add to solved locally and then persist (server will not decrement attempts)
       if (!solved.includes(currentIndex)) solved.push(currentIndex);
-      await updateDB({ answerSubmitted: false });
+      await updateDB(); // no flag needed for correct answers
       updateTopBar();
       statusEl.style.color = "#2a7a2a";
       statusEl.innerText = "Correct";
@@ -303,14 +308,12 @@ if (submitBtn) submitBtn.onclick = async () => {
       return;
     }
 
-    // Incorrect: do not decrement attempts locally.
-    // Tell the server that this tab submitted an (incorrect) answer so the server decrements attempts once.
+    // Incorrect answer: decrement attempts on server
     statusEl.style.color = "crimson";
     statusEl.innerText = "Incorrect";
     setTimeout(()=> statusEl.innerText = "", 2000);
 
-    await updateDB({ answerSubmitted: true });
-    // server response will update `attempts` value for all tabs.
+    await updateDB({ incorrectAnswer: true });
     if (attempts <= 0) return endGame();
 
     answerInput.value = "";
@@ -498,4 +501,3 @@ setInterval(resyncFromServer, 60_000);
 
 /* ----------------- INIT ----------------- */
 loadUserProgress();
-
