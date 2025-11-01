@@ -73,12 +73,11 @@ async function register() {
     return;
   }
 
-  const start = new Date().toISOString();
-
   try {
+    // create user row but DO NOT set "start" here
     const payload = {
       email,
-      update: { name: username, solved_ids: [], attempts: 30, score: 0, start }
+      update: { name: username, solved_ids: [], attempts: 30, score: 0 }
     };
 
     const res = await fetch(UPDATE_URL, {
@@ -94,7 +93,7 @@ async function register() {
       return;
     }
 
-    const result = await res.json().catch(() => ({}));
+    // success: save locally and show instructions
     localStorage.setItem("email", email);
     localStorage.setItem("username", username);
 
@@ -105,8 +104,31 @@ async function register() {
   }
 }
 
-document.getElementById("startTestBtn").onclick = () => {
-  window.location.href = "quiz.html";
+// Start test: set start timestamp then redirect
+document.getElementById("startTestBtn").onclick = async () => {
+  const start = new Date().toISOString();
+
+  try {
+    const res = await fetch(UPDATE_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, update: { start } })
+    });
+
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      console.error("Failed to set start time:", res.status, text);
+      // show message but do not redirect
+      loginMsg.innerText = "Could not start test. Try again.";
+      return;
+    }
+
+    // success -> go to quiz
+    window.location.href = "quiz.html";
+  } catch (err) {
+    console.error("Network error setting start time:", err);
+    loginMsg.innerText = "Network error. Try again.";
+  }
 };
 
 document.getElementById("loginBtn").onclick = login;
