@@ -1,15 +1,16 @@
 const LOGIN_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/login";
 const UPDATE_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/update_user";
-
 const loginSection = document.getElementById("loginSection");
 const instructionsSection = document.getElementById("instructionsSection");
 const loginMsg = document.getElementById("loginMsg");
 const usernameInput = document.getElementById("username");
 const loginBtn = document.getElementById("loginBtn");
+const startTestBtn = document.getElementById("startTestBtn");
 
-let email = "";     
+let email = "";
 let username = "";
 
+// --- LOGIN ---
 async function login() {
   email = document.getElementById("email").value.trim();
   if (!email) {
@@ -45,14 +46,17 @@ async function login() {
       return;
     }
 
+    // Existing user
     username = payload.user.name;
     localStorage.setItem("email", email);
     localStorage.setItem("username", username);
 
-    if (payload.user.start) {
+    if (payload.user.started) {
+      // User already started, go directly to quiz
       window.location.href = "quiz.html";
     } else {
-      showInstructions();
+      // Show instructions page
+      showInstructions(payload.user.started);
     }
 
   } catch (err) {
@@ -61,11 +65,21 @@ async function login() {
   }
 }
 
-function showInstructions() {
+// --- SHOW INSTRUCTIONS ---
+function showInstructions(started) {
   loginSection.classList.add("hidden");
   instructionsSection.classList.remove("hidden");
+
+  if (started) {
+    startTestBtn.disabled = true;
+    loginMsg.innerText = "You have already started the test.";
+  } else {
+    startTestBtn.disabled = false;
+    loginMsg.innerText = "";
+  }
 }
 
+// --- REGISTER NEW USER ---
 async function register() {
   username = usernameInput.value.trim();
   if (!username) {
@@ -74,10 +88,9 @@ async function register() {
   }
 
   try {
-    // create user row but DO NOT set "start" here
     const payload = {
       email,
-      update: { name: username, solved_ids: [], attempts: 30, score: 0 }
+      update: { name: username, solved_ids: [], attempts: 30, score: 0, started: false }
     };
 
     const res = await fetch(UPDATE_URL, {
@@ -93,42 +106,48 @@ async function register() {
       return;
     }
 
-    // success: save locally and show instructions
     localStorage.setItem("email", email);
     localStorage.setItem("username", username);
 
-    showInstructions();
+    showInstructions(false);
+
   } catch (err) {
     console.error("Registration error:", err);
     loginMsg.innerText = "Failed to register. Try again later.";
   }
 }
 
-// Start test: set start timestamp then redirect
-document.getElementById("startTestBtn").onclick = async () => {
-  const start = new Date().toISOString();
-
+// --- START TEST BUTTON ---
+startTestBtn.onclick = async () => {
   try {
+    // Fetch current user data to check if already started
     const res = await fetch(UPDATE_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, update: { start } })
+      body: JSON.stringify({ email })
     });
+    const payload = await res.json().catch(() => ({}));
+    const user = payload.user ?? payload;
 
-    if (!res.ok) {
-      const text = await res.text().catch(() => "");
-      console.error("Failed to set start time:", res.status, text);
-      // show message but do not redirect
-      loginMsg.innerText = "Could not start test. Try again.";
+    if (user.started) {
+      loginMsg.innerText = "Test already started.";
       return;
     }
 
-    // success -> go to quiz
+    // Update DB: set start timestamp and mark started = true
+    const start = new Date().toISOString();
+    await fetch(UPDATE_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, update: { start, started: true } })
+    });
+
     window.location.href = "quiz.html";
+
   } catch (err) {
-    console.error("Network error setting start time:", err);
-    loginMsg.innerText = "Network error. Try again.";
+    console.error("Error starting test:", err);
+    loginMsg.innerText = "Could not start test. Try again.";
   }
 };
 
-document.getElementById("loginBtn").onclick = login;
+loginBtn.onclick = login;
