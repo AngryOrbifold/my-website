@@ -35,6 +35,9 @@ let startTimeUTC = Date.now();
 let timerInterval = null;
 let normoCache = null;
 
+let serverReceivedAt = null;
+let serverRemainingSeconds = null;
+
 const savedTheme = localStorage.getItem("darkMode");
 if (savedTheme === "enabled") {
   document.body.classList.add("dark-mode");
@@ -72,7 +75,6 @@ if (activeTab && activeTab !== TAB_ID) {
   lockTab();
 }
 
-// Listen for other tabs activating themselves
 channel.onmessage = (msg) => {
   if (msg.data?.type === "ACTIVE" && msg.data?.id !== TAB_ID) {
     blockUI();
@@ -120,7 +122,6 @@ async function loadUserProgress() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email })
     });
-
     if (!res.ok) {
       console.error("loadUserProgress: failed", await res.text().catch(()=>""));
       statusEl.innerText = "Failed to load user data.";
@@ -130,21 +131,31 @@ async function loadUserProgress() {
     const payload = await res.json().catch(()=>({}));
     const user = payload.user ?? payload;
 
+    // existing state sync...
     solved = Array.isArray(user?.solved_ids) ? user.solved_ids : (user?.solved_ids ?? []);
     attempts = (user?.attempts ?? TOTAL_ATTEMPTS);
-    startTimeUTC = user?.start ? new Date(user.start).getTime() : Date.now();
-
     username = localStorage.getItem("username") || user?.name || username;
     if (username) localStorage.setItem("username", username);
-
     updateTopBar();
+
+    // --- server timing ---
+    // payload.server_time is ISO string from server, payload.remaining_seconds is authoritative seconds left
+    if (payload.server_time) {
+      serverReceivedAt = Date.now();
+      // store authoritative remaining seconds (fallback to full time if server didn't return)
+      serverRemainingSeconds = Number.isFinite(Number(payload.remaining_seconds)) ? Number(payload.remaining_seconds) : TOTAL_TIME_SECONDS;
+    } else {
+      // fallback: if server didn't return timing, use client-side start as before
+      const startTimeUTC = user?.start ? new Date(user.start).getTime() : Date.now();
+      serverReceivedAt = Date.now();
+      serverRemainingSeconds = Math.max(0, TOTAL_TIME_SECONDS - Math.floor((Date.now() - startTimeUTC) / 1000));
+    }
 
     if (solved.length >= TOTAL_ITEMS || attempts <= 0) {
       return showFinalResults();
     }
 
-    const elapsed = Math.floor((Date.now() - startTimeUTC) / 1000);
-    if (elapsed >= TOTAL_TIME_SECONDS) {
+    if (serverRemainingSeconds <= 0) {
       return endGame();
     }
 
@@ -160,8 +171,13 @@ async function loadUserProgress() {
 function startTimer() {
   if (timerInterval) clearInterval(timerInterval);
   timerInterval = setInterval(()=> {
-    const elapsed = Math.floor((Date.now() - startTimeUTC) / 1000);
-    const remaining = TOTAL_TIME_SECONDS - elapsed;
+    if (serverRemainingSeconds === null || serverReceivedAt === null) {
+      // fallback: show something or stop
+      timerEl.innerText = "Time left: --";
+      return;
+    }
+    const elapsedSinceReceive = Math.floor((Date.now() - serverReceivedAt) / 1000);
+    const remaining = serverRemainingSeconds - elapsedSinceReceive;
     if (remaining <= 0) return endGame();
     const h = Math.floor(remaining/3600);
     const m = Math.floor((remaining%3600)/60);
@@ -472,3 +488,4 @@ darkModeBtn?.addEventListener("click", () => {
 
 // --- INIT ---
 loadUserProgress();
+
