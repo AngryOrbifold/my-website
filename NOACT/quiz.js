@@ -261,13 +261,13 @@ if (submitBtn) submitBtn.onclick = async () => {
     statusEl.innerText = "Network/server error";
   }
 };
-
 async function updateDB() {
   let iq = null;
   if (normoCache && solved.length > 0) {
     const maybe = normoCache[solved.length];
     if (!isNaN(maybe)) iq = Number(maybe);
   }
+
   const cleanEmail = String(email || "").trim().toLowerCase();
   if (!cleanEmail) {
     console.error("updateDB: missing email (localStorage/email is empty)");
@@ -280,26 +280,16 @@ async function updateDB() {
       })
     : [];
 
-  console.log("About to call updateDB() with state:", {
-    email: cleanEmail,
-    solvedNums,
-    score: solvedNums.length,
-    attempts,
-    iq
-  });
-
   const payload = {
     email: cleanEmail,
     update: {
       solved_ids: solvedNums,
-      score: Number.isFinite(Number(solvedNums.length)) ? Math.trunc(solvedNums.length) : 0,
-      attempts: Number.isFinite(Number(attempts)) ? Math.trunc(attempts) : null,
-      iq: iq !== null ? Number(iq) : null
+      score: solvedNums.length,
+      attempts,
+      iq
     }
   };
-
   console.log("updateDB payload ->", payload);
-
   try {
     const res = await fetch(UPDATE_USER_URL, {
       method: "POST",
@@ -319,18 +309,29 @@ async function updateDB() {
 
     console.log("update_user success:", body);
 
-    // if server returned authoritative row, sync local state
-    if (body && body.user) {
-      if (Array.isArray(body.user.solved_ids)) {
-        solved = body.user.solved_ids.map(x => Number.isFinite(Number(x)) ? Number(x) : x);
-      } else if (typeof body.user.solved_ids === "string") {
+    if (body?.server_time && typeof body?.remaining_seconds !== "undefined") {
+      serverReceivedAt = Date.now();
+      serverRemainingSeconds = Number(body.remaining_seconds);
+      console.log("Time sync:", {
+        serverRemainingSeconds,
+        serverReceivedAt
+      });
+    }
+    if (body?.user) {
+      const u = body.user;
+      if (Array.isArray(u.solved_ids)) {
+        solved = u.solved_ids.map(x => Number.isFinite(Number(x)) ? Number(x) : x);
+      } else if (typeof u.solved_ids === "string") {
         try {
-          const parsed = JSON.parse(body.user.solved_ids);
+          const parsed = JSON.parse(u.solved_ids);
           if (Array.isArray(parsed)) solved = parsed;
         } catch {}
       }
-      attempts = body.user.attempts ?? attempts;
+
+      attempts = u.attempts ?? attempts;
+      updateTopBar();
     }
+
   } catch (err) {
     console.error("updateDB network error:", err);
     statusEl && (statusEl.innerText = "Network error saving progress.");
@@ -488,4 +489,5 @@ darkModeBtn?.addEventListener("click", () => {
 
 // --- INIT ---
 loadUserProgress();
+
 
