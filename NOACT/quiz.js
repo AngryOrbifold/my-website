@@ -370,6 +370,10 @@ function showFinalResults() {
     </label>
 
     <p id="leaderboardStatus" style="margin-top:10px; font-weight:bold;"></p>
+    
+    <div style="text-align:center; margin-top:20px;">
+      <button id="changeUsernameBtn">Change Username</button>
+    </div>
   `;
 
   const checkbox = document.getElementById("leaderboardCheckbox");
@@ -394,6 +398,11 @@ function showFinalResults() {
       statusMsg.innerText = "Network error";
     }
   });
+  document.getElementById("changeUsernameBtn")
+    ?.addEventListener("click", (e) => {
+      e.preventDefault();
+      openUsernameModal();
+    });
 }
 
 /* ----------------- End / finish ----------------- */
@@ -474,8 +483,6 @@ darkModeBtn?.addEventListener("click", () => {
   darkModeBtn.textContent = isDark ? "Light Mode" : "Dark Mode";
 });
 
-/* ----------------- Resync logic ----------------- */
-// resync when window gains focus or tab becomes visible
 function resyncFromServer() {
   if (!email) return;
   fetch(UPDATE_USER_URL, {
@@ -501,5 +508,4 @@ setInterval(resyncFromServer, 60_000);
 
 /* ----------------- INIT ----------------- */
 loadUserProgress();
-
 
