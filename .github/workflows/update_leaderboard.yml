@@ -29,7 +29,7 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: |
-          python generate_leaderboard.py
+          python generate_noactleaderboard.py
 
       - name: Commit and push changes (if any)
         run: |
