@@ -160,7 +160,7 @@ html_output = f"""<!DOCTYPE html>
   </div>
 
   <div class="section">
-    <p>The leaderboard is refreshed every 24 hours, showcasing the current scores of participants who opted to be listed.</p>
+    <p>The leaderboard is refreshed every 48 hours, showcasing the current scores of participants who opted to be listed.</p>
   </div>
   <div class="section">
     <a class="button" href="index.html">Back to main page</a>
@@ -174,4 +174,5 @@ with open("naitesleaderboard.html", "w", encoding="utf-8") as f:
     f.write(html_output)
 
 print("✅ Leaderboard updated successfully — clean rewrite!")
+
 
