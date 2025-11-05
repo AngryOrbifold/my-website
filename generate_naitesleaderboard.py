@@ -143,7 +143,7 @@ html_output = f"""<!DOCTYPE html>
   </div>
 
   <div class="leaderboard-container">
-    <h2>NOACT Leaderboard</h2>
+    <h2>NAIT-ES Leaderboard</h2>
     <table>
       <thead>
         <tr>
@@ -174,5 +174,6 @@ with open("naitesleaderboard.html", "w", encoding="utf-8") as f:
     f.write(html_output)
 
 print("✅ Leaderboard updated successfully — clean rewrite!")
+
 
 
