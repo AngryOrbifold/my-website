@@ -1,4 +1,4 @@
-name: Update Leaderboard
+name: Update NOACT Leaderboard
 
 on:
   schedule:
