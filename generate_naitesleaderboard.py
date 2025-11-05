@@ -2,8 +2,8 @@ from supabase import create_client
 import os
 
 # Load Supabase auth from environment
-SUPABASE_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co"
-SUPABASE_SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsbWx2dG9odGtpeWN3dG9ocXdrIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0ODg3NDI3OSwiZXhwIjoyMDY0NDUwMjc5fQ.whzfEWapFfqBXdPsCM9ioXY9vK7gmlfvZlNrR3pKIj8"
+SUPABASE_URL = os.environ["SUPABASE_URL"]
+SUPABASE_SERVICE_KEY = os.environ["SUPABASE_SERVICE_KEY"]
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
 # Fetch leaderboard entries, sorted by score
@@ -174,3 +174,4 @@ with open("naitesleaderboard.html", "w", encoding="utf-8") as f:
     f.write(html_output)
 
 print("✅ Leaderboard updated successfully — clean rewrite!")
+
