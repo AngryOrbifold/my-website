@@ -198,7 +198,7 @@ html_output = f"""
     <p>Enhanced first preliminary norm data used.</p>
   </div>
   <div class="leaderboard-container">
-    <h2>NAIT Contest Leaderboard</h2>
+    <h2>NAIT Leaderboard</h2>
     <table>
       <thead>
         <tr>
@@ -235,4 +235,5 @@ with open("naitleaderboard.html", "w", encoding="utf-8") as f:
     f.write(html_output)
 
 print("✅ Contest leaderboard generated!")
+
 
