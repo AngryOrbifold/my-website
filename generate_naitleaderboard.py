@@ -33,6 +33,9 @@ for row in res.data:
     score = row.get("score") or 0
     iq = row.get("iq", "N/A")
 
+    if score == 120 and isinstance(iq, (int, float)):
+        iq = f"≥ {iq}"
+
     last_update_raw = row.get("last_update")
     contest_raw = row.get("contest")
 
@@ -235,5 +238,6 @@ with open("naitleaderboard.html", "w", encoding="utf-8") as f:
     f.write(html_output)
 
 print("✅ Contest leaderboard generated!")
+
 
 
