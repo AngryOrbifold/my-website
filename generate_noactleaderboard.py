@@ -23,6 +23,10 @@ for idx, row in enumerate(rows):
     name = row.get("name", "Unknown")
     score = row.get("score") if row.get("score") is not None else "N/A"
     iq = row.get("iq") if row.get("iq") is not None else "N/A"
+
+    if score == 50 and isinstance(iq, (int, float)):
+        iq = f"≥ {iq}"
+    
     rows_html += f"<tr><td>{idx + 1}</td><td>{name}</td><td>{score}</td><td>{iq}</td></tr>\n"
 
 # Full HTML output based on your exact example
