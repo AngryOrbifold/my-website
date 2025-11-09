@@ -374,12 +374,57 @@ function showFinalResults() {
     <div style="text-align:center; margin-top:20px;">
       <button id="changeUsernameBtn">Change Username</button>
     </div>
+
+    <div class="section"; margin-top:20px;">
+      <p>You can see your certificate by inputing your email adress in the field below:</p>
+    </div>
+
+    <form id="certForm" style="margin-top: 20px;">
+      <label>Email:</label>
+      <input type="email" id="email" required />
+      <button type="submit" class="button">Show Certificate</button>
+    </form>
+
+    <div id="result" style="margin-top: 20px;"></div>
+
   `;
 
   const checkbox = document.getElementById("leaderboardCheckbox");
   const statusMsg = document.getElementById("leaderboardStatus");
 
   loadLeaderboardState().then(isOnBoard => { if (checkbox) checkbox.checked = isOnBoard; });
+
+  document.getElementById("certForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("email").value;
+    const container = document.getElementById("result");
+
+    container.innerHTML = `<p style="font-weight:bold;">Certificate is being generated…</p>`;
+
+    try {
+      const res = await fetch(
+        "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/generate_certificate",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      if (!res.ok) {
+        container.innerHTML = `<p style="color:red;">Certificate not available or wrong email.</p>`;
+        return;
+      }
+
+      const { url } = await res.json();
+      container.innerHTML = `
+        <iframe src="${url}" style="width:100%;height:600px;border:1px solid #ccc;margin-top:10px;" allowfullscreen></iframe>
+      `;
+    } catch (err) {
+      container.innerHTML = `<p style="color:red;">An error occurred. Please try again later.</p>`;
+      console.error(err);
+    }
+  });
 
   checkbox?.addEventListener("change", async () => {
     const wantLeaderboard = checkbox.checked;
@@ -508,4 +553,5 @@ setInterval(resyncFromServer, 60_000);
 
 /* ----------------- INIT ----------------- */
 loadUserProgress();
+
 
