@@ -376,7 +376,7 @@ function showFinalResults() {
     </div>
 
     <div class="section"; margin-top:20px;">
-      <p>You can see your certificate by inputing your email adress in the field below:</p>
+      <p>You can see your certificate by inputting your email adress in the field below:</p>
     </div>
 
     <form id="certForm" style="margin-top: 20px;">
@@ -553,5 +553,6 @@ setInterval(resyncFromServer, 60_000);
 
 /* ----------------- INIT ----------------- */
 loadUserProgress();
+
 
 
