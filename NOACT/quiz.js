@@ -23,6 +23,11 @@ const saveUsernameBtn = document.getElementById("saveUsernameBtn");
 const cancelUsernameBtn = document.getElementById("cancelUsernameBtn");
 const usernameStatus = document.getElementById("usernameStatus");
 
+const ACTIVE_TAB_KEY = "activeTab";
+const ACTIVE_TAB_TS_KEY = "activeTabTimestamp";
+const LOCK_TIMEOUT = 5000; // 5 seconds - adjust as needed
+const HEARTBEAT_INTERVAL = 2000; // refresh every 2s
+
 /* ----------------- APP STATE ----------------- */
 let email = localStorage.getItem("email");
 let username = localStorage.getItem("username") || "";
@@ -49,13 +54,33 @@ if (savedTheme === "enabled") {
 }
 
 const APP_CHANNEL = "NOACT_channel";
-const channel = new BroadcastChannel(APP_CHANNEL);
+
 const TAB_ID = Math.random().toString(36).slice(2);
-let activeTab = localStorage.getItem("activeTab");
-function lockTab() {
-  localStorage.setItem("activeTab", TAB_ID);
-  channel.postMessage({ type: "ACTIVE", id: TAB_ID });
+const channel = new BroadcastChannel("NOACT_channel");
+
+function now() { return Date.now(); }
+
+function tryClaimLock() {
+  const existingId = localStorage.getItem(ACTIVE_TAB_KEY);
+  const ts = Number(localStorage.getItem(ACTIVE_TAB_TS_KEY)) || 0;
+  const age = now() - ts;
+
+  if (!existingId || age > LOCK_TIMEOUT) {
+    // Stale or empty -> take lock
+    localStorage.setItem(ACTIVE_TAB_KEY, TAB_ID);
+    localStorage.setItem(ACTIVE_TAB_TS_KEY, String(now()));
+    channel.postMessage({ type: "ACTIVE", id: TAB_ID });
+    return true;
+  }
+  return existingId === TAB_ID;
 }
+
+function heartbeat() {
+  if (localStorage.getItem(ACTIVE_TAB_KEY) === TAB_ID) {
+    localStorage.setItem(ACTIVE_TAB_TS_KEY, String(now()));
+  }
+}
+
 function blockUI() {
   document.body.innerHTML = `
     <div style="
@@ -67,22 +92,32 @@ function blockUI() {
     </div>
   `;
 }
-if (activeTab && activeTab !== TAB_ID) {
-  blockUI();
-} else {
-  lockTab();
+
+function enforceSingleTab() {
+  if (!tryClaimLock()) blockUI();
+  setInterval(heartbeat, HEARTBEAT_INTERVAL);
 }
+
+// Sync across tabs (fix multi-tab browser issue)
 channel.onmessage = (msg) => {
   if (msg.data?.type === "ACTIVE" && msg.data?.id !== TAB_ID) {
-    blockUI();
+    if (!tryClaimLock()) blockUI();
   }
 };
+
+// Optional improvement: detect lock loss immediately
+window.addEventListener("storage", () => {
+  if (!tryClaimLock()) blockUI();
+});
+
 window.addEventListener("beforeunload", () => {
-  if (localStorage.getItem("activeTab") === TAB_ID) {
-    localStorage.removeItem("activeTab");
-    channel.postMessage({ type: "CLOSED", id: TAB_ID });
+  if (localStorage.getItem(ACTIVE_TAB_KEY) === TAB_ID) {
+    localStorage.removeItem(ACTIVE_TAB_KEY);
+    localStorage.removeItem(ACTIVE_TAB_TS_KEY);
   }
 });
+
+enforceSingleTab();
 
 async function loadNormo() {
   try {
@@ -553,6 +588,7 @@ setInterval(resyncFromServer, 60_000);
 
 /* ----------------- INIT ----------------- */
 loadUserProgress();
+
 
 
 
