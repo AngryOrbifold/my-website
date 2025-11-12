@@ -37,7 +37,7 @@ if (!email) {
 
 let solved = [];
 let attempts = TOTAL_ATTEMPTS;
-let currentIndex = 1;
+let currentIndex = 0;
 let normoCache = null;
 
 /* ----------------- SERVER-AUTHORIZED TIMER ----------------- */
@@ -588,6 +588,7 @@ setInterval(resyncFromServer, 60_000);
 
 /* ----------------- INIT ----------------- */
 loadUserProgress();
+
 
 
 
