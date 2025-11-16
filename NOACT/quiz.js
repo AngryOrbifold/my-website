@@ -213,6 +213,7 @@ async function loadUserProgress() {
     }
 
     if (solved.length >= TOTAL_ITEMS || attempts <= 0) {
+      updateDB({ extraUpdate: { finished: true } });
       return showFinalResults();
     }
 
@@ -489,8 +490,7 @@ function showFinalResults() {
 function endGame() {
   if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
   attempts = 0;
-  // persist final state; note: we do not request answerSubmitted here
-  updateDB({ answerSubmitted: false });
+  updateDB({ extraUpdate: { finished: true } });
   showFinalResults();
 }
 
@@ -588,6 +588,7 @@ setInterval(resyncFromServer, 60_000);
 
 /* ----------------- INIT ----------------- */
 loadUserProgress();
+
 
 
 
