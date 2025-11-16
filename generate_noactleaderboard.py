@@ -164,7 +164,7 @@ html_output = f"""<!DOCTYPE html>
   </div>
 
   <div class="section">
-    <p>The leaderboard is refreshed every 12 hours, showcasing the current scores of participants who opted to be listed.</p>
+    <p>The leaderboard is refreshed every 24 hours, showcasing the current scores of participants who opted to be listed.</p>
   </div>
   <div class="section">
     <a class="button" href="index.html">Back to main page</a>
