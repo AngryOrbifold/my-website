@@ -2,7 +2,7 @@ name: Update NOACT Leaderboard
 
 on:
   schedule:
-    - cron: "0 */12 * * *"  # every 12 hours (change if needed)
+    - cron: "0 0 * * *"  # every 24 hours (change if needed)
   workflow_dispatch:  # manual run button
 
 permissions:
