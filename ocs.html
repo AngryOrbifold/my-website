@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OCS</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 30px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      margin-top: 60px;
+    }
+
+    p {
+      max-width: 1000px;
+      margin: 10px auto;
+      font-size: 18px;
+      text-align: justify;
+    }
+
+    a {
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    .section {
+      margin: 50px auto;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 28px;
+      font-size: 20px;
+      border-radius: 8px;
+      color: white;
+      background-color: #0070ba;
+      transition: background-color 0.3s ease;
+      margin: 5px;
+    }
+
+    .button:hover {
+      background-color: #005c99;
+    }
+
+    hr {
+      border: none;
+      height: 1px;
+      background-color: #ccc;
+      margin: 60px auto;
+      width: 80%;
+    }
+
+    .button, .paypal-button {
+      display: inline-block;
+      padding: 12px 28px;
+      font-size: 20px;
+      border-radius: 8px;
+      color: white;
+      background-color: #0070ba;
+      transition: background-color 0.3s ease;
+      margin: 5px;
+      min-width: 150px;
+    }
+
+    .button:hover, .paypal-button:hover {
+      background-color: #005c99;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-family: sans-serif;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px 16px;
+      text-align: center;
+    }
+
+    tr:hover {
+      background-color: #f2f2f2;
+    }
+
+    #certForm input[type="email"] {
+      font-size: 20px;        
+      padding: 12px 10px;       
+      height: calc(20px + 24px); 
+      border-radius: 8px;       
+      border: 1px solid #ccc;
+      box-sizing: border-box;   
+      margin-right: 10px;       
+    }
+  </style>
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XHMB3NM73"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3XHMB3NM73');
+</script>
+<body>
+  <h1>Overall Cognitive Score</h1>
+
+  <div class="section" style="max-width: 1000px;">
+    <p>If you have completed all required tests, you can view and download your Overall Cognitive Score certificate here.</p>
+    <p>The OCS provides a consolidated and more reliable assessment of your overall cognitive ability than any single test taken on its own.</p>
+    <p>It combines information across five domains to give a more accurate picture of your general performance level.</p>
+    <p>The tests included in this index are: NAIT, NAIT-ES, NOACT and SAT36.</p>
+  </div>
+
+  <hr>
+
+  <div class="section"; margin-top:20px;>
+      <p>You can see your up-to-date certificate by inputting your email adress in the field below:</p>
+  </div>
+
+  <form id="certForm" style="margin-top: 20px;">
+    <label>Email:</label>
+    <input type="email" id="email" required />
+    <button type="submit" class="button">Show OCS Certificate</button>
+  </form>
+
+  <div id="result" style="margin-top: 20px;"></div>
+
+  <script>
+     document.getElementById("certForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const container = document.getElementById("result");
+
+      container.innerHTML = `<p style="font-weight:bold;">Certificate is being generated…</p>`;
+
+      try {
+        const res = await fetch(
+          "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/gcai_certificate",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+          }
+        );
+
+        if (!res.ok) {
+          container.innerHTML = `<p style="color:red;">Certificate not available or wrong email.</p>`;
+          return;
+        }
+
+        const { url } = await res.json();
+        container.innerHTML = `
+          <iframe src="${url}" style="width:100%;height:600px;border:1px solid #ccc;margin-top:10px;" allowfullscreen></iframe>
+        `;
+      } catch (err) {
+        container.innerHTML = `<p style="color:red;">An error occurred. Please try again later.</p>`;
+        console.error(err);
+      }
+    });
+  </script>
+
+
+  <hr>
+
+  <div class="section">
+    <a class="button" href="index.html" >Back to main page</a><br><br>
+  </div>
+
+  <hr>
+</body>
+</html>
