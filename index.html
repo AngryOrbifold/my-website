@@ -110,6 +110,39 @@
         text-align: left;
         flex: 1;
     }
+
+    .news-container {
+      max-width: 800px;
+      height: 180px;           /* Adjust height as desired */
+      margin: 0 auto 50px auto;
+      padding: 15px 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background: #ffffff;
+      overflow-y: auto;
+      text-align: left;
+      box-shadow: 0 0 8px rgba(0,0,0,0.05);
+    }
+
+    .news-item {
+      margin-bottom: 12px;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .news-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .news-date {
+      font-weight: bold;
+      color: #333;
+      margin-right: 8px;
+    }
+
+    .news-text {
+      color: #444;
+    }
   </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XHMB3NM73"></script>
@@ -181,6 +214,15 @@
 
   <hr>
 
+  <h2>News</h2>
+
+    <div id="news-container" class="news-container">
+    Loading news...
+    </div>
+  </div>
+  
+  <hr>
+
   <h2>Links to the work of other test creators </h2>
 
   <div class="section">
@@ -196,5 +238,35 @@
       <img src="https://s05.flagcounter.com/count2/nyOL/bg_FFFFFF/txt_000000/border_1400CC/columns_3/maxflags_18/viewers_0/labels_0/pageviews_0/flags_0/percent_0/" alt="Flag Counter" border="0">
     </a>
   </div>
+
+  <script>
+  fetch("news.txt")
+    .then(response => response.text())
+    .then(text => {
+      const container = document.getElementById("news-container");
+      container.innerHTML = ""; 
+
+      const lines = text.split("\n").filter(line => line.trim() !== "");
+
+      lines.forEach(line => {
+        const div = document.createElement("div");
+        div.className = "news-item";
+
+        const parts = line.split("-");
+
+        div.innerHTML = `
+          <span class="news-date">${parts[0].trim()}</span>
+          <span class="news-text">${parts.slice(1).join("-").trim()}</span>
+        `;
+
+        container.appendChild(div);
+      });
+    })
+    .catch(err => {
+      document.getElementById("news-container").innerHTML =
+        "Could not load news.";
+      console.error(err);
+    });
+  </script>
 </body>
 </html>
