@@ -6,12 +6,13 @@ SUPABASE_URL = os.environ["SUPABASE_URL"]
 SUPABASE_SERVICE_KEY = os.environ["SUPABASE_SERVICE_KEY"]
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
-# Fetch leaderboard entries, sorted by score
+# Fetch leaderboard entries, sorted by score and attempts
 res = (
     supabase.table("online_data")
-    .select("name, score, iq")
+    .select("name, score, iq, attempts")  # include attempts
     .eq("leaderboard", True)
     .order("score", desc=True)
+    .order("attempts", desc=True)  # tie-breaker
     .execute()
 )
 
