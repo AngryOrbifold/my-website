@@ -19,9 +19,8 @@ res = (
 
 rows = res.data
 
-# Fetch the norm JSON from Supabase storage
-norm_file = supabase.storage.from_("public").download("questions/normo.json")
-norm_data = json.loads(norm_file.read())  # decode JSON
+norm_file_bytes = supabase.storage.from_("public").download("questions/normo.json")
+norm_data = json.loads(norm_file_bytes.decode("utf-8"))
 
 # Function to get IQ from score using norm
 def score_to_iq(score):
