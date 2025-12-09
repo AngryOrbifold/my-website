@@ -1,11 +1,17 @@
 from supabase import create_client
 import os
+import json
 
 # Load Supabase auth from environment
 SUPABASE_URL = os.environ["SUPABASE_URL"]
 SUPABASE_SERVICE_KEY = os.environ["SUPABASE_SERVICE_KEY"]
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
+def score_to_iq(score):
+    if score is None or score == 0:
+        return "N/A"
+    return norm_data.get(str(score), "N/A")  # keys in JSON are strings
+    
 # Fetch leaderboard entries, sorted by score
 res = (
     supabase.table("data_es")
@@ -16,13 +22,16 @@ res = (
 )
 
 rows = res.data
+norm_file_bytes = supabase.storage.from_("public").download("assetses/norm_es.json")
+norm_data = json.loads(norm_file_bytes.decode("utf-8"))
 
 # Build dynamic table rows
 rows_html = ""
 for idx, row in enumerate(rows):
     name = row.get("name", "Unknown")
     score = row.get("score") if row.get("score") is not None else "N/A"
-    iq = row.get("iq") if row.get("iq") is not None else "N/A"
+    iq = score_to_iq(score)
+
     if score == 50 and isinstance(iq, (int, float)):
         iq = f"≥ {iq}"
     rows_html += f"<tr><td>{idx + 1}</td><td>{name}</td><td>{score}</td><td>{iq}</td></tr>\n"
@@ -174,4 +183,5 @@ html_output = f"""<!DOCTYPE html>
 # Write final HTML to disk
 with open("naitesleaderboard.html", "w", encoding="utf-8") as f:
     f.write(html_output)
+
 
