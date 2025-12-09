@@ -1,6 +1,7 @@
 from supabase import create_client
 import os
 from datetime import datetime
+import json
 
 # Load Supabase auth from environment
 SUPABASE_URL = os.environ["SUPABASE_URL"]
@@ -16,11 +17,17 @@ def safe_date(dt_str):
     except:
         return None
 
+# Function to get IQ from score using norm
+def score_to_iq(score):
+    if score is None or score == 0:
+        return "N/A"
+    return norm_data.get(str(score), "N/A")  # keys in JSON are strings
+
 
 # Fetch leaderboard data with contest column
 res = (
     supabase.table("data")
-    .select("name, score, iq, last_update, contest")
+    .select("name, score, last_update, contest")
     .eq("leaderboard", True)
     .order("score", desc=True)
     .execute()
@@ -28,10 +35,13 @@ res = (
 
 entries = []
 
+norm_file_bytes = supabase.storage.from_("public").download("assets/norm.json")
+norm_data = json.loads(norm_file_bytes.decode("utf-8"))
+
 for row in res.data:
     name = row.get("name", "Unknown")
     score = row.get("score") or 0
-    iq = row.get("iq", "N/A")
+    iq = score_to_iq(score)
 
     if score == 120 and isinstance(iq, (int, float)):
         iq = f"≥ {iq}"
@@ -236,8 +246,3 @@ html_output = f"""
 
 with open("naitleaderboard.html", "w", encoding="utf-8") as f:
     f.write(html_output)
-
-print("✅ Contest leaderboard generated!")
-
-
-
