@@ -25,16 +25,14 @@ except Exception as e:
     print("Error fetching norm.json from Supabase storage:", e)
     norm_data = {}  # fallback to empty dict if file cannot be loaded
 
-# Function to get IQ from score using norm
 def score_to_iq(score):
     if score is None or score == 0:
         return "N/A"
-    return norm_data.get(str(score), "N/A")  # keys in JSON are strings
-
-
-# -------------------------
-# Build contest ranking map
-# -------------------------
+    iq_value = norm_data.get(str(score), "N/A")
+    # Round only if it's a number
+    if isinstance(iq_value, (int, float)):
+        return round(iq_value)
+    return iq_value
 
 # Fetch ALL rows (we'll filter in Python to avoid client-side filter issues)
 all_rows_res = (
@@ -304,3 +302,4 @@ html_output = f"""
 
 with open("naitleaderboard.html", "w", encoding="utf-8") as f:
     f.write(html_output)
+
