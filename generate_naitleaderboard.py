@@ -35,8 +35,12 @@ res = (
 
 entries = []
 
-norm_file_bytes = supabase.storage.from_("public").download("assets/norm.json")
-norm_data = json.loads(norm_file_bytes.decode("utf-8"))
+try:
+    norm_file_bytes = supabase.storage.from_("assets").download("norm.json")
+    norm_data = json.loads(norm_file_bytes.decode("utf-8"))
+except Exception as e:
+    print("Error fetching norm.json from Supabase storage:", e)
+    norm_data = {}  # fallback to empty dict if file cannot be loaded
 
 for row in res.data:
     name = row.get("name", "Unknown")
@@ -246,3 +250,4 @@ html_output = f"""
 
 with open("naitleaderboard.html", "w", encoding="utf-8") as f:
     f.write(html_output)
+
