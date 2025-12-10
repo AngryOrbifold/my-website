@@ -22,8 +22,13 @@ res = (
 )
 
 rows = res.data
-norm_file_bytes = supabase.storage.from_("public").download("assetses/norm_es.json")
-norm_data = json.loads(norm_file_bytes.decode("utf-8"))
+
+try:
+    norm_file_bytes = supabase.storage.from_("assetses").download("norm_es.json")
+    norm_data = json.loads(norm_file_bytes.decode("utf-8"))
+except Exception as e:
+    print("Error fetching norm.json from Supabase storage:", e)
+    norm_data = {}  # fallback to empty dict if file cannot be loaded
 
 # Build dynamic table rows
 rows_html = ""
@@ -183,5 +188,6 @@ html_output = f"""<!DOCTYPE html>
 # Write final HTML to disk
 with open("naitesleaderboard.html", "w", encoding="utf-8") as f:
     f.write(html_output)
+
 
 
