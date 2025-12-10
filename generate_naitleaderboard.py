@@ -35,7 +35,7 @@ def score_to_iq(score):
 all_contest = (
     supabase.table("data")
     .select("name, score, last_update, contest")
-    .not_("contest", "is", None)  # only those in a contest
+    .is_("contest", "not", None)  # only those in a contest
     .order("score", desc=True)
     .execute()
 ).data
@@ -178,3 +178,4 @@ html_output = f"""
 
 with open("naitleaderboard.html", "w", encoding="utf-8") as f:
     f.write(html_output)
+
