@@ -9,15 +9,9 @@ SUPABASE_SERVICE_KEY = os.environ["SUPABASE_SERVICE_KEY"]
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
 def format_date_short(dt):
-    """
-    Format date as 'DD mon. YYYY' where month names longer than 4 letters
-    are shortened and end with a dot.
-    """
     month = dt.strftime("%B")  # Full month name
     if len(month) > 4:
-        month = month[:3].lower() + "."
-    else:
-        month = month.lower()
+        month = month[:3] + "."
     return f"{dt.day:02d} {month} {dt.year}"
 
 def safe_date(dt_str):
@@ -314,5 +308,6 @@ html_output = f"""
 
 with open("naitleaderboard.html", "w", encoding="utf-8") as f:
     f.write(html_output)
+
 
 
