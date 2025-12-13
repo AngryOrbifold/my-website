@@ -8,6 +8,18 @@ SUPABASE_URL = os.environ["SUPABASE_URL"]
 SUPABASE_SERVICE_KEY = os.environ["SUPABASE_SERVICE_KEY"]
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
+def format_date_short(dt):
+    """
+    Format date as 'DD mon. YYYY' where month names longer than 4 letters
+    are shortened and end with a dot.
+    """
+    month = dt.strftime("%B")  # Full month name
+    if len(month) > 4:
+        month = month[:3].lower() + "."
+    else:
+        month = month.lower()
+    return f"{dt.day:02d} {month} {dt.year}"
+
 def safe_date(dt_str):
     """Parse supabase date string into datetime, or None"""
     if not dt_str:
@@ -110,7 +122,7 @@ for row in public_entries_raw:
 
     if contest_date and last_update:
         duration = (last_update - contest_date).days
-        c_val = f"{contest_date.strftime('%d %B %Y')} / {last_update.strftime('%d %B %Y')}"
+        c_val = f"{format_date_short(contest_date)} / {format_date_short(last_update)}"
         in_contest = True
         identity = (name, score, contest_date.isoformat(), last_update.isoformat())
         # Prefer the identity map (exact match). Fall back to name map if identity not found.
@@ -302,4 +314,5 @@ html_output = f"""
 
 with open("naitleaderboard.html", "w", encoding="utf-8") as f:
     f.write(html_output)
+
 
