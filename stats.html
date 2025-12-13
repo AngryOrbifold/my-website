@@ -106,6 +106,49 @@
       max-width: 100%;
       margin: 0 auto; /* ADDED to center table container */
     }
+
+    .default-table table,
+    .default-table table th,
+    .default-table table td {
+      font-size: 16px;
+      font-weight: normal; 
+    }
+
+    .default-table thead tr:first-child th {    
+      font-weight: normal;  
+      color: revert;           
+      background-color: revert; 
+    }
+
+    .default-table tbody tr:first-child td {
+      font-weight: normal;  
+    }
+    .default-table {
+      display: block;           
+      text-align: center;       
+    }
+
+    .default-table table {
+      width: auto !important;  
+      max-width: 900px;         
+      margin: 0 auto;           
+      display: table;          
+    }
+
+    .default-table caption {
+      caption-side: top;
+      text-align: center;
+      font-weight: bold;
+      padding-bottom: 8px;
+    }
+    .default-table caption {
+      caption-side: top;
+      text-align: center;
+      font-weight: bold;
+      padding-bottom: 8px;
+      white-space: nowrap;       /* prevent line break */
+    }
+
   </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XHMB3NM73"></script>
@@ -160,7 +203,7 @@
     </table>
   </div>
 
-  <p style="text-align: center;">Last update:  11 December 2025.</p>
+  <p style="text-align: center;">Last update:  13 December 2025.</p>
 
   <!-- NAIT Statistics Table -->
   <div class="table-container" style="max-width: 900px;">
@@ -182,7 +225,7 @@
         
         <tr>
           <td style="padding: 6px 8px;">Completed test sessions (N)</td>
-          <td style="padding: 6px 8px;">22</td>
+          <td style="padding: 6px 8px;">23</td>
         </tr>
         <tr>
           <td style="padding: 6px 8px;">Lowest raw score</td>
@@ -198,7 +241,7 @@
         </tr>
         <tr>
           <td style="padding: 6px 8px;">Resolution</td>
-          <td style="padding: 6px 8px;">13</td>
+          <td style="padding: 6px 8px;">12.5</td>
         </tr>
         <tr>
           <th colspan="2" style="padding: 8px; background: #8a8a8a; border-top: 2px solid #000000;">
@@ -207,11 +250,11 @@
         </tr>
         <tr>
           <td style="padding: 6px 8px;">Mean raw score (± 95% CI)</td>
-          <td style="padding: 6px 8px;">86.50 ± 8.81 </td>
+          <td style="padding: 6px 8px;">86.04 ± 8.45 </td>
         </tr>
         <tr>
           <td style="padding: 6px 8px;">Median raw score</td>
-          <td style="padding: 6px 8px;">87</td>
+          <td style="padding: 6px 8px;">86</td>
         </tr>
         <tr>
           <td style="padding: 6px 8px;">Raw score mode</td>
@@ -219,15 +262,15 @@
         </tr>
         <tr>
           <td style="padding: 6px 8px;">Raw score standard deviation</td>
-          <td style="padding: 6px 8px;">19.41</td>
+          <td style="padding: 6px 8px;">19.1</td>
         </tr>
         <tr>
           <td style="padding: 6px 8px;">Quartile deviation</td>
-          <td style="padding: 6px 8px;">12.13</td>
+          <td style="padding: 6px 8px;">12.25</td>
         </tr>
         <tr>
           <td style="padding: 6px 8px;">Raw score standard error of measurement</td>
-          <td style="padding: 6px 8px;">3.29</td>
+          <td style="padding: 6px 8px;">3.31</td>
         </tr>
 
         <tr>
@@ -238,11 +281,11 @@
 
         <tr>
           <td style="padding: 6px 8px;">Skewness</td>
-          <td style="padding: 6px 8px;">-0.76</td>
+          <td style="padding: 6px 8px;">-0.7</td>
         </tr>
         <tr>
           <td style="padding: 6px 8px;">Excess Kurtosis</td>
-          <td style="padding: 6px 8px;">0.82</td>
+          <td style="padding: 6px 8px;">0.8</td>
         </tr>
 
         <tr>
@@ -253,19 +296,19 @@
 
         <tr>
           <td style="padding: 6px 8px;">McDonald's omega</td>
-          <td style="padding: 6px 8px;">0.9464</td>
+          <td style="padding: 6px 8px;">0.9427</td>
         </tr>
         <tr>
           <td style="padding: 6px 8px;">Cronbach's alpha</td>
-          <td style="padding: 6px 8px;">0.9712</td>
+          <td style="padding: 6px 8px;">0.9699</td>
         </tr>        
         <tr>
           <td style="padding: 6px 8px;">Split Half Reliability Index *</td>
-          <td style="padding: 6px 8px;">0.9532</td>
+          <td style="padding: 6px 8px;">0.9529</td>
         </tr>
         <tr>
           <td style="padding: 6px 8px;">Spearman–Brown corrected</td>
-          <td style="padding: 6px 8px;">0.976</td>
+          <td style="padding: 6px 8px;">0.9759</td>
         </tr>
 
         <tr>
@@ -297,19 +340,19 @@
         </tr>
         <tr>
           <td style="padding: 6px 8px;">Mean age (years)</td>
-          <td style="padding: 6px 8px;">38.1</td>
+          <td style="padding: 6px 8px;">37.1</td>
         </tr>
         <tr>
           <td style="padding: 6px 8px;">Median age (years)</td>
-          <td style="padding: 6px 8px;">34.0</td>
+          <td style="padding: 6px 8px;">33.0</td>
         </tr>
         <tr>
           <td style="padding: 6px 8px;">Age standard deviation (years)</td>
-          <td style="padding: 6px 8px;">17.94</td>
+          <td style="padding: 6px 8px;">18.08</td>
         </tr>
         <tr>
           <td style="padding: 6px 8px;">Percentage of males</td>
-          <td style="padding: 6px 8px;">95.45</td>
+          <td style="padding: 6px 8px;">95.65</td>
         </tr>
         <tr>
           <td style="padding: 6px 8px;">Percentage of females</td>
@@ -317,7 +360,7 @@
         </tr>
         <tr>
           <td style="padding: 6px 8px;">Percentage classified as unknown/other sex</td>
-          <td style="padding: 6px 8px;">4.55</td>
+          <td style="padding: 6px 8px;">4.35</td>
         </tr>
         <tr>
           <th colspan="2" style="padding: 8px; background: #8a8a8a; border-top: 2px solid #000000;">
@@ -327,7 +370,7 @@
 
         <tr>
           <td style="padding: 6px 8px;">United States of America</td>
-          <td style="padding: 6px 8px;">3</td>
+          <td style="padding: 6px 8px;">2</td>
         </tr>
         <tr>
           <td style="padding: 6px 8px;">China</td>
@@ -387,7 +430,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr><td>NAIT Numerical Subtest</td><td>0.974</td><td>0.962</td><td>22</td></tr><tr><td>NAIT Verbal Subtest</td><td>0.910</td><td>0.931</td><td>22</td></tr><tr><td>NAIT Abstract Subtest</td><td>0.775</td><td>0.868</td><td>22</td></tr><tr><td>NAIT Logical Subtest</td><td>0.765</td><td>0.823</td><td>22</td></tr><tr><td>NAIT Spatial Subtest</td><td>0.712</td><td>0.796</td><td>22</td></tr><tr><td>NOACT</td><td>0.899</td><td>0.871</td><td>7</td></tr><tr><td>NOACT Numerical Subtest</td><td>0.883</td><td>0.836</td><td>7</td></tr><tr><td>NOACT Verbal Subtest</td><td>0.883</td><td>0.894</td><td>7</td></tr><tr><td>NOACT Abstract Subtest</td><td>0.730</td><td>0.742</td><td>7</td></tr><tr><td>NOACT Logical Subtest</td><td>0.730</td><td>0.665</td><td>7</td></tr><tr><td>SAT 36</td><td>0.975</td><td>0.722</td><td>5</td></tr><tr><td>Einplex</td><td>1.000</td><td>0.921</td><td>4</td></tr><tr><td>VTPR 26</td><td>1.000</td><td>0.980</td><td>4</td></tr><tr><td>CLM 39</td><td>1.000</td><td>0.853</td><td>4</td></tr><tr><td>Wechsler Adult Intelligence Scale (aggregate)</td><td>0.800</td><td>0.961</td><td>4</td></tr><tr><td>Simtollect</td><td>0.800</td><td>0.974</td><td>4</td></tr><tr><td>NAIT-ES</td><td>-0.200</td><td>0.055</td><td>4</td></tr><tr><td>World Intelligence Test</td><td>-0.400</td><td>-0.564</td><td>4</td></tr><tr><td>MCST 32</td><td>1.000</td><td>1.000</td><td>3</td></tr><tr><td>LSHR Light</td><td>1.000</td><td>1.000</td><td>3</td></tr><tr><td>Numerus</td><td>1.000</td><td>0.976</td><td>3</td></tr><tr><td>MVA 28</td><td>1.000</td><td>1.000</td><td>3</td></tr><tr><td>NIT-Form 1</td><td>0.500</td><td>0.870</td><td>3</td></tr><tr><td>LSHR</td><td>0.500</td><td>0.977</td><td>3</td></tr><tr><td>Mathema</td><td>-0.866</td><td>-0.795</td><td>3</td></tr>
+        <tr><td>NAIT Numerical Subtest</td><td>0.973</td><td>0.962</td><td>23</td></tr><tr><td>NAIT Verbal Subtest</td><td>0.910</td><td>0.928</td><td>23</td></tr><tr><td>NAIT Abstract Subtest</td><td>0.758</td><td>0.860</td><td>23</td></tr><tr><td>NAIT Logical Subtest</td><td>0.743</td><td>0.815</td><td>23</td></tr><tr><td>NAIT Spatial Subtest</td><td>0.736</td><td>0.798</td><td>23</td></tr><tr><td>NOACT</td><td>0.899</td><td>0.871</td><td>7</td></tr><tr><td>NOACT Numerical Subtest</td><td>0.883</td><td>0.836</td><td>7</td></tr><tr><td>NOACT Verbal Subtest</td><td>0.883</td><td>0.894</td><td>7</td></tr><tr><td>NOACT Abstract Subtest</td><td>0.730</td><td>0.742</td><td>7</td></tr><tr><td>NOACT Logical Subtest</td><td>0.730</td><td>0.665</td><td>7</td></tr><tr><td>SAT 36</td><td>0.975</td><td>0.722</td><td>5</td></tr><tr><td>Einplex</td><td>1.000</td><td>0.921</td><td>4</td></tr><tr><td>VTPR 26</td><td>1.000</td><td>0.980</td><td>4</td></tr><tr><td>CLM 39</td><td>1.000</td><td>0.853</td><td>4</td></tr><tr><td>Wechsler Adult Intelligence Scale (aggregate)</td><td>0.800</td><td>0.961</td><td>4</td></tr><tr><td>Simtollect</td><td>0.800</td><td>0.974</td><td>4</td></tr><tr><td>NAIT-ES</td><td>-0.200</td><td>0.055</td><td>4</td></tr><tr><td>World Intelligence Test</td><td>-0.400</td><td>-0.564</td><td>4</td></tr><tr><td>MCST 32</td><td>1.000</td><td>1.000</td><td>3</td></tr><tr><td>LSHR Light</td><td>1.000</td><td>1.000</td><td>3</td></tr><tr><td>Numerus</td><td>1.000</td><td>0.976</td><td>3</td></tr><tr><td>MVA 28</td><td>1.000</td><td>1.000</td><td>3</td></tr><tr><td>NIT-Form 1</td><td>0.500</td><td>0.870</td><td>3</td></tr><tr><td>LSHR</td><td>0.500</td><td>0.977</td><td>3</td></tr><tr><td>Mathema</td><td>-0.866</td><td>-0.795</td><td>3</td></tr>
       </tbody>
     </table>
   </div>
@@ -406,29 +449,63 @@
         <thead>
           <tr>
             <th>Test or subtest</th>
-            <th>Items</th>
+            <th>Number of items</th>
             <th>Good items</th>
             <th>Average Items</th>
             <th>Suspicious items</th>
             <th>Bad items</th>
             <th>Unsolved items</th>
             <th>Overall quality (%)</th>
-            <th>130-150 IQ quality (%)</th>
-            <th>140-160 IQ quality (%)</th>
-            <th>150-170 IQ quality (%)</th>
+            <th>130-150 IQ range quality (%)</th>
+            <th>140-160 IQ range quality (%)</th>
+            <th>150-170 IQ range quality (%)</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>NAIT</td><td>120</td><td>106</td><td>10</td><td>0</td><td>1</td><td>3</td><td>88.6</td><td>87.1</td><td>80.0</td><td>73.7</td></tr>
-          <tr><td>NAIT Abstract Subtest</td><td>27</td><td>23</td><td>2</td><td>0</td><td>1</td><td>1</td><td>89.6</td><td>96.0</td><td>83.0</td><td>68.2</td></tr>
-          <tr><td>NAIT Logical Subtest</td><td>9</td><td>9</td><td>0</td><td>0</td><td>0</td><td>0</td><td>92.4</td><td>91.0</td><td>83.3</td><td>79.2</td></tr>
-          <tr><td>NAIT Numerical Subtest</td><td>45</td><td>40</td><td>4</td><td>0</td><td>0</td><td>1</td><td>89.3</td><td>88.2</td><td>82.3</td><td>81.0</td></tr>
-          <tr><td>NAIT Spatial Subtest</td><td>13</td><td>9</td><td>3</td><td>0</td><td>0</td><td>1</td><td>80.2</td><td>90.6</td><td>81.1</td><td>71.4</td></tr>
-          <tr><td>NAIT Verbal Subtest</td><td>26</td><td>25</td><td>1</td><td>0</td><td>0</td><td>0</td><td>93.2</td><td>93.2</td><td>84.1</td><td>79.5</td></tr>
+          <tr><td>NAIT</td><td>120</td><td>105</td><td>11</td><td>0</td><td>1</td><td>3</td><td>89.4</td><td>85.5</td><td>79.5</td><td>74.5</td></tr>
+          <tr><td>NAIT Abstract Subtest</td><td>27</td><td>23</td><td>2</td><td>0</td><td>1</td><td>1</td><td>89.5</td><td>95.7</td><td>82.6</td><td>67.4</td></tr>
+          <tr><td>NAIT Logical Subtest</td><td>9</td><td>8</td><td>1</td><td>0</td><td>0</td><td>0</td><td>92.0</td><td>89.5</td><td>84.2</td><td>76.7</td></tr>
+          <tr><td>NAIT Numerical Subtest</td><td>45</td><td>40</td><td>4</td><td>0</td><td>0</td><td>1</td><td>89.1</td><td>86.9</td><td>82.9</td><td>81.2</td></tr>
+          <tr><td>NAIT Spatial Subtest</td><td>13</td><td>9</td><td>3</td><td>0</td><td>0</td><td>1</td><td>79.9</td><td>90.7</td><td>81.2</td><td>71.4</td></tr>
+          <tr><td>NAIT Verbal Subtest</td><td>26</td><td>25</td><td>1</td><td>0</td><td>0</td><td>0</td><td>93.3</td><td>92.5</td><td>84.3</td><td>79.5</td></tr>
         </tbody>
       </table>
       <a href="https://ivec.ultimaiq.net/quality.htm" target="_blank">Information about Ivec's quality</a>
     </div>
+
+    <div class="default-table" style="display: flex; justify-content: center; width: 100%;">
+        <table style="width: auto; max-width: 1000px;">
+            <caption>Correlations matrix between NAIT subtests</caption>
+            <thead>
+            <tr>
+                <th> </th>
+                <th>Abstract</th><th>Numerical</th><th>Verbal</th><th>Spatial</th><th>Logical</th>      
+            </tr>
+            </thead>
+            <tbody>
+            <tr><td>Abstract</td><td>1</td><td>0.749</td><td>0.711</td><td>0.747</td><td>0.634</td></tr>
+            <tr><td>Numerical</td><td>0.749</td><td>1</td><td>0.875</td><td>0.683</td><td>0.744</td></tr>
+            <tr><td>Verbal</td><td>0.711</td><td>0.875</td><td>1</td><td>0.669</td><td>0.848</td></tr>
+            <tr><td>Spatial</td><td>0.747</td><td>0.683</td><td>0.669</td><td>1</td><td>0.555</td></tr>
+            <tr><td>Logical</td><td>0.634</td><td>0.744</td><td>0.848</td><td>0.555</td><td>1</td></tr>
+
+            </tbody>
+        </table>
+      </div>
+
+    <div class="default-table" style="display: flex; justify-content: center; width: 100%;">
+        <table style="width: auto; max-width: 1000px;">
+            <caption>NAIT subtests g-loadings (PCA)</caption>
+            <tbody>
+            <tr><td>Verbal subtest</td><td>0.934</td></tr>
+            <tr><td>Numerical subtest</td><td>0.922</td></tr>
+            <tr><td>Abstract subtest</td><td>0.869</td></tr>
+            <tr><td>Logical subtest</td><td>0.859</td></tr>
+            <tr><td>Spatial subtest</td><td>0.823</td></tr>
+
+            </tbody>
+        </table>
+      </div>
 
   <h2 style="text-align: center;"><strong>Norming roadmap for all tests:</strong></h2>
 
@@ -449,7 +526,4 @@
   </div>
 </body>
 </html>
-
-
-
 
