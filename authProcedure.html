@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Authentication</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 30px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      margin-top: 60px;
+    }
+
+    p {
+      max-width: 1000px;
+      margin: 10px auto;
+      font-size: 18px;
+      text-align: justify;
+    }
+
+    a {
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    .section {
+      margin: 50px auto;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 28px;
+      font-size: 20px;
+      border-radius: 8px;
+      color: white;
+      background-color: #0070ba;
+      transition: background-color 0.3s ease;
+      margin: 5px;
+    }
+
+    .button:hover {
+      background-color: #005c99;
+    }
+
+    hr {
+      border: none;
+      height: 1px;
+      background-color: #ccc;
+      margin: 60px auto;
+      width: 80%;
+    }
+
+    .button, .paypal-button {
+      display: inline-block;
+      padding: 12px 28px;
+      font-size: 20px;
+      border-radius: 8px;
+      color: white;
+      background-color: #0070ba;
+      transition: background-color 0.3s ease;
+      margin: 5px;
+      min-width: 150px;
+    }
+
+    .button:hover, .paypal-button:hover {
+      background-color: #005c99;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-family: sans-serif;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px 16px;
+      text-align: center;
+    }
+
+    tr:hover {
+      background-color: #f2f2f2;
+    }
+
+    #certForm input[type="email"] {
+      font-size: 20px;        
+      padding: 12px 10px;       
+      height: calc(20px + 24px); 
+      border-radius: 8px;       
+      border: 1px solid #ccc;
+      box-sizing: border-box;   
+      margin-right: 10px;       
+    }
+  </style>
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3XHMB3NM73"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3XHMB3NM73');
+</script>
+<body>
+  <h1>Authentication Procedure</h1>
+
+  <div class="section" style="max-width: 1000px;">
+    <p>To verify your identity, please follow the steps below:</p>
+
+    <p>All new users must submit a valid identity document, either through the test applications or by sending it directly to this
+      <a href="mailto:orbifoldanswers@ikmail.com" target="_blank">email address</a>.
+    </p>
+
+    <p>Your full name and date of birth must be clearly visible on the document.</p>
+
+    <p>If you are a member of the Glia Society, this information is sufficient. If you are not a member, the document must also include a visible photograph of your face.</p>
+
+    <p>In addition, you must submit a recent photograph of yourself. This is required to confirm that the person submitting the information is the same individual named on the identity document.</p>
+
+    <p>If you prefer not to submit a facial photograph, a one-time fee of €30 must be paid using the PayPal button below.</p>
+  </div>
+
+
+  <a href="https://paypal.me/OrbifoldAnswers?country.x=CH&locale.x=en_US" target="_blank" rel="noopener noreferrer" class="paypal-button">Pay with PayPal</a>
+
+  <div class="section" style="max-width: 1000px;">
+    <p><strong>This information is collected to prevent individuals from retaking tests under a false identity. It will not be shared with any third party unless there is a strong reason to suspect fraudulent activity.</strong></p>
+  </div>
+
+  <h2 style="text-align: center;"><strong>Procedure visual summary</strong></h2>
+
+  <img src="auth.png"
+     alt="Auth"
+     style="max-width: 600px; width: 30%;
+            border: 2px solid black;
+            border-radius: 6px;">
+  <hr>
+
+  <div class="section">
+    <a class="button" href="index.html" >Back to main page</a><br><br>
+  </div>
+
+  <hr>
+</body>
+</html>
