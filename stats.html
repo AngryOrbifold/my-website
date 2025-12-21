@@ -146,7 +146,27 @@
       text-align: center;
       font-weight: bold;
       padding-bottom: 8px;
-      white-space: nowrap;       /* prevent line break */
+      white-space: nowrap;   
+    }
+    .hover-thumb {
+    position: relative;
+    cursor: help;
+    }
+
+    .hover-thumb img {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 500px; 
+    border: 2px solid #333;
+    background: #fff;
+    padding: 4px;
+    z-index: 10;
+    }
+
+    .hover-thumb:hover img {
+    display: block;
     }
 
   </style>
@@ -321,8 +341,13 @@
           <td style="padding: 6px 8px;">0.29</td>
         </tr>
         <tr>
-          <td style="padding: 6px 8px;">Sample-independent hardness **</td>
-          <td style="padding: 6px 8px;">0.41</td>
+            <td style="padding: 6px 8px;">
+                <span class="hover-thumb">
+                Sample-independent hardness **
+                <img src="harddes.png" alt="Hardness Designations">
+                </span>
+            </td>
+            <td style="padding: 6px 8px;">0.41</td>
         </tr>
         <tr>
           <th colspan="2" style="padding: 8px; background: #8a8a8a; border-top: 2px solid #000000;">
@@ -533,4 +558,3 @@
   </div>
 </body>
 </html>
-
