@@ -79,7 +79,6 @@
       background-color: #f2f2f2;
     }
 
-    /* Ensure MathJax display equations are centered and spaced */
     .math-block {
       text-align: center;
       margin: 25px 0;
@@ -111,16 +110,16 @@
 
   <div class="section">
     <p>
-      Overall Test Complexity (OTC) quantifies the global difficulty of a test across its entire measurement range.
+      Overall Test Complexity (OTC) quantifies the global difficulty of a test across its entire effective measurement range.
     </p>
     <p>
-      It is conceptually related to metrics such as <em>Hardness</em> and <em>Sample-Independent Hardness</em>, but goes further by reflecting the average cognitive demand of the entire test.
+      It is conceptually related to metrics such as <em>Hardness</em> and <em>Sample-Independent Hardness</em>, but extends beyond them by capturing the average cognitive demand imposed by the full test structure.
     </p>
     <p>
-      OTC is independent of the sample, as it is computed exclusively from the normalized scores.
+      OTC is independent of the tested sample, as it is computed exclusively from the normalized scores defined by the norms.
     </p>
     <p>
-      OTC is expressed as a continuous value in the open interval (0,1).
+      OTC is expressed as a continuous value in the open interval \( (0, 1) \).
     </p>
   </div>
 
@@ -128,27 +127,39 @@
 
   <div class="section">
     <p>
-      \( R_{\max} \) denote the maximum raw score of the test.
+      Let \( \mathcal{R} = \{ r_1, r_2, \dots, r_N \} \) denote the set of all attainable raw scores of the test.
     </p>
 
     <p>
-      \( SS(r) \) denote the standard score or IQ score
+      Let \( SS(r) \) denote the standard score or IQ score
       (mean = 100, standard deviation = 15)
       associated with raw score \( r \) according to the test norms.
     </p>
 
     <p>
-      \( M_{\mathrm{ap}} = 138.5 \) is the reference ability level
+      Let \( M_{\mathrm{ap}} = 138.5 \) be the reference ability level
       (median ability of the high-range population).
     </p>
 
     <p>
-      \( \sigma = 15 \) is the standard deviation.
+      Let \( \sigma = 15 \) be the standard deviation.
     </p>
 
     <div class="math-block">
       \[
-      A = \frac{1}{R_{\max}} \sum_{r=1}^{R_{\max}} SS(r)
+      A = \frac{1}{N} \sum_{k=1}^{N} SS(r_k)
+      \]
+    </div>
+
+    <p>
+      In the common case where raw scores are integers and range from
+      \( r = 1 \) to \( r = R_{\max} \), this expression reduces to:
+    </p>
+
+    <div class="math-block">
+      \[
+      A = \frac{1}{R_{\max}}
+      \sum_{r=1}^{R_{\max}} SS(r)
       \]
     </div>
 
@@ -204,7 +215,4 @@
   </div>
 
 </body>
-
 </html>
-
-
