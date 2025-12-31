@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Statistical Explanations</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 30px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      margin-top: 40px;
+    }
+
+    p {
+      max-width: 1000px;
+      margin: 12px auto;
+      font-size: 18px;
+      text-align: justify;
+    }
+
+    a {
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    .section {
+      margin: 40px auto;
+      max-width: 1000px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 28px;
+      font-size: 20px;
+      border-radius: 8px;
+      color: white;
+      background-color: #0070ba;
+      transition: background-color 0.3s ease;
+      margin: 5px;
+    }
+
+    .button:hover {
+      background-color: #005c99;
+    }
+
+    hr {
+      border: none;
+      height: 1px;
+      background-color: #ccc;
+      margin: 60px auto;
+      width: 80%;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-family: sans-serif;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px 16px;
+      text-align: center;
+    }
+
+    tr:hover {
+      background-color: #f2f2f2;
+    }
+
+    /* Ensure MathJax display equations are centered and spaced */
+    .math-block {
+      text-align: center;
+      margin: 25px 0;
+      font-size: 20px;
+    }
+  </style>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XHMB3NM73"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-3XHMB3NM73', {
+      'send_page_view': true,
+      'allow_google_signals': true
+    });
+  </script>
+
+  <!-- MathJax -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+
+  <h1>Overall Test Complexity</h1>
+
+  <h2>Description of the Metric</h2>
+
+  <div class="section">
+    <p>
+      Overall Test Complexity (OTC) quantifies the global difficulty of a test across its entire measurement range.
+    </p>
+    <p>
+      It is conceptually related to metrics such as <em>Hardness</em> and <em>Sample-Independent Hardness</em>, but extends beyond these by capturing the average cognitive ability demand imposed by the full test structure.
+    </p>
+    <p>
+      OTC is independent of the sample, as it is computed exclusively from the normalized scores.
+    </p>
+  </div>
+
+  <h2>Definition</h2>
+
+  <div class="section">
+    <p>
+      \( R_{\max} \) denote the maximum raw score of the test.
+    </p>
+
+    <p>
+      \( SS(r) \) denote the standard score or IQ score
+      (mean = 100, standard deviation = 15)
+      associated with raw score \( r \) according to the test norms.
+    </p>
+
+    <p>
+      \( M_{\mathrm{ap}} = 138.5 \) is the reference ability level
+      (median ability of the high-range population).
+    </p>
+
+    <p>
+      \( \sigma = 15 \) is the standard deviation.
+    </p>
+
+    <div class="math-block">
+      \[
+      A = \frac{1}{R_{\max}} \sum_{r=1}^{R_{\max}} SS(r)
+      \]
+    </div>
+
+    <div class="math-block">
+      \[
+      C = \frac{A - M_{\mathrm{ap}}}{\sigma}
+      \]
+    </div>
+
+    <div class="math-block">
+      \[
+      \mathrm{OTC} = \frac{1}{1 + \exp(-C)}
+      \]
+    </div>
+  </div>
+
+  <h2>Overall Test Complexity Interpretation Table</h2>
+
+  <div style="display: flex; justify-content: center;">
+    <table
+      border="1"
+      cellpadding="10"
+      style="
+        border-collapse: collapse;
+        max-width: 700px;
+        text-align: center;
+        font-family: Arial, sans-serif;
+        font-size: 20px;
+      "
+    >
+      <thead>
+        <tr style="background-color: #0070ba; color: white; font-size: 21px;">
+          <th>OTC range</th>
+          <th>Interpretation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>&lt; 0.25</td><td>Minimal</td></tr>
+        <tr><td>0.25 – 0.40</td><td>Low</td></tr>
+        <tr><td>0.40 – 0.60</td><td>Medium</td></tr>
+        <tr><td>0.60 – 0.75</td><td>High</td></tr>
+        <tr><td>0.75 – 0.90</td><td>Very high</td></tr>
+        <tr><td>0.90 – 0.95</td><td>Severe</td></tr>
+        <tr><td>&gt; 0.95</td><td>Extreme</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr>
+
+  <div class="section">
+    <a class="button" href="index.html">Back to main page</a>
+  </div>
+
+</body>
+</html>
