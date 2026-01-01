@@ -48,7 +48,7 @@ html_output = f"""<!DOCTYPE html>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NAIT-ES Leaderboard</title>
-
+  <link rel="icon" href="favicon.png">
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XHMB3NM73"></script>
   <script>
@@ -188,6 +188,7 @@ html_output = f"""<!DOCTYPE html>
 # Write final HTML to disk
 with open("naitesleaderboard.html", "w", encoding="utf-8") as f:
     f.write(html_output)
+
 
 
 
