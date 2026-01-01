@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Normalization information</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 30px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      margin-top: 40px;
+    }
+
+    p {
+      max-width: 1000px;
+      margin: 12px auto;
+      font-size: 18px;
+      text-align: center;
+    }
+
+    a {
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    .section {
+      margin: 40px auto;
+      max-width: 1000px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 28px;
+      font-size: 20px;
+      border-radius: 8px;
+      color: white;
+      background-color: #0070ba;
+      transition: background-color 0.3s ease;
+      margin: 5px;
+    }
+
+    .button:hover {
+      background-color: #005c99;
+    }
+
+    hr {
+      border: none;
+      height: 1px;
+      background-color: #ccc;
+      margin: 60px auto;
+      width: 80%;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-family: sans-serif;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px 16px;
+      text-align: center;
+    }
+
+    tr:hover {
+      background-color: #f2f2f2;
+    }
+
+    .math-block {
+      text-align: center;
+      margin: 25px 0;
+      font-size: 20px;
+    }
+  </style>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XHMB3NM73"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-3XHMB3NM73', {
+      'send_page_view': true,
+      'allow_google_signals': true
+    });
+  </script>
+</head>
+
+<body>
+
+  <h1 style="text-align: center;"><strong>Norming roadmap for all tests:</strong></h1>
+
+  <div style="display: flex; justify-content: center;">
+    <ul style="max-width: 1000px; text-align: left; list-style-position: inside; padding-left: 0;">
+      <li><strong>N = 0</strong>: Estimated norm</li>
+      <li><strong>N = 10</strong>: First preliminary norm</li>
+      <li><strong>N = 25</strong>: Second preliminary norm</li>
+      <li><strong>N = 50</strong>: Third preliminary norm</li>
+      <li><strong>N = 100</strong>: First official norm</li>
+      <li><strong>N = 200</strong>: Second official norm</li>
+      <li><strong>N = 450</strong>: Final norm</li>
+    </ul>
+  </div>
+  <div class="section">
+    <p>
+      With N the number of candidates who have finished the test.
+    </p>
+  </div>
+
+  <hr>
+
+  <h1>Current norms</h1>
+
+  <h2>Nydegger Automatic Intelligence Test</h2>
+  
+  <iframe
+    src="norm.pdf"
+    width="100%"
+    height="800px"
+    style="max-width: 1000px; border: 3px solid black; border-radius: 8px;">
+  </iframe>
+
+  <h2>Nydegger Automatic Intelligence Test - Extended Scale</h2>
+  
+  <iframe
+    src="norm-es.pdf"
+    width="100%"
+    height="800px"
+    style="max-width: 1000px; border: 3px solid black; border-radius: 8px;">
+  </iframe>
+
+  <h2>Nydegger Online Automatic Cognitive Test</h2>
+  
+  <iframe
+    src="noactnorm.pdf"
+    width="100%"
+    height="800px"
+    style="max-width: 1000px; border: 3px solid black; border-radius: 8px;">
+  </iframe>
+
+  <hr>
+
+  <div class="section">
+    <a class="button" href="index.html">Back to main page</a>
+  </div>
+
+</body>
+</html>
