@@ -164,7 +164,7 @@ html_output = f"""
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NAIT Leaderboard</title>
-
+  <link rel="icon" href="favicon.png">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XHMB3NM73"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -308,6 +308,7 @@ html_output = f"""
 
 with open("naitleaderboard.html", "w", encoding="utf-8") as f:
     f.write(html_output)
+
 
 
 
