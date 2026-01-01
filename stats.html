@@ -185,7 +185,7 @@
 <link rel="icon" href="favicon.png">
 </head>
 <body>
-  <h1>Statistics and Normalisation</h1>
+  <h1>Statistical report</h1>
 
 <div class="section" style="max-width: 1500px; margin: 0 auto; font-family: Arial, sans-serif;">
 
@@ -226,7 +226,6 @@
 
   <p style="text-align: center;">Last update:  30 December 2025.</p>
 
-  <!-- NAIT Statistics Table -->
   <div class="table-container" style="max-width: 900px;">
     <table style="width: 100%; border-collapse: collapse; text-align: left;">
       <thead>
@@ -324,7 +323,7 @@
           <td style="padding: 6px 8px;">0.9676</td>
         </tr>        
         <tr>
-          <td style="padding: 6px 8px;">Split Half Reliability Index *</td>
+          <td style="padding: 6px 8px;">Split Half Reliability Index</td>
           <td style="padding: 6px 8px;">0.9474</td>
         </tr>
         <tr>
@@ -342,7 +341,7 @@
           <td style="padding: 6px 8px;">0.29</td>
         </tr>
         <tr>
-            <td style="padding: 6px 8px;">Sample-independent hardness **</td>
+            <td style="padding: 6px 8px;">Sample-independent hardness</td>
             <td style="padding: 6px 8px;">0.41</td>
         </tr>
         <tr>
@@ -428,14 +427,6 @@
     </table>
   </div>
 
-  <p style="text-align: center;">
-    * Average over 100 random two-part splits of the test's item set.
-  </p>
-  <p style="text-align: center;">
-    ** Based on the norm computed from all the current data (not "official" norms necessarily) and a median IQ of 138.5.
-  </p>
-  <a href="stat_explanations.html" target="_blank">Some statistical explanations.</a>
-
   <h2 style="text-align: center;"><strong>NAIT raw score histogram:</strong></h2>
 
   <img src="nait_raw_score_histogram.png"
@@ -468,13 +459,6 @@
     </table>
   </div>
 
-  <div class="section" style="max-width: 1000px; margin: 0 auto; font-family: Arial, sans-serif;">
-    <p style="text-align: center;">
-      If you have previously taken other IQ tests, please consider sharing your earlier scores with the test author at <a href="mailto:orbifoldanswers@ikmail.com" target="_blank">email</a>.
-      This will allow the computation of correlations and g-loadings. You can use this <a href="previous_scores.xlsx" target="_blank">form</a> for convenience.
-    </p>
-  </div>
-
   <h2 style="text-align: center;"><strong>Quality matrix (Ivec's method): </strong></h2>
 
   <div class="table-container" style="max-width: 1500px; margin-bottom: 20px;">
@@ -503,7 +487,6 @@
           <tr><td>NAIT Verbal Subtest</td><td>26</td><td>25</td><td>1</td><td>0</td><td>0</td><td>0</td><td>93.3</td><td>92.5</td><td>84.3</td><td>79.5</td></tr>
         </tbody>
       </table>
-      <a href="https://ivec.ultimaiq.net/quality.htm" target="_blank">Information about Ivec's quality</a>
     </div>
 
     <div class="default-table" style="display: flex; justify-content: center; width: 100%;">
@@ -517,47 +500,29 @@
             </thead>
             <tbody>
             <tr><td>Abstract</td><td>1</td><td>0.730</td><td>0.691</td><td>0.728</td><td>0.605</td></tr>
-<tr><td>Numerical</td><td>0.730</td><td>1</td><td>0.865</td><td>0.649</td><td>0.716</td></tr>
-<tr><td>Verbal</td><td>0.691</td><td>0.865</td><td>1</td><td>0.641</td><td>0.835</td></tr>
-<tr><td>Spatial</td><td>0.728</td><td>0.649</td><td>0.641</td><td>1</td><td>0.510</td></tr>
-<tr><td>Logical</td><td>0.605</td><td>0.716</td><td>0.835</td><td>0.510</td><td>1</td></tr>
-
+            <tr><td>Numerical</td><td>0.730</td><td>1</td><td>0.865</td><td>0.649</td><td>0.716</td></tr>
+            <tr><td>Verbal</td><td>0.691</td><td>0.865</td><td>1</td><td>0.641</td><td>0.835</td></tr>
+            <tr><td>Spatial</td><td>0.728</td><td>0.649</td><td>0.641</td><td>1</td><td>0.510</td></tr>
+            <tr><td>Logical</td><td>0.605</td><td>0.716</td><td>0.835</td><td>0.510</td><td>1</td></tr>
             </tbody>
         </table>
-        </div>
+    </div>
 
 <div class="default-table" style="display: flex; justify-content: center; width: 100%;">
         <table style="width: auto; max-width: 1000px;">
             <caption>NAIT subtests g-loadings (PCA)</caption>
             <tbody>
             <tr><td>Verbal subtest</td><td>0.931</td></tr>
-<tr><td>Numerical subtest</td><td>0.914</td></tr>
-<tr><td>Abstract subtest</td><td>0.860</td></tr>
-<tr><td>Logical subtest</td><td>0.844</td></tr>
-<tr><td>Spatial subtest</td><td>0.803</td></tr>
-
+            <tr><td>Numerical subtest</td><td>0.914</td></tr>
+            <tr><td>Abstract subtest</td><td>0.860</td></tr>
+            <tr><td>Logical subtest</td><td>0.844</td></tr>
+            <tr><td>Spatial subtest</td><td>0.803</td></tr>
             </tbody>
         </table>
         </div>
-
-  <h2 style="text-align: center;"><strong>Norming roadmap for all tests:</strong></h2>
-
-  <div style="display: flex; justify-content: center;">
-    <ul style="max-width: 1000px; text-align: left; list-style-position: inside; padding-left: 0;">
-      <li><strong>N = 0</strong>: Estimated norm</li>
-      <li><strong>N = 10</strong>: First preliminary norm</li>
-      <li><strong>N = 25</strong>: Second preliminary norm</li>
-      <li><strong>N = 50</strong>: Third preliminary norm</li>
-      <li><strong>N = 100</strong>: First official norm</li>
-      <li><strong>N = 200</strong>: Second official norm</li>
-      <li><strong>N = 450</strong>: Final norm</li>
-    </ul>
-  </div>
 
   <div class="section">
     <a class="button" href="index.html" >Back to main page</a>
   </div>
 </body>
 </html>
-
-
