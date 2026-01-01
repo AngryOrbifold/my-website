@@ -47,7 +47,7 @@ html_output = f"""<!DOCTYPE html>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NOACT Leaderboard</title>
-
+  <link rel="icon" href="favicon.png">
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XHMB3NM73"></script>
   <script>
@@ -175,7 +175,7 @@ html_output = f"""<!DOCTYPE html>
   </div>
 
   <div class="section">
-    <p>The leaderboard is refreshed every 24 hours, showcasing the current scores of participants who opted to be listed.</p>
+    <p>The leaderboard is refreshed every 48 hours, showcasing the current scores of participants who opted to be listed.</p>
   </div>
 
   <div class="section">
