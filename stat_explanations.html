@@ -118,10 +118,271 @@
   <div class="section">
     <h2>Table of Contents</h2>
     <ul style="list-style-type: none; padding-left: 0; font-size: 20px;">
+      <li><a href="#mode">Mode</a></li>
+      <li><a href="#mean">Mean</a></li>
+      <li><a href="#median">Median</a></li>
+      <li><a href="#sd">Standard Deviation</a></li>
+      <li><a href="#quartile">Quartile</a></li>
+      <li><a href="#qd">Quartile Deviation</a></li>
+      <li><a href="#res">Resolution</a></li>
+      <li><a href="#range">Range</a></li>
       <li><a href="#hardness">Hardness</a></li>
       <li><a href="#sih">Sample-Independent Hardness</a></li>
       <li><a href="#otc">Overall Test Complexity</a></li>
     </ul>
+  </div>
+
+  <hr>
+
+  <h1 id="mode">Mode</h1>
+  <h2>Description</h2>
+  <div class="section">
+    <p>
+      The mode is a measure of central tendency defined as the most frequently occurring value in a dataset.
+    </p>
+    <p>
+      When multiple values share the highest frequency, the smallest of these values is selected as the mode.
+    </p>
+  </div>
+
+  <h2>Definition</h2>
+  <div class="section">
+    <p>
+      Let \( r_1, r_2, \dots, r_n \) be the raw scores.
+    </p>
+    <p>
+      Let \( f(r) \) be the frequency of the raw score \( r \) in the dataset.
+    </p>
+    <div class="math-block">
+      \[
+      f(r) = \left| \{\, i \in \{1,\dots,n\} : r_i = r \,\} \right|
+      \]
+    </div>
+    <p>
+      The mode of the raw scores (Mo) is:
+    </p>
+    <div class="math-block">
+      \[
+      Mo = \min \left\{ r \;:\; f(r) \ge f(s)\ \forall s \right\}
+      \]
+    </div>
+  </div>
+
+  <hr>
+
+  <h1 id="mean">Mean</h1>
+  <h2>Description</h2>
+  <div class="section">
+    <p>
+      The mean is a measure of central tendency that represents the average value of a dataset.
+    </p>
+    <p>
+      It indicates the center of the distribution but is sensitive to extreme values in skewed distributions.
+    </p>
+  </div>
+
+  <h2>Definition</h2>
+  <div class="section">
+    <p>
+      Let \( r_1, r_2, \dots, r_n \) be the raw scores.
+    </p>
+    <p>The mean of the raw scores \(\bar{r}\) is:</p>
+    <div class="math-block">
+      \[
+      \bar{r} = \frac{1}{n}\sum_{i=1}^{n} r_i
+      \]
+    </div>
+  </div>
+
+  <hr>
+
+  <h1 id="median">Median</h1>
+  <h2>Description</h2>
+  <div class="section">
+    <p>
+      The median is the middle value in a dataset when numbers are arranged in order, splitting the data into two equal halves and serving as a measure of central tendency.
+      often preferred over the mean (average) when outliers exist because it isn't skewed by extreme values.
+    </p>
+    <p>
+      The median is the second quartile.
+    </p>
+  </div>
+
+  <h2>Definition</h2>
+  <div class="section">
+    <p>
+      Let \( r_{(1)} \le r_{(2)} \le \dots \le r_{(n)} \) be the ordered raw scores.
+    </p>
+    <p>The median (M) is:</p>
+    <div class="math-block">
+      \[
+      M =
+      \begin{cases}
+        r_{(\frac{n+1}{2})}, & \text{if \( n \) is odd}, \\[6pt]
+        \dfrac{r_{(\frac{n}{2})} + r_{(\frac{n}{2}+1)}}{2}, & \text{if \( n \) is even}.
+      \end{cases}
+      \]
+    </div>
+  </div>
+
+  <hr>
+
+  <h1 id="sd">Standard Deviation</h1>
+  <h2>Description</h2>
+  <div class="section">
+    <p>
+      The standard deviation is a measure of spread that describes how far scores are spread from the mean (average).
+    </p>
+    <p>
+      It is primarily meaningful for normal or approximately normal distributions.
+    </p>
+    <p>
+      The standard deviation is the square root of the variance.
+    </p>
+  </div>
+
+  <h2>Definition</h2>
+  <div class="section">
+    <p>
+      Let \( r_1, r_2, \dots, r_n \) be the raw scores, and let \( \bar{r} \) be their mean.
+    </p>
+    <p>The standard deviation (SD) is:</p>
+    <div class="math-block">
+      \[
+      SD = \sqrt{\frac{1}{n}\sum_{i=1}^{n}\left(r_i - \bar{r}\right)^2}
+      \]
+    </div>
+  </div>
+
+  <hr>
+
+  <h1 id="quartile">Quartile</h1>
+  <h2>Description</h2>
+  <div class="section">
+    <p>
+      A quartile is a measure that divides an ordered distribution of scores into four parts containing approximately the same number of observations.
+    </p>
+    <p>
+      To compute quartiles, the data is ordered from smallest to largest.
+    </p>
+  </div>
+
+  <h2>Definition</h2>
+  <div class="section">
+    <p>
+      Let \( r_{(1)} \le r_{(2)} \le \dots \le r_{(n)} \) be the ordered raw scores.
+    </p>
+    <p>
+      Let \( k = \lfloor n/2 \rfloor \) be half the number of observations.
+    </p>
+
+    <p>
+      The first quartile is:
+    </p>
+    <div class="math-block">
+      \[
+      q_1 = \mathrm{Median}\!\left(\{ r_{(1)}, \dots, r_{(k)} \}\right)
+      \]
+    </div>
+
+    <p>
+      The second quartile (median) is:
+    </p>
+    <div class="math-block">
+      \[
+      q_2 = \mathrm{Median}\!\left(\{ r_{(1)}, \dots, r_{(n)} \}\right)
+      \]
+    </div>
+
+    <p>
+      The third quartile is:
+    </p>
+    <div class="math-block">
+      \[
+      q_3 = \mathrm{Median}\!\left(\{ r_{(k+1)}, \dots, r_{(n)} \}\right)
+      \]
+    </div>
+  </div>
+
+  <hr>
+
+  <h1 id="qd">Quartile deviation</h1>
+  <h2>Description</h2>
+  <div class="section">
+    <p>
+      The quartile deviation is a measure of spread, like the standard deviation, but is more appropriate in non-linear situations and for non-normal distributions.
+  </p>
+  </div>
+  <h2>Definition</h2>
+  <div class="section">
+    <p>
+      Let \( q_1 \) be the first quartile.
+    </p>
+    <p>
+      Let \( q_3 \) be the third quartile.
+    </p>
+    <p>
+      The quartile deviation (QD) is:
+    </p>
+    <div class="math-block">
+      \[
+      QD = \frac{q_3 - q_1}{2}
+      \]
+    </div>
+  </div>
+
+  <hr>
+
+  <h1 id="res">Resolution</h1>
+  <h2>Description</h2>
+  <div class="section">
+    <p>
+      Resolution reflects the number of consecutive raw score values that fit within a unit of score dispersion.
+    </p>
+  </div>
+  <h2>Definition</h2>
+  <div class="section">
+    <p>
+      Let \( u \) be the smallest raw score unit (typically 1 or 0.5 for high range tests).
+    </p>
+    <p>
+      Let \( r_{qd} \) be the raw score quartile deviation.
+    </p>
+    <p>
+      The resolution (Res) is:
+    </p>
+    <div class="math-block">
+      \[
+      Res = \frac{r_{qd}}{u}
+      \]
+    </div>
+  </div>
+
+  <hr>
+
+  <h1 id="range">Range</h1>
+  <h2>Description</h2>
+   <div class="section">
+    <p>
+      The range is the difference between the maximum and minimum observed scores in a sample.
+    <p>
+       For discrete, integer-valued scales, this difference is increased by 1 to indicate the number of distinct score values spanned.
+    </p>
+    </div>
+  <h2>Definition</h2>
+  <div class="section">
+    <p>
+      Let \( Max \) be the maximum possible raw score.
+    </p>
+    <p>
+      Let \( Min\) be the minimum possible raw score (usually 0).
+    </p>
+    <p>The inclusive span is:</p>
+    <div class="math-block">
+      \[
+      Range = Max - Min + 1 
+      \]
+    </div>
   </div>
 
   <hr>
@@ -142,18 +403,12 @@
   <h2>Definition</h2>
   <div class="section">
     <p>
-      Let \( Max \) be the maximum possible raw score.
-    </p>
-    <p>
-      Let \( Min\) be the minimum possible raw score (usually 0).
-    </p>
-    <p>
       Let \( Avg \) be the average raw score.
     </p>
-
+    <p>The hardness (H) is:</p>
     <div class="math-block">
       \[
-      \mathrm{H} = \frac{ Max - Avg }{ Max - Min }
+      H = \frac{ Max - Avg }{ Max - Min }
       \]
     </div>
   </div>
@@ -180,10 +435,10 @@
     <p>
       Let \( R \) be the raw score that corresponds, according to the test norm, to a standard or IQ score of \( M_{\mathrm{ap}} \).
     </p>
-
+    <p>The sample-independent hardness (SIH) is:</p>
     <div class="math-block">
       \[
-        \mathrm{SIH} = \frac{Max - R}{Max - Min}
+        SIH = \frac{Max - R}{Max - Min}
       \]
     </div>
   </div>
@@ -230,7 +485,7 @@
 
   <div class="section">
     <p>
-      Let \( \mathcal{R} = \{ r_1, r_2, \dots, r_N \} \) denote the set of all attainable raw scores of the test.
+      Let \( \mathcal{R} = \{ r_1, r_2, \dots, r_n \} \) denote the set of all attainable raw scores of the test.
     </p>
 
     <p>
@@ -240,16 +495,12 @@
     </p>
 
     <p>
-      Let \( M_{\mathrm{ap}} = 138.5 \) be the reference ability level
-    </p>
-
-    <p>
       Let \( \sigma = 15 \) be the standard deviation.
     </p>
 
     <div class="math-block">
       \[
-      A = \frac{1}{N} \sum_{k=1}^{N} SS(r_k)
+      A = \frac{1}{n} \sum_{k=1}^{n} SS(r_k)
       \]
     </div>
 
@@ -270,10 +521,10 @@
       C = \frac{A - M_{\mathrm{ap}}}{\sigma}
       \]
     </div>
-
+    <p>The overall test complexity (OTC) is:</p>
     <div class="math-block">
       \[
-      \mathrm{OTC} = \frac{1}{1 + \exp(-C)}
+      OTC = \frac{1}{1 + \exp(-C)}
       \]
     </div>
   </div>
@@ -304,5 +555,4 @@
   </div>
 
 </body>
-
 </html>
