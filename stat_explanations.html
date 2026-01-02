@@ -40,21 +40,6 @@
       max-width: 1000px;
     }
 
-    .button {
-      display: inline-block;
-      padding: 12px 28px;
-      font-size: 20px;
-      border-radius: 8px;
-      color: white;
-      background-color: #0070ba;
-      transition: background-color 0.3s ease;
-      margin: 5px;
-    }
-
-    .button:hover {
-      background-color: #005c99;
-    }
-
     hr {
       border: none;
       height: 1px;
@@ -92,9 +77,62 @@
       color: #0070ba;
       text-decoration: none;
     }
+    .page-layout {
+      display: flex;
+      align-items: flex-start;
+      gap: 40px;
+    }
 
-    .toc a:hover {
-      text-decoration: underline;
+    .toc {
+      width: 300px;
+      border: 2px solid #444;
+      padding: 10px 10px;
+      border-radius: 10px;
+      position: sticky;
+      top: 30px;
+      text-align: left;
+      font-size: 18px;
+    }
+
+    .main-content {
+      flex: 1;
+    }
+
+    .main-content .section,
+    .main-content p {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    @media (max-width: 1100px) {
+      .page-layout {
+        flex-direction: column;
+      }
+
+      .toc {
+        position: static;
+        width: 100%;
+      }
+    }
+    .toc-footer {
+      margin-top: 30px;
+      text-align: center;
+    }
+    .toc-button {
+      display: block;
+      padding: 10px 14px;
+      font-size: 16px;
+      border-radius: 6px;
+      color: white;
+      background-color: #0070ba;
+      text-align: center;
+      transition: background-color 0.3s ease;
+    }
+    .toc a.toc-button {
+      color: white;
+    }
+    .toc-button:hover {
+      background-color: #005c99;
     }
   </style>
 
@@ -115,444 +153,776 @@
 </head>
 
 <body>
-  <div class="section">
-    <h2>Table of Contents</h2>
-    <ul style="list-style-type: none; padding-left: 0; font-size: 20px;">
-      <li><a href="#mode">Mode</a></li>
-      <li><a href="#mean">Mean</a></li>
-      <li><a href="#median">Median</a></li>
-      <li><a href="#sd">Standard Deviation</a></li>
-      <li><a href="#quartile">Quartile</a></li>
-      <li><a href="#qd">Quartile Deviation</a></li>
-      <li><a href="#res">Resolution</a></li>
-      <li><a href="#range">Range</a></li>
-      <li><a href="#hardness">Hardness</a></li>
-      <li><a href="#sih">Sample-Independent Hardness</a></li>
-      <li><a href="#otc">Overall Test Complexity</a></li>
-    </ul>
-  </div>
+  <div class="page-layout">
+    <nav class="toc">
+      <h2>Table of Contents</h2>
+      <ul style="list-style-type: none; padding-left: 0;">
+        <li><a href="#g-loading">Estimated g-loading</a></li>
+        <li><a href="#kurt">Excess Kurtosis</a></li>
+        <li><a href="#skewness">Skewness</a></li>
+        <li><a href="#spearman-rho">Spearman Correlation Coefficient</a></li>
+        <li><a href="#pearson-r">Pearson Correlation Coefficient</a></li>
+        <li><a href="#split-half">Split-Half Reliability</a></li>
+        <li><a href="#spearman-brown">Spearman-Brown Reliability Correction</a></li>
+        <li><a href="#omega">McDonald’s omega</a></li>
+        <li><a href="#alpha">Cronbach’s alpha</a></li>
+        <li><a href="#sem">Standard Error of Measurement</a></li>
+        <li><a href="#mode">Mode</a></li>
+        <li><a href="#mean">Mean</a></li>
+        <li><a href="#median">Median</a></li>
+        <li><a href="#sd">Standard Deviation</a></li>
+        <li><a href="#quartile">Quartile</a></li>
+        <li><a href="#qd">Quartile Deviation</a></li>
+        <li><a href="#res">Resolution</a></li>
+        <li><a href="#range">Range</a></li>
+        <li><a href="#hardness">Hardness</a></li>
+        <li><a href="#sih">Sample-Independent Hardness</a></li>
+        <li><a href="#otc">Overall Test Complexity</a></li>
+      </ul>
+      <div class="toc-footer">
+        <a class="toc-button" href="index.html">Back to main page</a>
+      </div>
+    </nav>
 
-  <hr>
+    <div class="main-content">
 
-  <h1 id="mode">Mode</h1>
-  <h2>Description</h2>
-  <div class="section">
-    <p>
-      The mode is a measure of central tendency defined as the most frequently occurring value in a dataset.
-    </p>
-    <p>
-      When multiple values share the highest frequency, the smallest of these values is selected as the mode.
-    </p>
-  </div>
+      <h1 id="g-loading">Estimated g-loading</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          The estimated g-loading of a test measures its association with the general intelligence factor \( g \), representing the common variance shared across mental ability tests.
+        </p>
+        <p>
+          A higher g-loading indicates that the test is more strongly related to general intelligence, while a lower g-loading indicates that the test primarily measures specific abilities.
+        </p>
+        <p>
+          The g-loading is a correlation coefficient ranging from 0 to 1.
+        </p>
+      </div>
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let a test have correlations \( r_1, r_2, \dots, r_k \) with \( k \) other tests in a battery, and let \( w_1, w_2, \dots, w_k \) be the corresponding weights (number of score pairs used to compute each correlation).
+        </p>
+        <p>
+          The estimated g-loading (\( g_\text{est}\)) is:
+        </p>
+        <div class="math-block">
+          \[
+          g_\text{est} = \sqrt{ \frac{\sum_{i=1}^{k} w_i \, r_i^2}{\sum_{i=1}^{k} w_i} }
+          \]
+        </div>
+      </div>
 
-  <h2>Definition</h2>
-  <div class="section">
-    <p>
-      Let \( r_1, r_2, \dots, r_n \) be the raw scores.
-    </p>
-    <p>
-      Let \( f(r) \) be the frequency of the raw score \( r \) in the dataset.
-    </p>
-    <div class="math-block">
-      \[
-      f(r) = \left| \{\, i \in \{1,\dots,n\} : r_i = r \,\} \right|
-      \]
+      <hr>
+
+      <h1 id="kurt">Excess Kurtosis</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          Excess kurtosis measures the "fatness" of a distribution's tails relative to a normal distribution.
+        </p>
+        <p>
+          A normal distribution has an excess kurtosis of 0. Positive excess kurtosis indicates heavier tails and a sharper peak, while negative excess kurtosis indicates lighter tails and a flatter peak compared to a normal distribution.
+        </p>
+      </div>
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let \( r_1, r_2, \dots, r_n \) be the raw scores, \( \bar{r} \) the mean, and \( \sigma \) the standard deviation.
+        </p>
+        <p>
+          The sample excess kurtosis \( \gamma_2 \) is defined as:
+        </p>
+        <div class="math-block">
+          \[
+          \gamma_2 = \frac{ \frac{1}{n} \sum_{i=1}^{n} (r_i - \bar{r})^4 }{ \left( \frac{1}{n} \sum_{i=1}^{n} (r_i - \bar{r})^2 \right)^2 } - 3
+          \]
+        </div>
+      </div>
+
+      <hr>
+
+      <h1 id="skewness">Skewness</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          Skewness is a measure of the asymmetry of a distribution around its mean.
+        </p>
+        <p>
+          A distribution is symmetric if skewness is zero. Positive skewness indicates that the right tail is longer or heavier, while negative skewness indicates that the left tail is longer or heavier.
+        </p>
+        <p>
+          Skewness helps identify non-normal data, showing direction of imbalance.
+        </p>
+      </div>
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let \( r_1, r_2, \dots, r_n \) be the raw scores and \( \bar{r} \) their mean. Let \( \sigma \) be the standard deviation of the scores.
+        </p>
+        <p>
+          The sample skewness \( \gamma_1 \) is defined as:
+        </p>
+        <div class="math-block">
+          \[
+          \gamma_1 = \frac{ \frac{1}{n} \sum_{i=1}^{n} (r_i - \bar{r})^3 }{ \left( \frac{1}{n} \sum_{i=1}^{n} (r_i - \bar{r})^2 \right)^{3/2} }
+          \]
+        </div>
+      </div>
+
+      <hr>
+
+      <h1 id="spearman-rho">Spearman correlation coefficient</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          Spearman's rank correlation coefficient (\( \rho \)) measures the strength and direction of a monotonic relationship between two variables, based on the ranks of the data.
+        </p>
+        <p>
+          It is a continuous value ranging from \(-1\) to \(+1\).
+        </p>
+        <p>
+          A value of 1 indicates that the two variables are perfectly positively proportional in terms of their ranks (as the rank of one increases, the rank of the other increases in exact proportion), 
+          -1 indicates they are perfectly negatively proportional in rank, 
+          and 0 indicates no monotonic proportional relationship between the variables.
+        </p>
+      </div>
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let two variables \( X = \{x_1, x_2, \dots, x_n\} \) and \( Y = \{y_1, y_2, \dots, y_n\} \) be observed in \( n \) cases.
+        </p>
+        <p>
+          Let \( R(x_i) \) and \( R(y_i) \) be the ranks of \( x_i \) and \( y_i \) within their respective datasets.
+        </p>
+        <p>
+          The Spearman correlation coefficient (\(\rho\)) is:
+        </p>
+        <div class="math-block">
+          \[
+          \rho = \frac{\sum_{i=1}^{n} (R(x_i) - \overline{R_X})(R(y_i) - \overline{R_Y})}
+                      {\sqrt{\sum_{i=1}^{n} (R(x_i) - \overline{R_X})^2} \sqrt{\sum_{i=1}^{n} (R(y_i) - \overline{R_Y})^2}}
+          \]
+        </div>
+      </div>
+
+      <hr>
+
+      <h1 id="pearson-r">Pearson correlation coefficient</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          The Pearson correlation coefficient (\( r \)) measures the strength and direction of the linear relationship between two variables.
+        </p>
+        <p>
+          It is a continuous value ranging from \(-1\) to \(+1\).
+        </p>
+        <p>
+          A value of 1 indicates that the two variables are perfectly positively proportional (as one increases, the other increases in exact proportion), 
+          -1 indicates they are perfectly negatively proportional (as one increases, the other decreases in exact proportion), 
+          and 0 indicates no linear proportional relationship between the variables.
+        </p>
+      </div>
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let two variables \( X = \{x_1, x_2, \dots, x_n\} \) and \( Y = \{y_1, y_2, \dots, y_n\} \) be observed in \( n \) cases.
+        </p>
+        <p>
+          Let \( \bar{X} \) and \( \bar{Y} \) be the sample means of \( X \) and \( Y \), respectively.
+        </p>
+        <p>
+          The Pearson correlation coefficient (r) is:
+        </p>
+        <div class="math-block">
+          \[
+          r = \frac{\sum_{i=1}^{n} (x_i - \bar{X})(y_i - \bar{Y})}
+                  {\sqrt{\sum_{i=1}^{n} (x_i - \bar{X})^2} \sqrt{\sum_{i=1}^{n} (y_i - \bar{Y})^2}}
+          \]
+        </div>
+      </div>
+
+      <hr>
+
+      <h1 id="split-half">Split-Half Reliability</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          Split-Half Reliability is a measure of a test's internal consistency, assessing if different parts of the same test measure the same underlying concept.
+        </p>
+        <p>
+          The test items are split into two subsets, the scores on each half are correlated, and this correlation estimates the reliability of the test. 
+        </p>
+        <p>
+          Using multiple random splits and averaging the results provides a more accurate estimate.
+        </p>
+      </div>
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let a test consist of \( k \) items, and let \( r_1, \dots, r_k \) be the item responses for a participant.
+        </p>
+        <p>
+          Let \( sp \) be the number of splits.
+        </p>
+        <p>
+          For each split \( j = 1, \dots, sp \), divide the items randomly into two halves and compute the Pearson correlation \( \rho_j \) between the half-test scores.
+        </p>
+        <p>
+          The split-half reliability is then the average over all splits:
+        </p>
+        <div class="math-block">
+          \[
+          R_\text{split} = \frac{1}{sp} \sum_{j=1}^{sp} \rho_j
+          \]
+        </div>
+      </div>
+
+      <hr>
+
+      <h1 id="spearman-brown">Spearman-Brown Reliability Correction</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          The Spearman-Brown correction adjusts split-half reliability to estimate the reliability of the full test.
+        </p>
+        <p>
+          Because a split-half correlation measures only half of the test, this correction accounts for the fact that combining both halves increases reliability.
+        </p>
+      </div>
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let \( R_\text{split} \) be the reliability obtained from a split-half correlation.
+        </p>
+        <p>
+          The corrected reliability for the full test is:
+        </p>
+        <div class="math-block">
+          \[
+          R_\text{full} = \frac{2 \, R_\text{split}}{1 + R_\text{split}}
+          \]
+        </div>
+      </div>
+
+      <hr>
+
+      <h1 id="omega">McDonald’s omega</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          McDonald’s omega is a measure of internal consistency/reliability based on a latent factor model.
+        </p>
+        <p>
+          It estimates the proportion of variance in test scores attributable to a common underlying factor and is generally considered a more accurate reliability estimate than Cronbach’s alpha when item loadings differ.
+        </p>
+      </div>
+
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let a test consist of \( k \) items.
+        </p>
+        <p>
+          Let \( \lambda_1, \lambda_2, \dots, \lambda_k \) be the standardized factor loadings of the items on the common latent factor.
+        </p>
+        <p>
+          Let \( \theta_1, \theta_2, \dots, \theta_k \) be the corresponding error variances, representing item-specific variance not explained by the common factor.
+        </p>
+        <div class="math-block">
+          \[
+          \omega =
+          \frac{\left(\sum_{i=1}^{k} \lambda_i\right)^2}
+          {\left(\sum_{i=1}^{k} \lambda_i\right)^2 + \sum_{i=1}^{k} \theta_i}
+          \]
+        </div>
+      </div>
+
+      <hr>
+
+      <h1 id="alpha">Cronbach’s alpha</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          Cronbach’s alpha is a measure of internal consistency, indicating how closely related a set of items are as a group, essentially showing if they measure the same underlying concept or construct.
+        </p>
+        <p>
+          Higher values indicate greater reliability.
+        </p>
+      </div>
+
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let a test consist of \( k \) items, let \( \sigma_i^2 \) be the variance of item \( i \), and let \( \sigma_T^2 \) be the variance of the total test score.
+        </p>
+        <p>
+          Cronbach’s alpha is defined as:
+        </p>
+        <div class="math-block">
+          \[
+          \alpha = \frac{k}{k - 1}
+          \left(
+            1 - \frac{\sum_{i=1}^{k} \sigma_i^2}{\sigma_T^2}
+          \right)
+          \]
+        </div>
+      </div>
+
+      <hr>
+
+      <h1 id="sem">Standard error of measurement</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          The standard error of measurement (SEM) is a measure of the variability in observed test scores due to measurement error.
+        </p>
+        <p>
+          It indicates how much an observed score is expected to fluctuate around their true score, with smaller values indicating higher reliability and measurement precision.
+        </p>
+        <p>
+          A true score is expected to lie within ±2 standard errors of the observed score with 95&nbsp;% probability. This interval is referred to as the 95&nbsp;% confidence interval.
+        </p>
+      </div>
+
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let \( \sigma \) be the standard deviation of the test scores.
+        </p>
+        <p>
+          Let \( r \) be the reliability coefficient of the test; Cronbach’s alpha is used when applicable.
+        </p>
+        <div class="math-block">
+          \[
+          SEM = \sigma \sqrt{1 - r}
+          \]
+        </div>
+      </div>
+
+      <hr>
+
+      <h1 id="mode">Mode</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          The mode is a measure of central tendency defined as the most frequently occurring value in a dataset.
+        </p>
+        <p>
+          When multiple values share the highest frequency, the smallest of these values is selected as the mode.
+        </p>
+      </div>
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let \( r_1, r_2, \dots, r_n \) be the raw scores.
+        </p>
+        <p>
+          Let \( f(r) \) be the frequency of the raw score \( r \) in the dataset.
+        </p>
+        <div class="math-block">
+          \[
+          f(r) = \left| \{\, i \in \{1,\dots,n\} : r_i = r \,\} \right|
+          \]
+        </div>
+        <p>
+          The mode of the raw scores (Mo) is:
+        </p>
+        <div class="math-block">
+          \[
+          Mo = \min \left\{ r \;:\; f(r) \ge f(s)\ \forall s \right\}
+          \]
+        </div>
+      </div>
+
+      <hr>
+
+      <h1 id="mean">Mean</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          The mean is a measure of central tendency that represents the average value of a dataset.
+        </p>
+        <p>
+          It indicates the center of the distribution but is sensitive to extreme values in skewed distributions.
+        </p>
+      </div>
+
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let \( r_1, r_2, \dots, r_n \) be the raw scores.
+        </p>
+        <p>The mean of the raw scores \(\bar{r}\) is:</p>
+        <div class="math-block">
+          \[
+          \bar{r} = \frac{1}{n}\sum_{i=1}^{n} r_i
+          \]
+        </div>
+      </div>
+
+      <hr>
+
+      <h1 id="median">Median</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          The median is the middle value in a dataset when numbers are arranged in order, splitting the data into two equal halves and serving as a measure of central tendency.
+          often preferred over the mean (average) when outliers exist because it isn't skewed by extreme values.
+        </p>
+        <p>
+          The median is the second quartile.
+        </p>
+      </div>
+
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let \( r_{(1)} \le r_{(2)} \le \dots \le r_{(n)} \) be the ordered raw scores.
+        </p>
+        <p>The median (M) is:</p>
+        <div class="math-block">
+          \[
+          M =
+          \begin{cases}
+            r_{(\frac{n+1}{2})}, & \text{if \( n \) is odd}, \\[6pt]
+            \dfrac{r_{(\frac{n}{2})} + r_{(\frac{n}{2}+1)}}{2}, & \text{if \( n \) is even}.
+          \end{cases}
+          \]
+        </div>
+      </div>
+
+      <hr>
+
+      <h1 id="sd">Standard Deviation</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          The standard deviation is a measure of spread that describes how far scores are spread from the mean (average).
+        </p>
+        <p>
+          It is primarily meaningful for normal or approximately normal distributions.
+        </p>
+        <p>
+          The standard deviation is the square root of the variance.
+        </p>
+      </div>
+
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let \( r_1, r_2, \dots, r_n \) be the raw scores, and let \( \bar{r} \) be their mean.
+        </p>
+        <p>The standard deviation (\( \sigma\)) is:</p>
+        <div class="math-block">
+          \[
+          \sigma = \sqrt{\frac{1}{n}\sum_{i=1}^{n}\left(r_i - \bar{r}\right)^2}
+          \]
+        </div>
+      </div>
+
+      <hr>
+
+      <h1 id="quartile">Quartile</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          A quartile is a measure that divides an ordered distribution of scores into four parts containing approximately the same number of observations.
+        </p>
+        <p>
+          To compute quartiles, the data is ordered from smallest to largest.
+        </p>
+      </div>
+
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let \( r_{(1)} \le r_{(2)} \le \dots \le r_{(n)} \) be the ordered raw scores.
+        </p>
+        <p>
+          Let \( k = \lfloor n/2 \rfloor \) be half the number of observations.
+        </p>
+
+        <p>
+          The first quartile is:
+        </p>
+        <div class="math-block">
+          \[
+          q_1 = \mathrm{Median}\!\left(\{ r_{(1)}, \dots, r_{(k)} \}\right)
+          \]
+        </div>
+
+        <p>
+          The second quartile (median) is:
+        </p>
+        <div class="math-block">
+          \[
+          q_2 = \mathrm{Median}\!\left(\{ r_{(1)}, \dots, r_{(n)} \}\right)
+          \]
+        </div>
+
+        <p>
+          The third quartile is:
+        </p>
+        <div class="math-block">
+          \[
+          q_3 = \mathrm{Median}\!\left(\{ r_{(k+1)}, \dots, r_{(n)} \}\right)
+          \]
+        </div>
+      </div>
+
+      <hr>
+
+      <h1 id="qd">Quartile deviation</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          The quartile deviation is a measure of spread, like the standard deviation, but is more appropriate in non-linear situations and for non-normal distributions.
+      </p>
+      </div>
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let \( q_1 \) be the first quartile.
+        </p>
+        <p>
+          Let \( q_3 \) be the third quartile.
+        </p>
+        <p>
+          The quartile deviation (QD) is:
+        </p>
+        <div class="math-block">
+          \[
+          QD = \frac{q_3 - q_1}{2}
+          \]
+        </div>
+      </div>
+
+      <hr>
+
+      <h1 id="res">Resolution</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          Resolution reflects the number of consecutive raw score values that fit within a unit of score dispersion.
+        </p>
+      </div>
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let \( u \) be the smallest raw score unit (typically 1 or 0.5 for high range tests).
+        </p>
+        <p>
+          Let \( r_{qd} \) be the raw score quartile deviation.
+        </p>
+        <p>
+          The resolution (Res) is:
+        </p>
+        <div class="math-block">
+          \[
+          Res = \frac{r_{qd}}{u}
+          \]
+        </div>
+      </div>
+
+      <hr>
+
+      <h1 id="range">Range</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          The range is the difference between the maximum and minimum observed scores in a sample.
+        <p>
+          For discrete, integer-valued scales, this difference is increased by 1 to indicate the number of distinct score values spanned.
+        </p>
+        </div>
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let \( Max \) be the maximum possible raw score.
+        </p>
+        <p>
+          Let \( Min\) be the minimum possible raw score (usually 0).
+        </p>
+        <p>The inclusive span is:</p>
+        <div class="math-block">
+          \[
+          Range = Max - Min + 1 
+          \]
+        </div>
+      </div>
+
+      <hr>
+
+      <h1 id="hardness">Hardness</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          Hardness represents the average proportion of the possible raw score range that is not achieved.
+        </p>
+        <p>
+          This metric is sample-dependent, as it is based solely on raw scores and does not involve any normalization.
+        </p>
+        <p>
+          Hardness (H) is expressed as a continuous value in the closed interval \( [0, 1] \).
+        </p>
+        </div>
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let \( Avg \) be the average raw score.
+        </p>
+        <p>The hardness (H) is:</p>
+        <div class="math-block">
+          \[
+          H = \frac{ Max - Avg }{ Max - Min }
+          \]
+        </div>
+      </div>
+      <hr>
+
+      <h1 id="sih">Sample-Independent Hardness</h1>
+      <h2>Description</h2>
+        <div class="section">
+        <p>
+          Sample-independent hardness is a variant that replaces the average raw score with a raw score corresponding to a fixed reference cognitive ability defined by the test norm.
+        </p>
+        <p>
+          The reference ability level is set at 138.5 (mean = 100, standard deviation = 15), as this represents the median ability of the high-range population.
+        </p>
+        <p>
+          Sample-independent hardness (SIH) is expressed as a continuous value in the closed interval \( [0, 1] \).
+        </p>
+        </div>
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let \( M_{\mathrm{ap}} = 138.5 \) be the reference cognitive ability level.
+        </p>
+        <p>
+          Let \( R \) be the raw score that corresponds, according to the test norm, to a standard or IQ score of \( M_{\mathrm{ap}} \).
+        </p>
+        <p>The sample-independent hardness (SIH) is:</p>
+        <div class="math-block">
+          \[
+            SIH = \frac{Max - R}{Max - Min}
+          \]
+        </div>
+      </div>
+      
+      <div style="display: flex; justify-content: center;">
+        <table>
+          <thead>
+            <tr style="background-color: #0070ba; color: white; font-size: 21px;">
+              <th>SIH range</th>
+              <th>Interpretation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>&lt; 0.25</td><td>Easy</td></tr>
+            <tr><td>0.25 – 0.50</td><td>Moderate</td></tr>
+            <tr><td>0.50 – 0.75</td><td>Hard</td></tr>
+            <tr><td>&gt; 0.75</td><td>Hardest</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr>
+
+      <h1 id="otc">Overall Test Complexity</h1>
+
+      <h2>Description</h2>
+
+      <div class="section">
+        <p>
+          Overall Test Complexity (OTC) quantifies the global difficulty of a test across its entire effective measurement range.
+        </p>
+        <p>
+          It is conceptually related to metrics such as <em>Hardness</em> and <em>Sample-Independent Hardness</em>, but extends beyond them by capturing the average cognitive demand imposed by the full test structure.
+        </p>
+        <p>
+          OTC is independent of the tested sample, as it is computed exclusively from the normalized scores defined by the norms.
+        </p>
+        <p>
+          OTC is expressed as a continuous value in the open interval \( (0, 1) \).
+        </p>
+      </div>
+
+      <h2>Definition</h2>
+
+      <div class="section">
+        <p>
+          Let \( \mathcal{R} = \{ r_1, r_2, \dots, r_n \} \) denote the set of all attainable raw scores of the test.
+        </p>
+        <p>
+          Let \( SS(r) \) denote the standard score or IQ score
+          (mean = 100, standard deviation = 15)
+          associated with raw score \( r \) according to the test norms.
+        </p>
+        <p>
+          Let \( M_{\mathrm{ap}} = 138.5 \) be the reference cognitive ability level.
+        </p>
+        <p>
+          Let \( \sigma = 15 \) be the standard deviation.
+        </p>
+
+        <div class="math-block">
+          \[
+          A = \frac{1}{n} \sum_{k=1}^{n} SS(r_k)
+          \]
+        </div>
+
+        <p>
+          In the common case where raw scores are integers and range from
+          \( r = 1 \) to \( r = R_{\max} \), this expression reduces to:
+        </p>
+
+        <div class="math-block">
+          \[
+          A = \frac{1}{R_{\max}}
+          \sum_{r=1}^{R_{\max}} SS(r)
+          \]
+        </div>
+
+        <div class="math-block">
+          \[
+          C = \frac{A - M_{\mathrm{ap}}}{\sigma}
+          \]
+        </div>
+        <p>The overall test complexity (OTC) is:</p>
+        <div class="math-block">
+          \[
+          OTC = \frac{1}{1 + \exp(-C)}
+          \]
+        </div>
+      </div>
+      <div style="display: flex; justify-content: center;">
+        <table>
+          <thead>
+            <tr style="background-color: #0070ba; color: white; font-size: 21px;">
+              <th>OTC range</th>
+              <th>Interpretation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>&lt; 0.25</td><td>Minimal</td></tr>
+            <tr><td>0.25 – 0.40</td><td>Low</td></tr>
+            <tr><td>0.40 – 0.60</td><td>Medium</td></tr>
+            <tr><td>0.60 – 0.75</td><td>High</td></tr>
+            <tr><td>0.75 – 0.90</td><td>Very high</td></tr>
+            <tr><td>0.90 – 0.95</td><td>Severe</td></tr>
+            <tr><td>&gt; 0.95</td><td>Extreme</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr>
+      
+      <a href="https://ivec.ultimaiq.net/quality.htm" target="_blank">Information about Ivec's quality</a>
+      
     </div>
-    <p>
-      The mode of the raw scores (Mo) is:
-    </p>
-    <div class="math-block">
-      \[
-      Mo = \min \left\{ r \;:\; f(r) \ge f(s)\ \forall s \right\}
-      \]
-    </div>
-  </div>
-
-  <hr>
-
-  <h1 id="mean">Mean</h1>
-  <h2>Description</h2>
-  <div class="section">
-    <p>
-      The mean is a measure of central tendency that represents the average value of a dataset.
-    </p>
-    <p>
-      It indicates the center of the distribution but is sensitive to extreme values in skewed distributions.
-    </p>
-  </div>
-
-  <h2>Definition</h2>
-  <div class="section">
-    <p>
-      Let \( r_1, r_2, \dots, r_n \) be the raw scores.
-    </p>
-    <p>The mean of the raw scores \(\bar{r}\) is:</p>
-    <div class="math-block">
-      \[
-      \bar{r} = \frac{1}{n}\sum_{i=1}^{n} r_i
-      \]
-    </div>
-  </div>
-
-  <hr>
-
-  <h1 id="median">Median</h1>
-  <h2>Description</h2>
-  <div class="section">
-    <p>
-      The median is the middle value in a dataset when numbers are arranged in order, splitting the data into two equal halves and serving as a measure of central tendency.
-      often preferred over the mean (average) when outliers exist because it isn't skewed by extreme values.
-    </p>
-    <p>
-      The median is the second quartile.
-    </p>
-  </div>
-
-  <h2>Definition</h2>
-  <div class="section">
-    <p>
-      Let \( r_{(1)} \le r_{(2)} \le \dots \le r_{(n)} \) be the ordered raw scores.
-    </p>
-    <p>The median (M) is:</p>
-    <div class="math-block">
-      \[
-      M =
-      \begin{cases}
-        r_{(\frac{n+1}{2})}, & \text{if \( n \) is odd}, \\[6pt]
-        \dfrac{r_{(\frac{n}{2})} + r_{(\frac{n}{2}+1)}}{2}, & \text{if \( n \) is even}.
-      \end{cases}
-      \]
-    </div>
-  </div>
-
-  <hr>
-
-  <h1 id="sd">Standard Deviation</h1>
-  <h2>Description</h2>
-  <div class="section">
-    <p>
-      The standard deviation is a measure of spread that describes how far scores are spread from the mean (average).
-    </p>
-    <p>
-      It is primarily meaningful for normal or approximately normal distributions.
-    </p>
-    <p>
-      The standard deviation is the square root of the variance.
-    </p>
-  </div>
-
-  <h2>Definition</h2>
-  <div class="section">
-    <p>
-      Let \( r_1, r_2, \dots, r_n \) be the raw scores, and let \( \bar{r} \) be their mean.
-    </p>
-    <p>The standard deviation (SD) is:</p>
-    <div class="math-block">
-      \[
-      SD = \sqrt{\frac{1}{n}\sum_{i=1}^{n}\left(r_i - \bar{r}\right)^2}
-      \]
-    </div>
-  </div>
-
-  <hr>
-
-  <h1 id="quartile">Quartile</h1>
-  <h2>Description</h2>
-  <div class="section">
-    <p>
-      A quartile is a measure that divides an ordered distribution of scores into four parts containing approximately the same number of observations.
-    </p>
-    <p>
-      To compute quartiles, the data is ordered from smallest to largest.
-    </p>
-  </div>
-
-  <h2>Definition</h2>
-  <div class="section">
-    <p>
-      Let \( r_{(1)} \le r_{(2)} \le \dots \le r_{(n)} \) be the ordered raw scores.
-    </p>
-    <p>
-      Let \( k = \lfloor n/2 \rfloor \) be half the number of observations.
-    </p>
-
-    <p>
-      The first quartile is:
-    </p>
-    <div class="math-block">
-      \[
-      q_1 = \mathrm{Median}\!\left(\{ r_{(1)}, \dots, r_{(k)} \}\right)
-      \]
-    </div>
-
-    <p>
-      The second quartile (median) is:
-    </p>
-    <div class="math-block">
-      \[
-      q_2 = \mathrm{Median}\!\left(\{ r_{(1)}, \dots, r_{(n)} \}\right)
-      \]
-    </div>
-
-    <p>
-      The third quartile is:
-    </p>
-    <div class="math-block">
-      \[
-      q_3 = \mathrm{Median}\!\left(\{ r_{(k+1)}, \dots, r_{(n)} \}\right)
-      \]
-    </div>
-  </div>
-
-  <hr>
-
-  <h1 id="qd">Quartile deviation</h1>
-  <h2>Description</h2>
-  <div class="section">
-    <p>
-      The quartile deviation is a measure of spread, like the standard deviation, but is more appropriate in non-linear situations and for non-normal distributions.
-  </p>
-  </div>
-  <h2>Definition</h2>
-  <div class="section">
-    <p>
-      Let \( q_1 \) be the first quartile.
-    </p>
-    <p>
-      Let \( q_3 \) be the third quartile.
-    </p>
-    <p>
-      The quartile deviation (QD) is:
-    </p>
-    <div class="math-block">
-      \[
-      QD = \frac{q_3 - q_1}{2}
-      \]
-    </div>
-  </div>
-
-  <hr>
-
-  <h1 id="res">Resolution</h1>
-  <h2>Description</h2>
-  <div class="section">
-    <p>
-      Resolution reflects the number of consecutive raw score values that fit within a unit of score dispersion.
-    </p>
-  </div>
-  <h2>Definition</h2>
-  <div class="section">
-    <p>
-      Let \( u \) be the smallest raw score unit (typically 1 or 0.5 for high range tests).
-    </p>
-    <p>
-      Let \( r_{qd} \) be the raw score quartile deviation.
-    </p>
-    <p>
-      The resolution (Res) is:
-    </p>
-    <div class="math-block">
-      \[
-      Res = \frac{r_{qd}}{u}
-      \]
-    </div>
-  </div>
-
-  <hr>
-
-  <h1 id="range">Range</h1>
-  <h2>Description</h2>
-   <div class="section">
-    <p>
-      The range is the difference between the maximum and minimum observed scores in a sample.
-    <p>
-       For discrete, integer-valued scales, this difference is increased by 1 to indicate the number of distinct score values spanned.
-    </p>
-    </div>
-  <h2>Definition</h2>
-  <div class="section">
-    <p>
-      Let \( Max \) be the maximum possible raw score.
-    </p>
-    <p>
-      Let \( Min\) be the minimum possible raw score (usually 0).
-    </p>
-    <p>The inclusive span is:</p>
-    <div class="math-block">
-      \[
-      Range = Max - Min + 1 
-      \]
-    </div>
-  </div>
-
-  <hr>
-
-  <h1 id="hardness">Hardness</h1>
-  <h2>Description</h2>
-   <div class="section">
-    <p>
-      Hardness represents the average proportion of the possible raw score range that is not achieved.
-    </p>
-    <p>
-      This metric is sample-dependent, as it is based solely on raw scores and does not involve any normalization.
-    </p>
-    <p>
-      Hardness (H) is expressed as a continuous value in the closed interval \( [0, 1] \).
-    </p>
-    </div>
-  <h2>Definition</h2>
-  <div class="section">
-    <p>
-      Let \( Avg \) be the average raw score.
-    </p>
-    <p>The hardness (H) is:</p>
-    <div class="math-block">
-      \[
-      H = \frac{ Max - Avg }{ Max - Min }
-      \]
-    </div>
-  </div>
-  <hr>
-
-  <h1 id="sih">Sample-Independent Hardness</h1>
-  <h2>Description</h2>
-    <div class="section">
-    <p>
-      Sample-independent hardness is a variant that replaces the average raw score with a raw score corresponding to a fixed reference cognitive ability defined by the test norm.
-    </p>
-    <p>
-      The reference ability level is set at 138.5 (mean = 100, standard deviation = 15), as this represents the median ability of the high-range population.
-    </p>
-    <p>
-      Sample-independent hardness (SIH) is expressed as a continuous value in the closed interval \( [0, 1] \).
-    </p>
-    </div>
-  <h2>Definition</h2>
-  <div class="section">
-    <p>
-      Let \( M_{\mathrm{ap}} = 138.5 \) be the reference cognitive ability level.
-    </p>
-    <p>
-      Let \( R \) be the raw score that corresponds, according to the test norm, to a standard or IQ score of \( M_{\mathrm{ap}} \).
-    </p>
-    <p>The sample-independent hardness (SIH) is:</p>
-    <div class="math-block">
-      \[
-        SIH = \frac{Max - R}{Max - Min}
-      \]
-    </div>
-  </div>
-  
-  <div style="display: flex; justify-content: center;">
-    <table>
-      <thead>
-        <tr style="background-color: #0070ba; color: white; font-size: 21px;">
-          <th>SIH range</th>
-          <th>Interpretation</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>&lt; 0.25</td><td>Easy</td></tr>
-        <tr><td>0.25 – 0.50</td><td>Moderate</td></tr>
-        <tr><td>0.50 – 0.75</td><td>Hard</td></tr>
-        <tr><td>&gt; 0.75</td><td>Hardest</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <hr>
-
-  <h1 id="otc">Overall Test Complexity</h1>
-
-  <h2>Description</h2>
-
-  <div class="section">
-    <p>
-      Overall Test Complexity (OTC) quantifies the global difficulty of a test across its entire effective measurement range.
-    </p>
-    <p>
-      It is conceptually related to metrics such as <em>Hardness</em> and <em>Sample-Independent Hardness</em>, but extends beyond them by capturing the average cognitive demand imposed by the full test structure.
-    </p>
-    <p>
-      OTC is independent of the tested sample, as it is computed exclusively from the normalized scores defined by the norms.
-    </p>
-    <p>
-      OTC is expressed as a continuous value in the open interval \( (0, 1) \).
-    </p>
-  </div>
-
-  <h2>Definition</h2>
-
-  <div class="section">
-    <p>
-      Let \( \mathcal{R} = \{ r_1, r_2, \dots, r_n \} \) denote the set of all attainable raw scores of the test.
-    </p>
-
-    <p>
-      Let \( SS(r) \) denote the standard score or IQ score
-      (mean = 100, standard deviation = 15)
-      associated with raw score \( r \) according to the test norms.
-    </p>
-
-    <p>
-      Let \( \sigma = 15 \) be the standard deviation.
-    </p>
-
-    <div class="math-block">
-      \[
-      A = \frac{1}{n} \sum_{k=1}^{n} SS(r_k)
-      \]
-    </div>
-
-    <p>
-      In the common case where raw scores are integers and range from
-      \( r = 1 \) to \( r = R_{\max} \), this expression reduces to:
-    </p>
-
-    <div class="math-block">
-      \[
-      A = \frac{1}{R_{\max}}
-      \sum_{r=1}^{R_{\max}} SS(r)
-      \]
-    </div>
-
-    <div class="math-block">
-      \[
-      C = \frac{A - M_{\mathrm{ap}}}{\sigma}
-      \]
-    </div>
-    <p>The overall test complexity (OTC) is:</p>
-    <div class="math-block">
-      \[
-      OTC = \frac{1}{1 + \exp(-C)}
-      \]
-    </div>
-  </div>
-  <div style="display: flex; justify-content: center;">
-    <table>
-      <thead>
-        <tr style="background-color: #0070ba; color: white; font-size: 21px;">
-          <th>OTC range</th>
-          <th>Interpretation</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>&lt; 0.25</td><td>Minimal</td></tr>
-        <tr><td>0.25 – 0.40</td><td>Low</td></tr>
-        <tr><td>0.40 – 0.60</td><td>Medium</td></tr>
-        <tr><td>0.60 – 0.75</td><td>High</td></tr>
-        <tr><td>0.75 – 0.90</td><td>Very high</td></tr>
-        <tr><td>0.90 – 0.95</td><td>Severe</td></tr>
-        <tr><td>&gt; 0.95</td><td>Extreme</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <hr>
-  <a href="https://ivec.ultimaiq.net/quality.htm" target="_blank">Information about Ivec's quality</a>
-  <div class="section">
-    <a class="button" href="index.html">Back to main page</a>
-  </div>
+  </div>  
 
 </body>
 </html>
