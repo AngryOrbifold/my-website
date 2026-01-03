@@ -20,7 +20,7 @@
     }
 
     h2 {
-      margin-top: 40px;
+      margin-top: 30px;
     }
 
     p {
@@ -80,16 +80,16 @@
     .page-layout {
       display: flex;
       align-items: flex-start;
-      gap: 40px;
+      gap: 20px;
     }
 
     .toc {
       width: 320px;
-      border: 2px solid #444;
+      border: 2px solid #000000;
       padding: 10px 10px;
       border-radius: 10px;
-      position: sticky;
       top: 30px;
+      position: sticky;
       text-align: left;
       font-size: 18px;
     }
@@ -115,7 +115,7 @@
       }
     }
     .toc-footer {
-      margin-top: 30px;
+      margin-top: 10px;
       text-align: center;
     }
     .toc-button {
@@ -157,6 +157,10 @@
     <nav class="toc">
       <h2>Table of Contents</h2>
       <ul style="list-style-type: none; padding-left: 0;">
+        <li><a href="#ivec-disc">Ivec Item Quality (Discrimination)</a></li>
+        <li><a href="#g-loading-pca">g-loading (PCA Method)</a></li>
+        <li><a href="#dim">Test Dimensionality</a></li>
+        <li><a href="#item-rest">Corrected Point-Biserial Correlation</a></li>
         <li><a href="#g-loading">Estimated g-loading</a></li>
         <li><a href="#kurt">Excess Kurtosis</a></li>
         <li><a href="#skewness">Skewness</a></li>
@@ -185,6 +189,218 @@
     </nav>
 
     <div class="main-content">
+
+      <h1 id="ivec-disc">Ivec item quality (discrimination)</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          The Ivec item quality metric measures how well an item discriminates between lower- and higher-ability examinees.
+        </p>
+        <p>
+          It evaluates whether correct responses to an item are concentrated among examinees with higher overall test performance.
+          The metric is conceptually similar to the item discrimination parameter in Item Response Theory (IRT).
+        </p>
+        <p>
+          The metric takes values in the closed interval \([0,1]\). A value of 1 indicates perfect discrimination, where correct
+          responses are fully concentrated among higher-performing examinees, while a value of 0 indicates no discrimination.
+        </p>
+      </div>
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let \( X_{pi} \in \{0,1\} \) be the score of testee \( p \) on item \( i \), let \( n \) be the number of testees,
+          and let \( z \) be the number of items in the test.
+        </p>
+
+        <p>
+          The total test score of testee \( p \) is:
+        </p>
+        <div class="math-block">
+          \[
+          T_p = \sum_{j=1}^{z} X_{pj}
+          \]
+        </div>
+
+        <p>
+          The number of testees who solved item \( i \) is:
+        </p>
+        <div class="math-block">
+          \[
+          K_i = \sum_{p=1}^{n} X_{pi}
+          \]
+        </div>
+
+        <p>
+          Testees are ordered by decreasing total score \( T_p \).
+          Let \( G_i \) be the set of testees belonging to the top \( K_i \) ranks.
+          If a tie occurs at the cutoff, all tied testees are included.
+        </p>
+
+        <p>
+          Let \( S_i = |G_i| \) be the resulting size of the top-performing group used for item \( i \).
+          The number of correct responses to item \( i \) within this group is:
+        </p>
+
+        <div class="math-block">
+          \[
+          R_i = \sum_{p \in G_i} X_{pi}
+          \]
+        </div>
+
+        <p>
+          The Ivec item quality (discrimination) of item \( i \) is defined as:
+        </p>
+        <div class="math-block">
+          \[
+          Q_i = \frac{R_i}{S_i}
+          \]
+        </div>
+
+        <div style="display: flex; justify-content: center;">
+          <table>
+            <thead>
+              <tr style="background-color: #0070ba; color: white; font-size: 21px;">
+                <th>\(Q_i\) range</th>
+                <th>Item Discrimination Interpretation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>&lt; 0.3</td><td>Bad</td></tr>
+              <tr><td>0.3 – 0.5</td><td>Suspicious</td></tr>
+              <tr><td>0.5 – 0.7</td><td>Average</td></tr>
+              <tr><td>&gt; 0.7</td><td>Good</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <a href="https://ivec.ultimaiq.net/quality.htm" target="_blank">More Information about Ivec's quality</a>
+      </div>
+
+
+      <hr>
+
+      <h1 id="g-loading-pca">g-loading (PCA method)</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          When a test consists of multiple subtests, the general factor \( g \) can be estimated for each subtest using principal component analysis (PCA) applied to the subtest correlation matrix.
+        </p>
+        <p>
+          In this approach, the first principal component represents the direction of maximum shared variance among subtests and is commonly interpreted as an estimate of the general intelligence factor.
+        </p>
+        <p>
+          The g-loading is a correlation coefficient ranging from 0 to 1.
+        </p>
+      </div>
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let \( \mathbf{R} \) be the correlation matrix of \( k \) subtests.
+        </p>
+        <p>
+          Let \( \lambda_1 \) be the largest eigenvalue of \( \mathbf{R} \), and let
+          \( \mathbf{v}_1 = (v_{11}, v_{21}, \dots, v_{k1}) \) be the corresponding normalized eigenvector.
+        </p>
+        <p>
+          The eigenvalues of the correlation matrix \( \mathbf{R} \) are obtained by solving the characteristic equation
+          \( \det(\mathbf{R} - \lambda \mathbf{I}) = 0 \), where \( \mathbf{I} \) is the identity matrix.
+        </p>
+        <p>
+          The eigenvector \( \mathbf{v}_1 \) associated with \( \lambda_1 \) is obtained by solving
+          \( (\mathbf{R} - \lambda_1 \mathbf{I}) \mathbf{v}_1 = \mathbf{0} \) and normalizing the solution so that
+          \( \| \mathbf{v}_1 \| = 1 \).
+        </p>
+        <p>
+          The PCA-based g-loading of subtest \( i \) is defined as:
+        </p>
+        <div class="math-block">
+          \[
+          g_i = \sqrt{\lambda_1} \, v_{i1}
+          \]
+        </div>
+        <p>
+          This quantity represents the correlation between subtest \( i \) and the first principal component, interpreted as an estimate of the general factor \( g \).
+        </p>
+      </div>
+
+      <hr>
+
+      <h1 id="dim">Test dimensionality</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          Test dimensionality refers to the number of underlying latent constructs measured by a test.
+        </p>
+        <p>
+          A test is said to be unidimensional if a single common factor accounts for most of the shared variance among items, multidimensional if multiple distinct factors are required, and borderline if the test lies between these two cases.
+        </p>
+      </div>
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let a test consist of \( k \) items, and let \( \mathbf{R} \) be the item correlation matrix.
+        </p>
+        <p>
+          Let \( \lambda_1 \ge \lambda_2 \ge \dots \ge \lambda_k \) be the eigenvalues of \( \mathbf{R} \).
+        </p>
+        <p>
+          The eigenvalues of the correlation matrix \( \mathbf{R} \) are obtained by solving the characteristic equation
+          \( \det(\mathbf{R} - \lambda \mathbf{I}) = 0 \), where \( \mathbf{I} \) is the identity matrix.
+        </p>
+        <p>
+          This procedure decomposes the correlation matrix into orthogonal components, each eigenvalue representing the amount of variance explained by its corresponding component.
+        </p>
+        <p>
+          The dimensionality of the test may be assessed by the relative magnitude of the leading eigenvalues:
+        </p>
+        <ul style="padding-left: 10; text-align: left;">
+          <li>
+            <strong>Unidimensional</strong>: \( \lambda_1 \) is substantially larger than all subsequent eigenvalues, indicating a dominant common factor.
+          </li>
+          <li>
+            <strong>Multidimensional</strong>: multiple eigenvalues are of comparable magnitude, indicating several distinct factors.
+          </li>
+          <li>
+            <strong>Borderline</strong>: \( \lambda_1 \) is dominant but secondary eigenvalues are non-negligible, indicating partial multidimensionality.
+          </li>
+        </ul>
+      </div>
+
+      <hr>
+
+      <h1 id="item-rest">Corrected point-biserial correlation</h1>
+      <h2>Description</h2>
+      <div class="section">
+        <p>
+          The corrected point-biserial correlation, also called the item–rest correlation, measures the association between a single test item and the total test score excluding that item.
+        </p>
+        <p>
+          It indicates how well an item discriminates between individuals with higher and lower overall test performance, while avoiding artificial inflation caused by including the item in the total score.
+        </p>
+        <p>
+          It is a correlation coefficient in the interval \([-1, 1]\). Higher values indicate better item discrimination, while values close to zero or negative values suggest a weak or problematic item.
+        </p>
+      </div>
+      <h2>Definition</h2>
+      <div class="section">
+        <p>
+          Let \( r_i \in \{0,1\} \) be the score on item \( i \), and let \( R_{\text{rest}} \) be the total score on all remaining items.
+        </p>
+        <p>
+          Let \( \bar{R}_{1} \) be the mean of \( R_{\text{rest}} \) for examinees who answered item \( i \) correctly, and let \( \bar{R}_{0} \) be the mean for those who answered incorrectly.
+        </p>
+        <p>
+          Let \( \sigma_{R_{\text{rest}}} \) be the standard deviation of \( R_{\text{rest}} \), and let \( p \) be the proportion of correct responses to item \( i \), with \( q = 1 - p \).
+        </p>
+        <div class="math-block">
+          \[
+          r_{\text{pb,corr}} =
+          \frac{\bar{R}_{1} - \bar{R}_{0}}{\sigma_{R_{\text{rest}}}}
+          \sqrt{p q}
+          \]
+        </div>
+      </div>
+
+      <hr>
 
       <h1 id="g-loading">Estimated g-loading</h1>
       <h2>Description</h2>
@@ -916,16 +1132,9 @@
           </tbody>
         </table>
       </div>
-
-      <hr>
-      
-      <a href="https://ivec.ultimaiq.net/quality.htm" target="_blank">Information about Ivec's quality</a>
-      
     </div>
   </div>  
 
 </body>
 
 </html>
-
-
