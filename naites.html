@@ -92,14 +92,18 @@
     tr:hover {
       background-color: #f2f2f2;
     }
-    #certForm input[type="email"] {
-      font-size: 20px;        
-      padding: 12px 10px;       
-      height: calc(20px + 24px); 
-      border-radius: 8px;       
+    #certForm {
+      max-width: 100%;
+    }
+    #certForm input[type="text"] {
+      font-size: 15px;
+      padding: 12px 10px;
+      height: calc(20px + 24px);
+      border-radius: 8px;
       border: 1px solid #ccc;
-      box-sizing: border-box;   
-      margin-right: 10px;       
+      box-sizing: border-box;
+      width: 30%;   
+      margin-right: 0;    
     }
   </style>
 <!-- Google tag (gtag.js) -->
@@ -145,41 +149,42 @@
     <a href="https://paypal.me/OrbifoldAnswers?country.x=CH&locale.x=en_US" target="_blank" rel="noopener noreferrer" class="paypal-button">Pay with PayPal</a>
   </div>
 
-  <div class="section"; margin-top:20px;>
-      <p>You can see your up-to-date certificate by inputting your email adress in the field below:</p>
+  <div class="section" style="margin-top:20px;">
+    <p>You can see your up-to-date certificate by inputting your device ID in the field below:</p>
   </div>
-
+  
   <form id="certForm" style="margin-top: 20px;">
-    <label>Email:</label>
-    <input type="email" id="email" required />
+    <label>Device ID:</label>
+    <input type="text" id="device_id" required />
     <button type="submit" class="button">Show Certificate</button>
   </form>
-
+  
   <div id="result" style="margin-top: 20px;"></div>
-
+  
   <script>
-     document.getElementById("certForm").addEventListener("submit", async (e) => {
+    document.getElementById("certForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const email = document.getElementById("email").value;
+  
+      const device_id = document.getElementById("device_id").value.trim();
       const container = document.getElementById("result");
-
+  
       container.innerHTML = `<p style="font-weight:bold;">Certificate is being generated…</p>`;
-
+  
       try {
         const res = await fetch(
           "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/generate_naites_cert",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email }),
+            body: JSON.stringify({ device_id }),
           }
         );
-
+  
         if (!res.ok) {
-          container.innerHTML = `<p style="color:red;">Certificate not available or wrong email.</p>`;
+          container.innerHTML = `<p style="color:red;">Certificate not available or wrong device ID.</p>`;
           return;
         }
-
+  
         const { url } = await res.json();
         container.innerHTML = `
           <iframe src="${url}" style="width:100%;height:600px;border:1px solid #ccc;margin-top:10px;" allowfullscreen></iframe>
