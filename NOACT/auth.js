@@ -47,7 +47,12 @@ async function login() {
       loginBtn.onclick = setPassword;
       return;
     }
-    
+    if (payload.user === null) {
+      usernameInput.classList.remove("hidden");
+      loginMsg.innerText = "Authenticated. Please pick a username to continue.";
+      loginBtn.onclick = register;
+      return;
+    }
     username = payload.user.name;
     localStorage.setItem("email", email);
     localStorage.setItem("username", username);
@@ -173,6 +178,7 @@ startTestBtn?.addEventListener("click", async () => {
 });
 
 document.getElementById("loginBtn").onclick = login;
+
 
 
 
