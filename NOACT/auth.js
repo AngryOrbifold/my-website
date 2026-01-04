@@ -1,6 +1,10 @@
 const LOGIN_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/login";
 const UPDATE_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/update_user";
 
+/* =========================
+   DOM ELEMENTS
+========================= */
+
 const loginSection = document.getElementById("loginSection");
 const instructionsSection = document.getElementById("instructionsSection");
 const loginMsg = document.getElementById("loginMsg");
@@ -11,6 +15,10 @@ const passwordInput = document.getElementById("password");
 
 const loginBtn = document.getElementById("loginBtn");
 const startTestBtn = document.getElementById("startTestBtn");
+
+/* =========================
+   STATE
+========================= */
 
 let email = "";
 let username = "";
@@ -24,14 +32,41 @@ function showInstructions() {
   instructionsSection.classList.remove("hidden");
 }
 
-function finishLogin(user) {
+/* 
+   Defensive user fetch (used if backend briefly returns user = null)
+*/
+async function refetchUser(email) {
+  try {
+    const res = await fetch(LOGIN_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email })
+    });
+    if (!res.ok) return null;
+    const payload = await res.json();
+    return payload.user || null;
+  } catch (err) {
+    console.error("refetchUser failed:", err);
+    return null;
+  }
+}
+
+/* 
+   Finalize login (safe against null user)
+*/
+async function finishLogin(user) {
   if (!user) {
-    loginMsg.innerText = "Login succeeded, but user data is missing. Please reload.";
-    loginBtn.disabled = false;
-    return;
+    loginMsg.innerText = "Finalizing login…";
+    user = await refetchUser(email);
+    if (!user) {
+      loginMsg.innerText =
+        "Login succeeded but user data is temporarily missing. Please reload.";
+      loginBtn.disabled = false;
+      return;
+    }
   }
 
-  username = user.name;
+  username = user.name || "";
 
   localStorage.setItem("email", email);
   localStorage.setItem("username", username);
@@ -44,7 +79,7 @@ function finishLogin(user) {
 }
 
 /* =========================
-   LOGIN
+   LOGIN FLOW
 ========================= */
 
 async function login() {
@@ -74,7 +109,7 @@ async function login() {
       return;
     }
 
-    // ── User exists but has NO password yet
+    /* ── User exists but must CREATE password */
     if (payload.set_password) {
       passwordInput.classList.remove("hidden");
       passwordInput.focus();
@@ -84,7 +119,7 @@ async function login() {
       return;
     }
 
-    // ── Password required
+    /* ── Password required */
     if (payload.need_password) {
       passwordInput.classList.remove("hidden");
       passwordInput.focus();
@@ -93,8 +128,8 @@ async function login() {
       return;
     }
 
-    // ── Fully authenticated
-    finishLogin(payload.user);
+    /* ── Fully authenticated */
+    await finishLogin(payload.user);
 
   } catch (err) {
     console.error(err);
@@ -110,8 +145,8 @@ async function login() {
 async function setPassword() {
   const password = passwordInput.value;
 
-  if (!password || password.length < 6) {
-    loginMsg.innerText = "Password must be at least 6 characters.";
+  if (!password || password.length < 4) {
+    loginMsg.innerText = "Password too short.";
     return;
   }
 
@@ -136,11 +171,11 @@ async function setPassword() {
       return;
     }
 
-    // Restore login handler
+    // restore normal login button behavior
     loginBtn.onclick = login;
 
-    // Immediately log in after setting password
-    finishLogin(payload.user);
+    // immediately log user in
+    await finishLogin(payload.user);
 
   } catch (err) {
     console.error(err);
@@ -191,4 +226,3 @@ startTestBtn?.addEventListener("click", async () => {
 ========================= */
 
 loginBtn.onclick = login;
-
