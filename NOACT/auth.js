@@ -25,6 +25,12 @@ function showInstructions() {
 }
 
 function finishLogin(user) {
+  if (!user) {
+    loginMsg.innerText = "Login succeeded, but user data is missing. Please reload.";
+    loginBtn.disabled = false;
+    return;
+  }
+
   username = user.name;
 
   localStorage.setItem("email", email);
@@ -185,3 +191,4 @@ startTestBtn?.addEventListener("click", async () => {
 ========================= */
 
 loginBtn.onclick = login;
+
