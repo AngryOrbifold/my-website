@@ -7,36 +7,47 @@ const loginMsg = document.getElementById("loginMsg");
 const usernameInput = document.getElementById("username");
 const loginBtn = document.getElementById("loginBtn");
 const startTestBtn = document.getElementById("startTestBtn");
+const passwordInput = document.getElementById("password");
 
 let email = "";
 let username = "";
 
 async function login() {
   email = document.getElementById("email").value.trim();
-  if (!email) return loginMsg.innerText = "Enter email.";
+  const password = passwordInput.value;
+
+  if (!email) {
+    loginMsg.innerText = "Enter email.";
+    return;
+  }
 
   try {
     const res = await fetch(LOGIN_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email })
+      body: JSON.stringify({ email, password })
     });
 
     const payload = await res.json().catch(() => ({}));
 
     if (!res.ok || payload?.error) {
-      loginMsg.innerText = payload?.error || payload?.reason || "Login failed.";
-      console.error("Login failed:", res.status, payload);
+      loginMsg.innerText = payload?.error || "Login failed.";
       return;
     }
 
-    if (!payload.user) {
-      usernameInput.classList.remove("hidden");
-      loginMsg.innerText = "Authenticated. Please pick a username to continue.";
-      loginBtn.onclick = register; 
+    if (payload.need_password) {
+      passwordInput.classList.remove("hidden");
+      loginMsg.innerText = "Enter your password.";
       return;
     }
 
+    if (payload.set_password) {
+      passwordInput.classList.remove("hidden");
+      loginMsg.innerText = "Create a password to continue.";
+      loginBtn.onclick = setPassword;
+      return;
+    }
+    
     username = payload.user.name;
     localStorage.setItem("email", email);
     localStorage.setItem("username", username);
@@ -46,15 +57,46 @@ async function login() {
     } else {
       showInstructions();
     }
+
   } catch (err) {
-    console.error("Network error during login:", err);
-    loginMsg.innerText = "Network error. Try again.";
+    console.error(err);
+    loginMsg.innerText = "Network error.";
   }
 }
 
 function showInstructions() {
   loginSection.classList.add("hidden");
   instructionsSection.classList.remove("hidden");
+}
+
+async function setPassword() {
+  const password = passwordInput.value;
+
+  if (password.length < 6) {
+    loginMsg.innerText = "Password must be at least 6 characters.";
+    return;
+  }
+
+  try {
+    const res = await fetch(UPDATE_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        update: { pwd: password }
+      })
+    });
+
+    if (!res.ok) {
+      loginMsg.innerText = "Failed to set password.";
+      return;
+    }
+
+    loginBtn.onclick = login;
+    login();
+  } catch (err) {
+    loginMsg.innerText = "Network error.";
+  }
 }
 
 async function register() {
@@ -131,5 +173,6 @@ startTestBtn?.addEventListener("click", async () => {
 });
 
 document.getElementById("loginBtn").onclick = login;
+
 
 
