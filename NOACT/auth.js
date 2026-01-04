@@ -5,13 +5,16 @@ const loginSection = document.getElementById("loginSection");
 const instructionsSection = document.getElementById("instructionsSection");
 const loginMsg = document.getElementById("loginMsg");
 const usernameInput = document.getElementById("username");
+const passwordInput = document.getElementById("password");
 const loginBtn = document.getElementById("loginBtn");
 const startTestBtn = document.getElementById("startTestBtn");
-const passwordInput = document.getElementById("password");
 
 let email = "";
 let username = "";
 
+/* --------------------------------------------------
+   LOGIN
+-------------------------------------------------- */
 async function login() {
   email = document.getElementById("email").value.trim();
   const password = passwordInput.value;
@@ -35,24 +38,30 @@ async function login() {
       return;
     }
 
+    /* ---------- PASSWORD REQUIRED ---------- */
     if (payload.need_password) {
       passwordInput.classList.remove("hidden");
       loginMsg.innerText = "Enter your password.";
       return;
     }
 
+    /* ---------- FIRST LOGIN: SET PASSWORD ---------- */
     if (payload.set_password) {
       passwordInput.classList.remove("hidden");
       loginMsg.innerText = "Create a password to continue.";
       loginBtn.onclick = setPassword;
       return;
     }
+
+    /* ---------- FIRST USER REGISTRATION ---------- */
     if (payload.user === null) {
       usernameInput.classList.remove("hidden");
       loginMsg.innerText = "Authenticated. Please pick a username to continue.";
       loginBtn.onclick = register;
       return;
     }
+
+    /* ---------- EXISTING USER ---------- */
     username = payload.user.name;
     localStorage.setItem("email", email);
     localStorage.setItem("username", username);
@@ -69,11 +78,9 @@ async function login() {
   }
 }
 
-function showInstructions() {
-  loginSection.classList.add("hidden");
-  instructionsSection.classList.remove("hidden");
-}
-
+/* --------------------------------------------------
+   SET PASSWORD
+-------------------------------------------------- */
 async function setPassword() {
   const password = passwordInput.value;
 
@@ -97,15 +104,22 @@ async function setPassword() {
       return;
     }
 
+    // Reset button behavior and retry login
     loginBtn.onclick = login;
     login();
+
   } catch (err) {
+    console.error(err);
     loginMsg.innerText = "Network error.";
   }
 }
 
+/* --------------------------------------------------
+   REGISTER USER (USERNAME)
+-------------------------------------------------- */
 async function register() {
   username = usernameInput.value.trim();
+
   if (!username) {
     loginMsg.innerText = "Username required.";
     return;
@@ -131,7 +145,7 @@ async function register() {
     });
 
     if (!res.ok) {
-      const text = await res.text().catch(()=>"");
+      const text = await res.text().catch(() => "");
       console.error("Registration failed:", res.status, text);
       loginMsg.innerText = text || "Failed to register user";
       return;
@@ -141,12 +155,24 @@ async function register() {
     localStorage.setItem("username", username);
 
     showInstructions();
+
   } catch (err) {
-    console.error("Registration error:", err);
+    console.error(err);
     loginMsg.innerText = "Failed to register. Try again later.";
   }
 }
 
+/* --------------------------------------------------
+   UI HELPERS
+-------------------------------------------------- */
+function showInstructions() {
+  loginSection.classList.add("hidden");
+  instructionsSection.classList.remove("hidden");
+}
+
+/* --------------------------------------------------
+   START TEST
+-------------------------------------------------- */
 startTestBtn?.addEventListener("click", async () => {
   startTestBtn.disabled = true;
   startTestBtn.innerText = "Starting…";
@@ -158,7 +184,7 @@ startTestBtn?.addEventListener("click", async () => {
       body: JSON.stringify({ email, update: { started: true } })
     });
 
-    const payload = await res.json().catch(()=>({}));
+    const payload = await res.json().catch(() => ({}));
 
     if (!res.ok || payload?.error) {
       console.error("Start failed:", res.status, payload);
@@ -169,16 +195,16 @@ startTestBtn?.addEventListener("click", async () => {
     }
 
     location.replace("quiz.html");
+
   } catch (err) {
-    console.error("Network error starting test:", err);
+    console.error(err);
     loginMsg.innerText = "Network error. Try again.";
     startTestBtn.disabled = false;
     startTestBtn.innerText = "Start the Test";
   }
 });
 
-document.getElementById("loginBtn").onclick = login;
-
-
-
-
+/* --------------------------------------------------
+   INIT
+-------------------------------------------------- */
+loginBtn.onclick = login;
