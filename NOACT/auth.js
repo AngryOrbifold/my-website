@@ -1,10 +1,6 @@
 const LOGIN_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/login";
 const UPDATE_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/update_user";
 
-/* =========================
-   DOM ELEMENTS
-========================= */
-
 const loginSection = document.getElementById("loginSection");
 const instructionsSection = document.getElementById("instructionsSection");
 const loginMsg = document.getElementById("loginMsg");
@@ -16,58 +12,16 @@ const passwordInput = document.getElementById("password");
 const loginBtn = document.getElementById("loginBtn");
 const startTestBtn = document.getElementById("startTestBtn");
 
-/* =========================
-   STATE
-========================= */
-
 let email = "";
 let username = "";
-
-/* =========================
-   UI HELPERS
-========================= */
 
 function showInstructions() {
   loginSection.classList.add("hidden");
   instructionsSection.classList.remove("hidden");
 }
 
-/* 
-   Defensive user fetch (used if backend briefly returns user = null)
-*/
-async function refetchUser(email) {
-  try {
-    const res = await fetch(LOGIN_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email })
-    });
-    if (!res.ok) return null;
-    const payload = await res.json();
-    return payload.user || null;
-  } catch (err) {
-    console.error("refetchUser failed:", err);
-    return null;
-  }
-}
-
-/* 
-   Finalize login (safe against null user)
-*/
-async function finishLogin(user) {
-  if (!user) {
-    loginMsg.innerText = "Finalizing login…";
-    user = await refetchUser(email);
-    if (!user) {
-      loginMsg.innerText =
-        "Login succeeded but user data is temporarily missing. Please reload.";
-      loginBtn.disabled = false;
-      return;
-    }
-  }
-
-  username = user.name || "";
-
+function finishLogin(user) {
+  username = user.name;
   localStorage.setItem("email", email);
   localStorage.setItem("username", username);
 
@@ -77,10 +31,6 @@ async function finishLogin(user) {
     showInstructions();
   }
 }
-
-/* =========================
-   LOGIN FLOW
-========================= */
 
 async function login() {
   email = emailInput.value.trim().toLowerCase();
@@ -109,7 +59,6 @@ async function login() {
       return;
     }
 
-    /* ── User exists but must CREATE password */
     if (payload.set_password) {
       passwordInput.classList.remove("hidden");
       passwordInput.focus();
@@ -119,7 +68,6 @@ async function login() {
       return;
     }
 
-    /* ── Password required */
     if (payload.need_password) {
       passwordInput.classList.remove("hidden");
       passwordInput.focus();
@@ -128,8 +76,7 @@ async function login() {
       return;
     }
 
-    /* ── Fully authenticated */
-    await finishLogin(payload.user);
+    finishLogin(payload.user);
 
   } catch (err) {
     console.error(err);
@@ -138,15 +85,11 @@ async function login() {
   }
 }
 
-/* =========================
-   SET PASSWORD (ONCE)
-========================= */
-
 async function setPassword() {
   const password = passwordInput.value;
 
-  if (!password || password.length < 4) {
-    loginMsg.innerText = "Password too short.";
+  if (!password || password.length < 1) {
+    loginMsg.innerText = "Password required.";
     return;
   }
 
@@ -171,11 +114,8 @@ async function setPassword() {
       return;
     }
 
-    // restore normal login button behavior
     loginBtn.onclick = login;
-
-    // immediately log user in
-    await finishLogin(payload.user);
+    finishLogin(payload.user);
 
   } catch (err) {
     console.error(err);
@@ -183,10 +123,6 @@ async function setPassword() {
     loginBtn.disabled = false;
   }
 }
-
-/* =========================
-   START TEST
-========================= */
 
 startTestBtn?.addEventListener("click", async () => {
   startTestBtn.disabled = true;
@@ -220,9 +156,5 @@ startTestBtn?.addEventListener("click", async () => {
     startTestBtn.innerText = "Start Test";
   }
 });
-
-/* =========================
-   INIT
-========================= */
 
 loginBtn.onclick = login;
