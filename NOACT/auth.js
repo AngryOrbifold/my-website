@@ -1,76 +1,55 @@
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const usernameInput = document.getElementById("username");
+const loginBtn = document.getElementById("loginBtn");
+const loginMsg = document.getElementById("loginMsg");
 const LOGIN_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/login";
 const UPDATE_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/update_user";
-
-const loginSection = document.getElementById("loginSection");
-const instructionsSection = document.getElementById("instructionsSection");
-const loginMsg = document.getElementById("loginMsg");
-const usernameInput = document.getElementById("username");
-const passwordInput = document.getElementById("password");
-const loginBtn = document.getElementById("loginBtn");
-const startTestBtn = document.getElementById("startTestBtn");
-
 let email = "";
 let username = "";
 
-/* --------------------------------------------------
-   LOGIN
--------------------------------------------------- */
+/* ---------------- LOGIN ---------------- */
 async function login() {
-  email = document.getElementById("email").value.trim();
-  const password = passwordInput.value;
-
+  email = emailInput.value.trim().toLowerCase();
   if (!email) {
-    loginMsg.innerText = "Enter email.";
+    loginMsg.innerText = "Enter your email.";
     return;
   }
+
+  loginMsg.innerText = "Checking…";
 
   try {
     const res = await fetch(LOGIN_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email })
     });
 
-    const payload = await res.json().catch(() => ({}));
+    const payload = await res.json();
 
-    if (!res.ok || payload?.error) {
-      loginMsg.innerText = payload?.error || "Login failed.";
+    if (!res.ok) {
+      loginMsg.innerText = payload.error || "Login failed.";
       return;
     }
-
-    /* ---------- PASSWORD REQUIRED ---------- */
     if (payload.need_password) {
       passwordInput.classList.remove("hidden");
       loginMsg.innerText = "Enter your password.";
+      loginBtn.onclick = submitPassword;
       return;
     }
-
-    /* ---------- FIRST LOGIN: SET PASSWORD ---------- */
     if (payload.set_password) {
       passwordInput.classList.remove("hidden");
       loginMsg.innerText = "Create a password to continue.";
       loginBtn.onclick = setPassword;
       return;
     }
-
-    /* ---------- FIRST USER REGISTRATION ---------- */
     if (payload.user === null) {
       usernameInput.classList.remove("hidden");
-      loginMsg.innerText = "Authenticated. Please pick a username to continue.";
+      loginMsg.innerText = "Pick a username to continue.";
       loginBtn.onclick = register;
       return;
     }
-
-    /* ---------- EXISTING USER ---------- */
-    username = payload.user.name;
-    localStorage.setItem("email", email);
-    localStorage.setItem("username", username);
-
-    if (payload.user.started) {
-      location.replace("quiz.html");
-    } else {
-      showInstructions();
-    }
+    finishLogin(payload.user);
 
   } catch (err) {
     console.error(err);
@@ -78,133 +57,101 @@ async function login() {
   }
 }
 
-/* --------------------------------------------------
-   SET PASSWORD
--------------------------------------------------- */
-async function setPassword() {
-  const password = passwordInput.value;
-
-  if (password.length < 6) {
-    loginMsg.innerText = "Password must be at least 6 characters.";
-    return;
-  }
-
-  try {
-    const res = await fetch(UPDATE_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        update: { pwd: password }
-      })
-    });
-
-    if (!res.ok) {
-      loginMsg.innerText = "Failed to set password.";
-      return;
-    }
-
-    // Reset button behavior and retry login
-    loginBtn.onclick = login;
-    login();
-
-  } catch (err) {
-    console.error(err);
-    loginMsg.innerText = "Network error.";
-  }
-}
-
-/* --------------------------------------------------
-   REGISTER USER (USERNAME)
--------------------------------------------------- */
 async function register() {
   username = usernameInput.value.trim();
-
   if (!username) {
-    loginMsg.innerText = "Username required.";
+    loginMsg.innerText = "Enter a username.";
     return;
   }
 
-  try {
-    const payload = {
+  loginMsg.innerText = "Creating account…";
+
+  const res = await fetch(UPDATE_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
       email,
-      update: {
-        name: username,
-        solved_ids: [],
-        attempts: 30,
-        score: 0,
-        iq: null,
-        leaderboard: false,
-      }
-    };
+      update: { name: username }
+    })
+  });
 
-    const res = await fetch(UPDATE_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
+  const payload = await res.json();
 
-    if (!res.ok) {
-      const text = await res.text().catch(() => "");
-      console.error("Registration failed:", res.status, text);
-      loginMsg.innerText = text || "Failed to register user";
-      return;
-    }
-
-    localStorage.setItem("email", email);
-    localStorage.setItem("username", username);
-
-    showInstructions();
-
-  } catch (err) {
-    console.error(err);
-    loginMsg.innerText = "Failed to register. Try again later.";
+  if (!res.ok) {
+    loginMsg.innerText = payload.error || "Registration failed.";
+    return;
   }
+
+  localStorage.setItem("email", email);
+  localStorage.setItem("username", username);
+
+  passwordInput.classList.remove("hidden");
+  loginMsg.innerText = "Create a password to continue.";
+  loginBtn.onclick = setPassword;
 }
 
-/* --------------------------------------------------
-   UI HELPERS
--------------------------------------------------- */
-function showInstructions() {
-  loginSection.classList.add("hidden");
-  instructionsSection.classList.remove("hidden");
+async function setPassword() {
+  const pwd = passwordInput.value;
+  if (!pwd || pwd.length < 4) {
+    loginMsg.innerText = "Password too short.";
+    return;
+  }
+
+  loginMsg.innerText = "Saving password…";
+
+  const res = await fetch(UPDATE_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email,
+      update: { pwd }
+    })
+  });
+
+  const payload = await res.json();
+
+  if (!res.ok) {
+    loginMsg.innerText = payload.error || "Password update failed.";
+    return;
+  }
+
+  finishLogin(payload.user);
 }
 
-/* --------------------------------------------------
-   START TEST
--------------------------------------------------- */
-startTestBtn?.addEventListener("click", async () => {
-  startTestBtn.disabled = true;
-  startTestBtn.innerText = "Starting…";
+async function submitPassword() {
+  const pwd = passwordInput.value;
+  if (!pwd) {
+    loginMsg.innerText = "Enter your password.";
+    return;
+  }
 
-  try {
-    const res = await fetch(UPDATE_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, update: { started: true } })
-    });
+  loginMsg.innerText = "Verifying…";
 
-    const payload = await res.json().catch(() => ({}));
+  const res = await fetch(LOGIN_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, pwd })
+  });
 
-    if (!res.ok || payload?.error) {
-      console.error("Start failed:", res.status, payload);
-      loginMsg.innerText = payload?.error || "Failed to start test.";
-      startTestBtn.disabled = false;
-      startTestBtn.innerText = "Start the Test";
-      return;
-    }
+  const payload = await res.json();
 
+  if (!res.ok) {
+    loginMsg.innerText = payload.error || "Wrong password.";
+    return;
+  }
+
+  finishLogin(payload.user);
+}
+
+function finishLogin(user) {
+  localStorage.setItem("email", email);
+  localStorage.setItem("username", user.name);
+
+  if (user.started) {
     location.replace("quiz.html");
-
-  } catch (err) {
-    console.error(err);
-    loginMsg.innerText = "Network error. Try again.";
-    startTestBtn.disabled = false;
-    startTestBtn.innerText = "Start the Test";
+  } else {
+    showInstructions();
   }
-});
+}
 
-/* --------------------------------------------------
-   INIT
--------------------------------------------------- */
 loginBtn.onclick = login;
