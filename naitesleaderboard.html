@@ -5,8 +5,115 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NAIT-ES Leaderboard</title>
   <link rel="icon" href="favicon.png">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XHMB3NM73"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-3XHMB3NM73');
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 30px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    p {
+      max-width: 1000px;
+      margin: 10px auto;
+      font-size: 18px;
+      text-align: justify;
+    }
+
+    a {
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    .section {
+      margin: 25px auto;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 28px;
+      font-size: 20px;
+      border-radius: 8px;
+      color: white;
+      background-color: #0070ba;
+      transition: background-color 0.3s ease;
+      margin: 5px;
+    }
+
+    .button:hover {
+      background-color: #005c99;
+    }
+
+    .leaderboard-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 2px solid #000;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .leaderboard-container::-webkit-scrollbar {
+      height: 6px;
+    }
+    .leaderboard-container::-webkit-scrollbar-thumb {
+      background: rgba(0,0,0,0.2);
+      border-radius: 3px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-family: sans-serif;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px 16px;
+      text-align: center;
+    }
+
+    thead {
+      background-color: #007acc;
+      color: white;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #eef6fb;
+    }
+
+    tbody tr:hover {
+      background-color: #d8ecf7;
+    }
+
+    .orange-header {
+      background-color: rgb(243, 174, 45) !important;
+      color: white;
+    }
+  </style>
 </head>
 <body>
+  <div class="section">
+    <p>Estimated norm data used.</p>
+  </div>
+
   <div class="leaderboard-container">
     <h2>NAIT-ES Leaderboard</h2>
     <table>
@@ -20,10 +127,19 @@
       </thead>
       <tbody>
         <tr><td>1</td><td>Motomasa Kurosawa</td><td>18</td><td>161</td></tr>
-<tr><td>2</td><td>Andrew Hayles</td><td>13</td><td>153</td></tr>
+<tr><td>2</td><td>jebi441990</td><td>15</td><td>156</td></tr>
+<tr><td>3</td><td>Andrew Hayles</td><td>13</td><td>153</td></tr>
+<tr><td>4</td><td>Göran Åhlander 75</td><td>10</td><td>149</td></tr>
 
       </tbody>
     </table>
+  </div>
+
+  <div class="section">
+    <p>The leaderboard is refreshed every 48 hours, showcasing the current scores of participants who opted to be listed.</p>
+  </div>
+  <div class="section">
+    <a class="button" href="index.html">Back to main page</a>
   </div>
 </body>
 </html>
