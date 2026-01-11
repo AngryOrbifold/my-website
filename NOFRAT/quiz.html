@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NOFRAT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+
+  <h1 class="title" style="text-align:center; margin-bottom :50px;">    Nydegger Online Formal Reasoning Automatic Test  </h1>
+
+  <section id="gameSection" aria-live="polite">
+
+    <div class="top-bar">
+      <span id="scoreEl">Score: 0</span>
+      <span id="attemptsEl">Attempts left: 0</span>
+      <span id="timerEl">Time left:</span>
+    </div>
+
+    <div class="question-container">
+      <img id="questionImg" alt="Current question">
+    </div>
+
+    <div class="question-navigation">
+      <button id="prevBtn" type="button">Previous</button>
+      <button id="nextBtn" type="button">Next</button>
+    </div>
+
+    <div class="answer-container">
+      <input
+        id="answerInput"
+        type="text"
+        placeholder="Your answer…"
+        autocomplete="off"
+      >
+
+      <div id="spatialContainer" class="spatial-container" style="display:none;">
+        <div class="spatial-controls">
+          <label>Rows: <input id="rowsInput" type="number" min="1" max="6" value="3"></label>
+          <label>Columns: <input id="colsInput" type="number" min="1" max="12" value="3"></label>
+          <button id="resetCanvasBtn" type="button">Reset</button>
+        </div>
+
+        <div class="spatial-canvas-wrapper">
+          <canvas id="spatialCanvas" width="300" height="300" aria-label="Spatial answer grid"></canvas>
+        </div>
+      </div>
+
+      <div style="margin-top:15px; text-align:center;">
+        <button id="submitBtn" type="button">Submit</button>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button id="darkModeBtn" type="button">Dark Mode</button>
+      <button id="changeUsernameBtn" type="button">Change Username</button>
+    </div>
+
+    <p id="status" role="status"></p>
+
+  </section>
+</div>
+
+<div
+  id="changeUsernameModal"
+  class="modal hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="changeUsernameTitle"
+>
+  <div class="modal-backdrop"></div>
+
+  <div class="modal-box" role="document">
+    <h3 id="changeUsernameTitle">Change username</h3>
+
+    <input
+      id="newUsernameInput"
+      type="text"
+      placeholder="New username"
+      autocomplete="off"
+    >
+
+    <div class="modal-actions">
+      <button id="saveUsernameBtn" type="button">Save</button>
+      <button id="cancelUsernameBtn" type="button">Cancel</button>
+    </div>
+
+    <p id="usernameStatus" class="status-msg" aria-live="polite"></p>
+  </div>
+</div>
+
+<script src="quiz.js"></script>
+</body>
+</html>
