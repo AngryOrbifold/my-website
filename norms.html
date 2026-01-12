@@ -27,7 +27,7 @@
       max-width: 1000px;
       margin: 12px auto;
       font-size: 18px;
-      text-align: center;
+      text-align: left;
     }
 
     a {
@@ -81,8 +81,8 @@
 
     .math-block {
       text-align: center;
-      margin: 25px 0;
-      font-size: 20px;
+      margin: 30px 0;
+      font-size: 1.1em;
     }
   </style>
 
@@ -98,11 +98,12 @@
     });
   </script>
   <link rel="icon" href="favicon.png">
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 <body>
 
-  <h1 style="text-align: center;"><strong>Norming roadmap for all tests:</strong></h1>
+  <h1 style="text-align: center;">Norming roadmap for all tests</h1>
 
   <div style="display: flex; justify-content: center;">
     <ul style="max-width: 1000px; text-align: left; list-style-position: inside; padding-left: 0;">
@@ -120,6 +121,181 @@
       With N the number of candidates who have finished the test.
     </p>
   </div>
+
+  <hr>
+  <h1>Norming methods and accuracy</h1>
+
+  <h2>Estimated norm (N = 0)</h2>
+
+  <h3>Method:</h3>
+
+  <p>  At this stage, no empirical data are available. Item difficulty (“solvability”) is therefore estimated based on prior experience.  </p>
+  <p>Item solvability is defined as the average score obtained by all candidates on the item, or the proportion of candidates who solve the item correctly (for dichotomous items).  </p>
+  <p>  Solvability is a continuous value in the closed interval:  </p>
+
+  <div class="math-block">
+    \[
+      0 \le s \le 1
+    \]
+  </div>
+
+  <p>  Each item is compared to items of perceived similar difficulty from other tests. A standard score is assigned accordingly, with Mean = 100 and Standard deviation = 15.  </p>
+  <p>  Item-level standard scores are sorted in increasing order, and a linear regression is applied to obtain an initial norming function:  </p>
+
+  <div class="math-block">
+    \[
+      SS = a \cdot \text{Raw} + b
+    \]
+  </div>
+
+  <p>  where <em>a</em> and <em>b</em> are constants. In some regions of the score range, the linear norm may be slightly adjusted to improve plausibility.  </p>
+  <p>  The same procedure is applied to subtests.  </p>
+
+  <h3>Accuracy:</h3>
+
+  <p>Full-test standard scores may deviate by more than 15 points.</p>
+  <p>Subtest scores may deviate by more than 20 points.</p>
+  <p>Both overestimation and underestimation are possible, with overestimation being more common.</p>
+  <p>At this stage, the norm should be regarded as an educated guess.</p>
+
+  <h2>First preliminary norm (N = 10)</h2>
+
+  <h3>Method:</h3>
+
+  <p>  Observed item solvabilities are now available. For each item, the empirical solvability is averaged with the previously estimated value.  </p>
+  <p>  These averaged solvabilities \(s\) are converted to standard scores using the following empirical transformation:  </p>
+
+  <div class="math-block">
+    \[
+      SS =
+      \left(
+        \frac{a - \ln\!\left(\dfrac{s \cdot c}{1 - s}\right)}{b}
+      \right) \cdot 15 + 100
+    \]
+  </div>
+
+  <p>with:</p>
+
+  <div class="math-block">
+    \[
+      \begin{aligned}
+        a &= 1.4796910138601 \\
+        b &= 1.1681357145202 \\
+        c &= 0.1571667950315
+      \end{aligned}
+    \]
+  </div>
+
+  <p>  This formula is derived from empirical data published at: <a href="https://ivec.ultimaiq.net/stat.htm" target="_blank">https://ivec.ultimaiq.net/stat.htm</a>  </p>
+  <p>  Early test takers tend to perform above the general high-range population. Because converting item-level solvabilities to standard scores relies only on limited information, the resulting norm is inherently conservative. </p>
+  <p>  Using raw empirical solvabilities directly would therefore systematically deflate the norm even further.  </p>
+  <p>  This transformation forces slower convergence toward the final norm, reducing the risk of early overshooting.  </p>
+
+  <h3>Accuracy:</h3>
+
+  <p>Near the center of the distribution, deviations may exceed 10 points.</p>
+  <p>At the extremes, deviations may exceed 15 points.</p>
+
+  <h2>Second preliminary norm and subsequent norms (N ≥ 25)</h2>
+
+  <p>From this stage onward, the final norming methodology is applied. Subsequent updates primarily reduce uncertainty by increasing sample size.</p>
+  <p>Two complementary sources of information are used: Modeled raw-score solvability and Empirical percentiles (proportion outscored)</p>
+
+  <h3>Raw-score solvability model:</h3>
+
+  <p>
+  Item-level solvabilities are not directly converted into standard scores.
+  Instead, a model is fitted to predict the expected solvability of a raw score, rather than of individual items.
+  Example:
+  If five items each have solvability 0.90, what is the expected solvability of a raw score of 3?</p>
+  <p>The predicted raw-score solvability \(s_r\) is then converted to a standard score using:</p>
+
+  <div class="math-block">
+    \[
+      SS_1 = a_1 \cdot s_r - \frac{1}{b_1} \ln(\frac{c_1 \cdot s_r^{d_1}}{1 - s_r^{d_1}})
+    \]
+  </div>
+
+  <p>Constants:</p>
+
+  <div class="math-block">
+    \[
+      \begin{aligned}
+        a_1 &= -0.5213 \\
+        b_1 &= 3.2121 \\
+        c_1 &= 0.0002075 \\
+        d_1 &= 1.8609
+      \end{aligned}
+    \]
+  </div>
+
+  <p>  Derived from the analysis of heterogeneous high-range test statistics:  <a href="https://iq-tests-for-the-high-range.com/statistics" target="_blank">  https://iq-tests-for-the-high-range.com/statistics  </a>  </p>
+
+  <h3>Proportion-outscored model:</h3>
+
+  <p>Proportion outscored is a number between 0 and 1 that functions as a mid-rank percentile. It is computed as follows:</p>
+  <div style="display: flex; justify-content: center;">
+    <ul style="text-align: left;">
+      <li>Count the number of scores strictly lower than the score of interest.</li>
+      <li>Add half of the number of scores equal to that score.</li>
+      <li>Divide the result by the total number of scores in the sample.</li>
+    </ul>
+  </div>
+  
+  <p>
+  The proportion outscored <em>p</em> is converted directly into a standard score:
+  </p>
+
+  <div class="math-block">
+    \[
+      SS_2 =
+      \left(
+        a_2 + \frac{\ln(\frac{p^{b_2}}{1 - p^{c_2}})}{d_2} + e_2 \cdot p^{f_2}
+      \right) \cdot 15 + 100
+    \]
+  </div>
+
+  <p>Constants:</p>
+
+  <div class="math-block">
+    \[
+      \begin{aligned}
+        a_2 &= 3.046685087161707 \\
+        b_2 &= 1.818068006804542 \\
+        c_2 &= 3.1423594106306467 \\
+        d_2 &= 3.1134315539658113 \\
+        e_2 &= 1.1433022794427306 \\
+        f_2 &= 6.439986281185212
+      \end{aligned}
+    \]
+  </div>
+
+  <p>Based on:  <a href="https://iq-tests-for-the-high-range.com/statistics/protonorms/" target="_blank">  https://iq-tests-for-the-high-range.com/statistics/protonorms/</a> and this <a href="Prousalis_data.pdf" target="_blank"> data </a></p>
+
+  <h3>Subnorm completion and monotonicity:</h3>
+
+  <p>  Missing subnorm values are filled using a combination of minimum score constraints, linear interpolation, and linear extrapolation. Leading gaps are filled smoothly from a minimum allowable score, intermediate gaps by interpolation, and trailing gaps by slope-based extrapolation.</p>
+
+  <p>
+  The solvability-based subnorm and percentile-based subnorm are then averaged:
+  </p>
+
+  <div class="math-block">
+    \[
+      SS = \frac{SS_1 + SS_2}{2}
+    \]
+  </div>
+
+  <p>The primary reason for using this more complex norming method, rather than simply pairing scores with previous tests, is to minimize the reliance on prior scores from candidates and ideally avoid them entirely.</p>
+  <p>For small sample sizes, candidate performance on other tests may be used to shift the norm. These prior scores help estimate the relative ability level of the current sample compared to the broader high-range population.</p>
+
+  <h3>Accuracy:</h3>
+
+  <p>
+  From this stage onward, uncertainty is computed statistically and a 95% confidence interval is displayed.
+  Accuracy is expected to increase with larger sample sizes and the inclusion of qualitative submissions.
+  </p>
+
 
   <hr>
 
@@ -175,9 +351,5 @@
   <div class="section">
     <a class="button" href="index.html">Back to main page</a>
   </div>
-
 </body>
-
 </html>
-
-
