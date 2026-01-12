@@ -92,6 +92,41 @@
   </div>
 </div>
 
+<div style="margin-top:50px; text-align:center;">
+  <a
+    href="#"
+    id="toggleVideoLink"
+    style="font-size:18px; font-weight:bold; cursor:pointer;"
+  >▶ Show spatial item instruction video
+  </a>
+  <div id="videoWrapper" style="display:none; margin-top:20px;">
+    <video
+      controls
+      preload="metadata"
+      style="width:100%; max-width:600px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.15);"
+    >
+      <source src="instructions.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+</div>
+
 <script src="quiz.js"></script>
+<script>
+  const toggleVideoLink = document.getElementById("toggleVideoLink");
+  const videoWrapper = document.getElementById("videoWrapper");
+
+  if (toggleVideoLink && videoWrapper) {
+    toggleVideoLink.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      const isVisible = videoWrapper.style.display === "block";
+      videoWrapper.style.display = isVisible ? "none" : "block";
+      toggleVideoLink.textContent = isVisible
+        ? "▶ Show spatial item instruction video"
+        : "▼ Hide spatial item instruction video";
+    });
+  }
+</script>
 </body>
 </html>
