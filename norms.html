@@ -234,6 +234,7 @@
   <h3>Proportion-outscored model:</h3>
 
   <p>Proportion outscored is a number between 0 and 1 that functions like a percentile, computed using a fractional or mid-rank ranking method. (Note: here "mid-rank" refers to how tied scores are handled, not to the median.)</p>
+  <p>It is computed like this:</p>
   <div style="display: flex; justify-content: center;">
     <ul style="text-align: left;">
       <li>Count the number of scores strictly lower than the score of interest.</li>
@@ -242,9 +243,7 @@
     </ul>
   </div>
   
-  <p>
-  The proportion outscored <em>p</em> is converted directly into a standard score:
-  </p>
+  <p>  The proportion outscored <em>p</em> is converted directly into a standard score:  </p>
 
   <div class="math-block">
     \[
@@ -352,4 +351,5 @@
   </div>
 </body>
 </html>
+
 
