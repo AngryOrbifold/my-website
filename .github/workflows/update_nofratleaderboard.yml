@@ -2,15 +2,11 @@ name: Update NOFRAT Leaderboard
 
 on:
   schedule:
-    - cron: "0 0 */2 * *"   # every 48 hours
-  workflow_dispatch:
+    - cron: "0 0 */2 * *"  # every 48 hours
+  workflow_dispatch:  # manual run button
 
 permissions:
   contents: write
-
-concurrency:
-  group: update-nofrat-leaderboard
-  cancel-in-progress: true
 
 jobs:
   build:
@@ -25,17 +21,15 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install supabase-py
+      - name: Install Supabase Client
+        run: pip install supabase
 
       - name: Generate leaderboard
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: |
-          python -u generate_nofratleaderboard.py
+          python generate_nofratleaderboard.py
 
       - name: Ensure .nojekyll exists
         run: |
@@ -44,13 +38,11 @@ jobs:
             touch .nojekyll
           fi
 
-      - name: Commit and push changes
+      - name: Commit and push changes (if any)
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
           git add nofratleaderboard.html .nojekyll
-
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
