@@ -17,31 +17,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ Setup Python
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
-      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install supabase
+          pip install supabase-py
 
-      # 4️⃣ Generate the leaderboard
       - name: Generate leaderboard
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
         run: |
-          python generate_nofratleaderboard.py
+          python -u generate_nofratleaderboard.py
 
-      # 5️⃣ Ensure .nojekyll exists
       - name: Ensure .nojekyll exists
         run: |
           if [ ! -f .nojekyll ]; then
@@ -49,7 +44,6 @@ jobs:
             touch .nojekyll
           fi
 
-      # 6️⃣ Commit and push changes only if something changed
       - name: Commit and push changes
         run: |
           git config user.name "github-actions"
@@ -62,3 +56,4 @@ jobs:
           else
             git commit -m "Auto-update leaderboard"
             git push
+          fi
