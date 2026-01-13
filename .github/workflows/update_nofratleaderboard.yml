@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: leaderboard-pages-update
+  group: leaderboard-update
   cancel-in-progress: false
 
 jobs:
@@ -17,68 +17,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # fetch full history helps when switching branches
+          fetch-depth: 0  # fetch full history
 
+      # 2️⃣ Setup Python
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
+      # 3️⃣ Install Supabase Client
       - name: Install Supabase Client
         run: pip install supabase
 
+      # 4️⃣ Generate leaderboard
       - name: Generate leaderboard
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python generate_nofratleaderboard.py
+
+      # 5️⃣ Commit and push changes (if any) directly to main
+      - name: Commit and push changes
         run: |
-          python generate_nofratleaderboard.py
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
 
-      - name: Ensure .nojekyll exists (optional, harmless)
-        run: |
-          if [ ! -f .nojekyll ]; then
-            touch .nojekyll
-          fi
+          git add nofratleaderboard.html
 
-      # ==== Publish only the generated site to gh-pages branch ====
-      - name: Publish to gh-pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -e
-
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-
-          # fetch gh-pages branch if it exists
-          if git ls-remote --exit-code --heads origin gh-pages; then
-            git fetch origin gh-pages:gh-pages
-            git checkout gh-pages
-            # optional: keep history; clean file(s) to only update what's needed
-            git rm -rf . || true
-          else
-            # create orphan branch
-            git checkout --orphan gh-pages
-            git rm -rf . || true
-          fi
-
-          # Copy the generated file into the branch root.
-          # Keep the file name the same so path /nofratleaderboard.html remains.
-          cp ../nofratleaderboard.html ./nofratleaderboard.html || cp nofratleaderboard.html ./nofratleaderboard.html
-
-          # Preserve custom domain in CNAME so orbifoldanswers.ch stays connected
-          echo "orbifoldanswers.ch" > CNAME
-
-          git add nofratleaderboard.html CNAME .nojekyll || true
-
-          # Commit only if changes exist
-          if git diff --quiet --staged; then
-            echo "No changes to publish"
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
           else
             git commit -m "Auto-update NOFRAT leaderboard"
-            # Force push to gh-pages branch using token auth
-            git push -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}" HEAD:gh-pages
+            git push
           fi
