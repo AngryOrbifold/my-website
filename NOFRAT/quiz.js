@@ -130,11 +130,15 @@ if (savedTheme === "enabled") {
 const APP_CHANNEL = "NOFRAT_channel";
 const channel = new BroadcastChannel(APP_CHANNEL);
 const TAB_ID = Math.random().toString(36).slice(2);
-let activeTab = localStorage.getItem("activeTab");
-function lockTab() {
-  localStorage.setItem("activeTab", TAB_ID);
-  channel.postMessage({ type: "ACTIVE", id: TAB_ID });
-}
+
+channel.onmessage = (msg) => {
+  if (msg.data?.type === "HELLO" && msg.data.id !== TAB_ID) {
+    blockUI();
+  }
+};
+
+channel.postMessage({ type: "HELLO", id: TAB_ID });
+
 function blockUI() {
   document.body.innerHTML = `
     <div style="
@@ -146,23 +150,6 @@ function blockUI() {
     </div>
   `;
 }
-if (activeTab && activeTab !== TAB_ID) {
-  blockUI();
-} else {
-  lockTab();
-}
-channel.onmessage = (msg) => {
-  if (msg.data?.type === "ACTIVE" && msg.data?.id !== TAB_ID) {
-    blockUI();
-  }
-};
-window.addEventListener("beforeunload", () => {
-  if (localStorage.getItem("activeTab") === TAB_ID) {
-    localStorage.removeItem("activeTab");
-    channel.postMessage({ type: "CLOSED", id: TAB_ID });
-  }
-});
-
 async function loadNormo() {
   try {
     const r = await fetch('https://qlmlvtohtkiycwtohqwk.supabase.co/storage/v1/object/public/questions2/normfr.json');
@@ -639,4 +626,5 @@ document.addEventListener("visibilitychange", () => {
 });
 setInterval(resyncFromServer, 60_000);
 loadUserProgress();
+
 
