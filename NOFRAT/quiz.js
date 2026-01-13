@@ -530,9 +530,8 @@ function showFinalResults() {
       openUsernameModal();
     });
 }
-
 /* ----------------- End / finish ----------------- */
-function endGame() {
+async function endGame() {
   if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
   attempts = 0;
   updateDB({ extraUpdate: { finished: true } });
