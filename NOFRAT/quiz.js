@@ -102,7 +102,6 @@ const saveUsernameBtn = document.getElementById("saveUsernameBtn");
 const cancelUsernameBtn = document.getElementById("cancelUsernameBtn");
 const usernameStatus = document.getElementById("usernameStatus");
 
-/* ----------------- APP STATE ----------------- */
 let email = localStorage.getItem("email");
 let username = localStorage.getItem("username") || "";
 if (!email) {
@@ -114,7 +113,6 @@ let attempts = TOTAL_ATTEMPTS;
 let currentIndex = 0;
 let normoCache = null;
 
-/* ----------------- SERVER-AUTHORIZED TIMER ----------------- */
 let serverReceivedAt = null;       
 let serverRemainingSeconds = null;  
 let timerInterval = null;
@@ -204,7 +202,6 @@ function startTimer() {
   }, 1000);
 }
 
-/* ----------------- Load user progress (authoritative) ----------------- */
 async function loadUserProgress() {
   try {
     const res = await fetch(UPDATE_USER_URL, {
@@ -229,7 +226,6 @@ async function loadUserProgress() {
     if (username) localStorage.setItem("username", username);
     updateTopBar();
 
-    // authoritative server timing if present
     if (typeof payload.remaining_seconds !== "undefined") {
       applyServerTiming(payload.server_time, payload.remaining_seconds);
     } else if (user?.start) {
@@ -404,7 +400,6 @@ if (submitBtn) submitBtn.onclick = async () => {
   }
 };
 
-/* ----------------- Top bar update ----------------- */
 function updateTopBar() {
   scoreEl.innerText = `Score: ${solved.length}`;
   attemptsEl.innerText = `Attempts left: ${attempts}`;
@@ -419,7 +414,6 @@ function updateTopBar() {
   iqEl.innerText = `IQ: ${iqVal} (Wechsler Scale)`;
 }
 
-/* ----------------- Leaderboard toggle in results ----------------- */
 async function loadLeaderboardState() {
   try {
     const res = await fetch(UPDATE_USER_URL, {
@@ -437,6 +431,8 @@ async function loadLeaderboardState() {
 }
 
 function showFinalResults() {
+  const toggleVideoLink = document.getElementById("toggleVideoLink");
+  toggleVideoLink?.parentElement?.remove();
   if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
   const iq = normoCache?.[solved.length] ?? "N/A";
 
@@ -530,7 +526,7 @@ function showFinalResults() {
       openUsernameModal();
     });
 }
-/* ----------------- End / finish ----------------- */
+
 async function endGame() {
   if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
   attempts = 0;
