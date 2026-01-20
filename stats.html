@@ -166,8 +166,47 @@
     }
 
     .hover-thumb:hover img {
-    display: block;
-    }
+      display: block;
+      }
+
+      .general-stats {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+    text-align: left;
+  }
+
+  .general-stats > li {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 8px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .general-stats .label {
+    flex: 1;
+  }
+
+  .general-stats .value {
+    font-weight: bold;
+    margin-left: 20px;
+  }
+
+  .general-stats .sub {
+    padding-left: 32px;
+    font-size: 0.95em;
+    color: #555;
+  }
+
+  .general-stats > li:not(.sub) {
+    background-color: #f2f2f2;
+    font-weight: 600;
+  }
+
+  .general-stats > li.sub {
+    background-color: transparent;
+  }
 
   </style>
 <!-- Google tag (gtag.js) -->
@@ -187,45 +226,70 @@
 <body>
   <h1>Statistical report</h1>
 
-<div class="section" style="max-width: 1500px; margin: 0 auto; font-family: Arial, sans-serif;">
+  <div class="section" style="max-width: 1500px; margin: 0 auto; font-family: Arial, sans-serif;">
 
-  <!-- General Statistics Table -->
-  <div class="table-container" style="max-width: 900px;">
-    <table style="width: 100%; border-collapse: collapse; text-align: left;">
-      <thead>
-        <tr>
-          <th colspan="2" style="padding: 8px; border-bottom: 2px solid #000;">
-            <h3>General</h3>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="padding: 6px 8px; width: 60%;">Number of people authenticated</td>
-          <td style="padding: 6px 8px;">51</td>
-        </tr>
-        <tr>
-          <td style="padding: 6px 8px;">Number of candidates attempting or having attempted the NAIT</td>
-          <td style="padding: 6px 8px;">26</td>
-        </tr>
-        <tr>
-          <td style="padding: 6px 8px;">Number of candidates attempting or having attempted the NAIT-ES</td>
-          <td style="padding: 6px 8px;">10</td>
-        </tr>
-        <tr>
-          <td style="padding: 6px 8px;">Number of candidates attempting or having attempted the NOACT</td>
-          <td style="padding: 6px 8px;">14</td>
-        </tr>
-        <tr>
-          <td style="padding: 6px 8px;">Number of candidates attempting or having attempted the NOFRAT</td>
-          <td style="padding: 6px 8px;">10</td>
-        </tr>
-        <tr>
-          <td style="padding: 6px 8px;">Number of candidates who have completed all tests (except NOFRAT)</td>
-          <td style="padding: 6px 8px;">2</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-container" style="max-width: 900px;">
+    <h2 style="text-align: center">General</h2>
+
+    <ul class="general-stats" style="margin-bottom: 40px; margin-top: 40px;">
+      <li>
+        <span class="label">Number of people authenticated</span>
+        <span class="value">51</span>
+      </li>
+      <li class="sub">
+        <span class="label">Number of banned accounts (email addresses)</span>
+        <span class="value">7</span>
+      </li>
+
+      <li>
+        <span class="label">Number of candidates who have finished the NAIT</span>
+        <span class="value">23</span>
+      </li>
+      <li class="sub">
+        <span class="label">Unfinished or abandoned submissions</span>
+        <span class="value">3</span>
+      </li>
+
+      <li>
+        <span class="label">Number of candidates who have finished the NAIT-ES</span>
+        <span class="value">4</span>
+      </li>
+      <li class="sub">
+        <span class="label">Unfinished or abandoned submissions</span>
+        <span class="value">6</span>
+      </li>
+
+      <li>
+        <span class="label">Number of candidates who have finished the NOACT</span>
+        <span class="value">10</span>
+      </li>
+      <li class="sub">
+        <span class="label">Unfinished submissions</span>
+        <span class="value">0</span>
+      </li>
+      <li class="sub">
+        <span class="label">Abandoned submissions</span>
+        <span class="value">4</span>
+      </li>
+
+      <li>
+        <span class="label">Number of candidates who have finished the NOFRAT</span>
+        <span class="value">2</span>
+      </li>
+      <li class="sub">
+        <span class="label">Unfinished submissions</span>
+        <span class="value">8</span>
+      </li>
+      <li class="sub">
+        <span class="label">Abandoned submissions</span>
+        <span class="value">0</span>
+      </li>
+
+      <li>
+        <span class="label">Number of candidates who have completed all OCS tests</span>
+        <span class="value">2</span>
+      </li>
+    </ul>
   </div>
 
   <p style="text-align: center;">Last update:  11 January 2026</p>
@@ -525,17 +589,8 @@
             </tbody>
         </table>
         </div>
-
   <div class="section">
     <a class="button" href="index.html" >Back to main page</a>
   </div>
 </body>
-
 </html>
-
-
-
-
-
-
-
