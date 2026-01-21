@@ -4,7 +4,6 @@ const TOTAL_ITEMS = 50;
 const TOTAL_ATTEMPTS = 30;
 const FALLBACK_TOTAL_TIME_SECONDS = 360 * 3600; // only used as fallback if server doesn't provide timing
 
-/* ----------------- DOM ----------------- */
 const scoreEl       = document.getElementById("scoreEl");
 const attemptsEl    = document.getElementById("attemptsEl");
 const timerEl       = document.getElementById("timerEl");
@@ -25,10 +24,9 @@ const usernameStatus = document.getElementById("usernameStatus");
 
 const ACTIVE_TAB_KEY = "activeTab";
 const ACTIVE_TAB_TS_KEY = "activeTabTimestamp";
-const LOCK_TIMEOUT = 5000; // 5 seconds - adjust as needed
+const LOCK_TIMEOUT = 5000; // 5 seconds 
 const HEARTBEAT_INTERVAL = 2000; // refresh every 2s
 
-/* ----------------- APP STATE ----------------- */
 let email = localStorage.getItem("email");
 let username = localStorage.getItem("username") || "";
 if (!email) {
@@ -40,7 +38,6 @@ let attempts = TOTAL_ATTEMPTS;
 let currentIndex = 0;
 let normoCache = null;
 
-/* ----------------- SERVER-AUTHORIZED TIMER ----------------- */
 let serverReceivedAt = null;       
 let serverRemainingSeconds = null;  
 let timerInterval = null;
@@ -66,7 +63,6 @@ function tryClaimLock() {
   const age = now() - ts;
 
   if (!existingId || age > LOCK_TIMEOUT) {
-    // Stale or empty -> take lock
     localStorage.setItem(ACTIVE_TAB_KEY, TAB_ID);
     localStorage.setItem(ACTIVE_TAB_TS_KEY, String(now()));
     channel.postMessage({ type: "ACTIVE", id: TAB_ID });
@@ -98,14 +94,12 @@ function enforceSingleTab() {
   setInterval(heartbeat, HEARTBEAT_INTERVAL);
 }
 
-// Sync across tabs (fix multi-tab browser issue)
 channel.onmessage = (msg) => {
   if (msg.data?.type === "ACTIVE" && msg.data?.id !== TAB_ID) {
     if (!tryClaimLock()) blockUI();
   }
 };
 
-// Optional improvement: detect lock loss immediately
 window.addEventListener("storage", () => {
   if (!tryClaimLock()) blockUI();
 });
@@ -173,7 +167,6 @@ function startTimer() {
   }, 1000);
 }
 
-/* ----------------- Load user progress (authoritative) ----------------- */
 async function loadUserProgress() {
   try {
     const res = await fetch(UPDATE_USER_URL, {
@@ -191,14 +184,25 @@ async function loadUserProgress() {
     const payload = await res.json().catch(()=>({}));
     const user = payload.user ?? payload;
 
-    // sync state
+    if (user?.finished === true) {
+      solved = Array.isArray(user.solved_ids) ? user.solved_ids : [];
+      attempts = user.attempts ?? attempts;
+      updateTopBar();
+
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+
+      return showFinalResults();
+    }
+
     solved = Array.isArray(user?.solved_ids) ? user.solved_ids : (user?.solved_ids ?? []);
     attempts = (user?.attempts ?? TOTAL_ATTEMPTS);
     username = localStorage.getItem("username") || user?.name || username;
     if (username) localStorage.setItem("username", username);
     updateTopBar();
 
-    // authoritative server timing if present
     if (typeof payload.remaining_seconds !== "undefined") {
       applyServerTiming(payload.server_time, payload.remaining_seconds);
     } else if (user?.start) {
@@ -241,7 +245,6 @@ function loadNextQuestion() {
   loadQuestionByIndex(next);
 }
 
-/* navigation */
 if (prevBtn) prevBtn.onclick = () => {
   const prev = findNextUnsolved(currentIndex, false);
   if (!prev) return endGame();
@@ -306,7 +309,6 @@ async function updateDB({ extraUpdate = {}, decrementAttempt = false } = {}) {
   }
 }
 
-/* ----------------- Submit flow ----------------- */
 if (submitBtn) submitBtn.onclick = async () => {
   const rawAns = answerInput.value;
   if (!rawAns || !rawAns.trim()) return;
@@ -329,9 +331,8 @@ if (submitBtn) submitBtn.onclick = async () => {
     const correct = payload?.correct === true;
 
     if (correct) {
-      // Correct answer: add to solved locally and persist
       if (!solved.includes(currentIndex)) solved.push(currentIndex);
-      await updateDB({ extraUpdate: {} }); // server does not decrement attempts
+      await updateDB({ extraUpdate: {} });
       updateTopBar();
       statusEl.style.color = "#2a7a2a";
       statusEl.innerText = "Correct";
@@ -343,7 +344,6 @@ if (submitBtn) submitBtn.onclick = async () => {
       return;
     }
 
-    // Incorrect answer: decrement attempts in server
     statusEl.style.color = "crimson";
     statusEl.innerText = "Incorrect";
     setTimeout(() => statusEl.innerText = "", 2000);
@@ -359,7 +359,6 @@ if (submitBtn) submitBtn.onclick = async () => {
   }
 };
 
-/* ----------------- Top bar update ----------------- */
 function updateTopBar() {
   scoreEl.innerText = `Score: ${solved.length}`;
   attemptsEl.innerText = `Attempts left: ${attempts}`;
@@ -374,7 +373,6 @@ function updateTopBar() {
   iqEl.innerText = `IQ: ${iqVal} (Wechsler Scale)`;
 }
 
-/* ----------------- Leaderboard toggle in results ----------------- */
 async function loadLeaderboardState() {
   try {
     const res = await fetch(UPDATE_USER_URL, {
@@ -486,7 +484,6 @@ function showFinalResults() {
     });
 }
 
-/* ----------------- End / finish ----------------- */
 function endGame() {
   if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
   attempts = 0;
@@ -494,7 +491,6 @@ function endGame() {
   showFinalResults();
 }
 
-/* ----------------- Change username modal (UX) ----------------- */
 function openUsernameModal() {
   newUsernameInput.value = localStorage.getItem("username") || "";
   usernameStatus.textContent = "";
@@ -555,7 +551,23 @@ saveUsernameBtn?.addEventListener("click", async (e) => {
   }
 });
 
-/* ----------------- Dark mode toggle ----------------- */
+finishBtn?.addEventListener("click", async () => {
+  const ok = window.confirm(
+    "Are you sure you want to finish the test?"
+  );
+  if (!ok) return;
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+
+  await updateDB({
+    extraUpdate: { finished: true }
+  });
+
+  showFinalResults();
+});
+
 darkModeBtn?.addEventListener("click", () => {
   document.body.classList.toggle("dark-mode");
   const isDark = document.body.classList.contains("dark-mode");
@@ -583,14 +595,7 @@ window.addEventListener("focus", () => setTimeout(resyncFromServer, 200));
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible") setTimeout(resyncFromServer, 200);
 });
-// periodic resync every 60s
-setInterval(resyncFromServer, 60_000);
 
-/* ----------------- INIT ----------------- */
+setInterval(resyncFromServer, 90_000);
+
 loadUserProgress();
-
-
-
-
-
-
