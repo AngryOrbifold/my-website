@@ -16,6 +16,7 @@ const submitBtn     = document.getElementById("submitBtn");
 const prevBtn       = document.getElementById("prevBtn");
 const nextBtn       = document.getElementById("nextBtn");
 const darkModeBtn   = document.getElementById("darkModeBtn");
+const finishBtn   = document.getElementById("finishBtn");
 
 const spatialContainer = document.getElementById("spatialContainer");
 const spatialCanvas = document.getElementById("spatialCanvas");
@@ -218,6 +219,17 @@ async function loadUserProgress() {
 
     const payload = await res.json().catch(()=>({}));
     const user = payload.user ?? payload;
+
+    if (user?.finished === true) {
+      solved = Array.isArray(user.solved_ids) ? user.solved_ids : [];
+      attempts = user.attempts ?? attempts;
+      updateTopBar();
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      return showFinalResults();
+    }
 
     // sync state
     solved = Array.isArray(user?.solved_ids) ? user.solved_ids : (user?.solved_ids ?? []);
@@ -598,6 +610,23 @@ darkModeBtn?.addEventListener("click", () => {
   const isDark = document.body.classList.contains("dark-mode");
   localStorage.setItem("darkMode", isDark ? "enabled" : "disabled");
   darkModeBtn.textContent = isDark ? "Light Mode" : "Dark Mode";
+});
+
+finishBtn?.addEventListener("click", async () => {
+  const ok = window.confirm(
+    "Are you sure you want to finish the test?"
+  );
+  if (!ok) return;
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+
+  await updateDB({
+    extraUpdate: { finished: true }
+  });
+
+  showFinalResults();
 });
 
 function resyncFromServer() {
