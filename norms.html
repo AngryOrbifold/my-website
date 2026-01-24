@@ -312,18 +312,9 @@
 
   <h3>Subnorm completion and monotonicity:</h3>
 
-  <p>  Missing subnorm values are filled using a combination of minimum score constraints, linear interpolation, and linear extrapolation. Leading gaps are filled smoothly from a minimum allowable score, intermediate gaps by interpolation, and trailing gaps by slope-based extrapolation.</p>
-
-  <p>
-  The solvability-based subnorm and percentile-based subnorm are then averaged:
-  </p>
-
-  <div class="math-block">
-    \[
-      SS = \frac{SS_1 + SS_2}{2}
-    \]
-  </div>
-
+  <p> A monotone latent norm curve is estimated from the available data of the subnorms using a weighted isotonic regression.  </p>
+  <p> The resulting norm is guaranteed to be non-decreasing and to vary smoothly across score levels without introducing artificial structure in regions where data is sparse.  </p>
+  <p> Boundary values where subnorm data is unavailable are handled by extrapolation.</p>
   <p>The primary reason for using this more complex norming method, rather than simply pairing scores with previous tests, is to minimize the reliance on prior scores from candidates and ideally avoid them entirely.</p>
   <p>For small sample sizes, candidate performance on other tests may be used to shift the norm. These prior scores help estimate the relative ability level of the current sample compared to the broader high-range population.</p>
 
@@ -350,6 +341,7 @@
   </div>
 </body>
 </html>
+
 
 
 
