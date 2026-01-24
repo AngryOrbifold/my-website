@@ -649,6 +649,7 @@ window.addEventListener("focus", () => setTimeout(resyncFromServer, 200));
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible") setTimeout(resyncFromServer, 200);
 });
-setInterval(resyncFromServer, 90_000);
+setInterval(resyncFromServer, 300_000);
 loadUserProgress();
+
 
