@@ -289,9 +289,9 @@
     <a class="button" href="norms.xlsx">Norms before the discontinuation (2015)</a>
 
     <div class="section" style="margin-top:20px;">
-    <p>If you have taken NIT-Form 1, you can retrieve your certificate as it was issued by inputting your name in the field below:</p>
+      <p>If you have taken NIT-Form 1, you can retrieve your certificate as it was issued by entering your full name below.</p>
     </div>
-    
+
     <form id="certForm" style="margin-top: 20px;">
       <label>Name:</label>
       <input type="text" id="name" required />
@@ -300,40 +300,71 @@
 
     <div id="result" style="margin-top: 20px;"></div>
 
-  <script>
-    document.getElementById("certForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-  
-      const name = document.getElementById("name").value.trim();
-      const container = document.getElementById("result");
-  
-      container.innerHTML = `<p style="font-weight:bold;">Certificate is being retrieved…</p>`;
-  
-      try {
-        const res = await fetch(
-          "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/get_nitcert",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name }),
-          }
-        );
-  
-        if (!res.ok) {
-          container.innerHTML = `<p style="color:red;">Certificate not available or wrong name, make sure you give your full name.</p>`;
+    <script>
+      // Persistent browser identifier
+      let browserId = localStorage.getItem("nit_browser_id");
+      if (!browserId) {
+        browserId = crypto.randomUUID();
+        localStorage.setItem("nit_browser_id", browserId);
+      }
+
+      document.getElementById("certForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const container = document.getElementById("result");
+
+        // Client-side lock
+        if (localStorage.getItem("nit_certificate_claimed")) {
+          container.innerHTML = `
+            <p style="color:red;font-weight:bold;">
+              You can only retrieve your own certificate.
+            </p>`;
           return;
         }
-  
-        const { url } = await res.json();
-        container.innerHTML = `
-          <iframe src="${url}" style="width:100%;height:600px;border:1px solid #ccc;margin-top:10px;" allowfullscreen></iframe>
-        `;
-      } catch (err) {
-        container.innerHTML = `<p style="color:red;">An error occurred. Please try again later.</p>`;
-        console.error(err);
-      }
-    });
-  </script>
+
+        const name = document.getElementById("name").value.trim();
+        if (!name) return;
+
+        container.innerHTML = `<p style="font-weight:bold;">Certificate is being retrieved…</p>`;
+
+        try {
+          const res = await fetch(
+            "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/get_nitcert",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ name, browserId }),
+            }
+          );
+
+          const payload = await res.json();
+
+          if (!res.ok) {
+            container.innerHTML = `
+              <p style="color:red;">
+                ${payload.error || "Certificate not available."}
+              </p>`;
+            return;
+          }
+
+          // Permanently lock this browser after success
+          localStorage.setItem("nit_certificate_claimed", "true");
+
+          container.innerHTML = `
+            <iframe
+              src="${payload.url}"
+              style="width:100%;height:600px;border:1px solid #ccc;margin-top:10px;"
+              allowfullscreen>
+            </iframe>`;
+        } catch (err) {
+          console.error(err);
+          container.innerHTML = `
+            <p style="color:red;">
+              An error occurred. Please try again later.
+            </p>`;
+        }
+      });
+    </script>
 
   <div class="section">
     <a class="button" href="index.html">Back to main page</a>
