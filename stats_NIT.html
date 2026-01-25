@@ -120,6 +120,20 @@
     .default-table tbody tr:first-child td {
       font-weight: normal;  
     }
+
+    #certForm {
+      max-width: 100%;
+    }
+    #certForm input[type="text"] {
+      font-size: 15px;
+      padding: 12px 10px;
+      height: calc(20px + 24px);
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+      width: 30%;   
+      margin-right: 0;    
+    }
   </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XHMB3NM73"></script>
@@ -272,14 +286,57 @@
     </div>
 
     <h1>Final norms of NIT-Form 1 and its subtests</h1>
-    <a class="button" href="norms.xlsx">Norms before it was discontinued (2015)</a>
+    <a class="button" href="norms.xlsx">Norms before the discontinuation (2015)</a>
+
+    <div class="section" style="margin-top:20px;">
+    <p>If you have taken NIT-Form 1, you can retrieve your certificate as it was issued by inputting your name in the field below:</p>
+    </div>
+    
+    <form id="certForm" style="margin-top: 20px;">
+      <label>Name:</label>
+      <input type="text" id="name" required />
+      <button type="submit" class="button">Show Certificate</button>
+    </form>
+
+    <div id="result" style="margin-top: 20px;"></div>
+
+  <script>
+    document.getElementById("certForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+  
+      const name = document.getElementById("name").value.trim();
+      const container = document.getElementById("result");
+  
+      container.innerHTML = `<p style="font-weight:bold;">Certificate is being retrieved…</p>`;
+  
+      try {
+        const res = await fetch(
+          "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/get_nitcert",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name }),
+          }
+        );
+  
+        if (!res.ok) {
+          container.innerHTML = `<p style="color:red;">Certificate not available or wrong name, make sure you give your full name.</p>`;
+          return;
+        }
+  
+        const { url } = await res.json();
+        container.innerHTML = `
+          <iframe src="${url}" style="width:100%;height:600px;border:1px solid #ccc;margin-top:10px;" allowfullscreen></iframe>
+        `;
+      } catch (err) {
+        container.innerHTML = `<p style="color:red;">An error occurred. Please try again later.</p>`;
+        console.error(err);
+      }
+    });
+  </script>
 
   <div class="section">
     <a class="button" href="index.html">Back to main page</a>
   </div>
 </body>
 </html>
-
-
-
-
