@@ -301,32 +301,18 @@
     <div id="result" style="margin-top: 20px;"></div>
 
     <script>
-      // Persistent browser identifier
-      let browserId = localStorage.getItem("nit_browser_id");
+      let browserId = localStorage.getItem("browserId");
       if (!browserId) {
         browserId = crypto.randomUUID();
-        localStorage.setItem("nit_browser_id", browserId);
+        localStorage.setItem("browserId", browserId);
       }
-
-      document.getElementById("certForm").addEventListener("submit", async (e) => {
+      const form = document.getElementById("certForm");
+      const container = document.getElementById("result");
+      form.addEventListener("submit", async (e) => {
         e.preventDefault();
-
-        const container = document.getElementById("result");
-
-        // Client-side lock
-        if (localStorage.getItem("nit_certificate_claimed")) {
-          container.innerHTML = `
-            <p style="color:red;font-weight:bold;">
-              You can only retrieve your own certificate.
-            </p>`;
-          return;
-        }
-
         const name = document.getElementById("name").value.trim();
         if (!name) return;
-
         container.innerHTML = `<p style="font-weight:bold;">Certificate is being retrieved…</p>`;
-
         try {
           const res = await fetch(
             "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/get_nitcert",
@@ -336,32 +322,21 @@
               body: JSON.stringify({ name, browserId }),
             }
           );
-
-          const payload = await res.json();
-
+          const data = await res.json();
           if (!res.ok) {
-            container.innerHTML = `
-              <p style="color:red;">
-                ${payload.error || "Certificate not available."}
-              </p>`;
+            container.innerHTML = `<p style="color:red;">${data.error || "Certificate not available."}</p>`;
             return;
           }
-
-          // Permanently lock this browser after success
-          localStorage.setItem("nit_certificate_claimed", "true");
-
           container.innerHTML = `
-            <iframe
-              src="${payload.url}"
-              style="width:100%;height:600px;border:1px solid #ccc;margin-top:10px;"
+            <iframe 
+              src="${data.url}" 
+              style="width:100%;height:600px;border:1px solid #ccc;margin-top:10px;" 
               allowfullscreen>
-            </iframe>`;
+            </iframe>
+          `;
         } catch (err) {
+          container.innerHTML = `<p style="color:red;">An error occurred. Please try again later.</p>`;
           console.error(err);
-          container.innerHTML = `
-            <p style="color:red;">
-              An error occurred. Please try again later.
-            </p>`;
         }
       });
     </script>
@@ -371,3 +346,4 @@
   </div>
 </body>
 </html>
+
