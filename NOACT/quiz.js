@@ -2,11 +2,9 @@ const UPDATE_USER_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/u
 const GET_ANSWER_URL  = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/get_answer";
 const TOTAL_ITEMS = 50;
 const TOTAL_ATTEMPTS = 30;
-const FALLBACK_TOTAL_TIME_SECONDS = 360 * 3600; // only used as fallback if server doesn't provide timing
 
 const scoreEl       = document.getElementById("scoreEl");
 const attemptsEl    = document.getElementById("attemptsEl");
-const timerEl       = document.getElementById("timerEl");
 const questionImg   = document.getElementById("questionImg");
 const statusEl      = document.getElementById("status");
 const answerInput   = document.getElementById("answerInput");
@@ -24,8 +22,8 @@ const usernameStatus = document.getElementById("usernameStatus");
 
 const ACTIVE_TAB_KEY = "activeTab";
 const ACTIVE_TAB_TS_KEY = "activeTabTimestamp";
-const LOCK_TIMEOUT = 5000; // 5 seconds 
-const HEARTBEAT_INTERVAL = 2000; // refresh every 2s
+const LOCK_TIMEOUT = 5000; 
+const HEARTBEAT_INTERVAL = 2000; 
 
 let email = localStorage.getItem("email");
 let username = localStorage.getItem("username") || "";
@@ -37,10 +35,6 @@ let solved = [];
 let attempts = TOTAL_ATTEMPTS;
 let currentIndex = 0;
 let normoCache = null;
-
-let serverReceivedAt = null;       
-let serverRemainingSeconds = null;  
-let timerInterval = null;
 
 const savedTheme = localStorage.getItem("darkMode");
 if (savedTheme === "enabled") {
@@ -139,34 +133,6 @@ function findNextUnsolved(start, forward = true) {
   return null;
 }
 
-function applyServerTiming(server_time_iso, remaining_seconds_from_server) {
-  serverReceivedAt = Date.now();
-  serverRemainingSeconds = Number.isFinite(Number(remaining_seconds_from_server))
-    ? Math.max(0, Math.trunc(Number(remaining_seconds_from_server)))
-    : FALLBACK_TOTAL_TIME_SECONDS;
-  console.log("applyServerTiming:", { serverReceivedAt, serverRemainingSeconds, server_time_iso });
-}
-
-function startTimer() {
-  if (timerInterval) clearInterval(timerInterval);
-  timerInterval = setInterval(()=> {
-    if (serverRemainingSeconds === null || serverReceivedAt === null) {
-      timerEl.innerText = "Time left: --";
-      return;
-    }
-    const elapsedSinceReceive = Math.floor((Date.now() - serverReceivedAt) / 1000);
-    const remaining = serverRemainingSeconds - elapsedSinceReceive;
-    if (remaining <= 0) {
-      if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
-      return endGame();
-    }
-    const h = Math.floor(remaining/3600);
-    const m = Math.floor((remaining%3600)/60);
-    const s = remaining%60;
-    timerEl.innerText = `Time left: ${h} h ${m} m ${s} s`;
-  }, 1000);
-}
-
 async function loadUserProgress() {
   try {
     const res = await fetch(UPDATE_USER_URL, {
@@ -189,11 +155,6 @@ async function loadUserProgress() {
       attempts = user.attempts ?? attempts;
       updateTopBar();
 
-      if (timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-      }
-
       return showFinalResults();
     }
 
@@ -203,29 +164,11 @@ async function loadUserProgress() {
     if (username) localStorage.setItem("username", username);
     updateTopBar();
 
-    if (typeof payload.remaining_seconds !== "undefined") {
-      applyServerTiming(payload.server_time, payload.remaining_seconds);
-    } else if (user?.start) {
-      const startMs = new Date(user.start).getTime();
-      serverReceivedAt = Date.now();
-      serverRemainingSeconds = Math.max(0, FALLBACK_TOTAL_TIME_SECONDS - Math.floor((Date.now() - startMs) / 1000));
-      console.warn("Using fallback timing computed from user.start.");
-    } else {
-      serverReceivedAt = Date.now();
-      serverRemainingSeconds = FALLBACK_TOTAL_TIME_SECONDS;
-      console.warn("No timing info from server; defaulting to full time.");
-    }
-
     if (solved.length >= TOTAL_ITEMS || attempts <= 0) {
       updateDB({ extraUpdate: { finished: true } });
       return showFinalResults();
     }
 
-    if (serverRemainingSeconds <= 0) {
-      return endGame();
-    }
-
-    startTimer();
     loadNextQuestion();
   } catch (err) {
     console.error("loadUserProgress error:", err);
@@ -390,9 +333,7 @@ async function loadLeaderboardState() {
 }
 
 function showFinalResults() {
-  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
   const iq = normoCache?.[solved.length] ?? "N/A";
-
   document.querySelector(".container").innerHTML = `
     <h2>Test Completed</h2>
     <p><strong>Raw score:</strong> ${solved.length} / ${TOTAL_ITEMS}</p>
@@ -485,7 +426,6 @@ function showFinalResults() {
 }
 
 function endGame() {
-  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
   attempts = 0;
   updateDB({ extraUpdate: { finished: true } });
   showFinalResults();
@@ -556,11 +496,6 @@ finishBtn?.addEventListener("click", async () => {
     "Are you sure you want to finish the test?"
   );
   if (!ok) return;
-  if (timerInterval) {
-    clearInterval(timerInterval);
-    timerInterval = null;
-  }
-
   await updateDB({
     extraUpdate: { finished: true }
   });
@@ -575,28 +510,4 @@ darkModeBtn?.addEventListener("click", () => {
   darkModeBtn.textContent = isDark ? "Light Mode" : "Dark Mode";
 });
 
-function resyncFromServer() {
-  if (!email) return;
-  fetch(UPDATE_USER_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email })
-  }).then(r => r.ok ? r.json() : null).then(p => {
-    if (p?.remaining_seconds !== undefined) applyServerTiming(p.server_time, p.remaining_seconds);
-    if (p?.user) {
-      const u = p.user;
-      if (Array.isArray(u.solved_ids)) solved = u.solved_ids;
-      attempts = u.attempts ?? attempts;
-      updateTopBar();
-    }
-  }).catch(e => console.warn("Resync failed:", e));
-}
-window.addEventListener("focus", () => setTimeout(resyncFromServer, 200));
-document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "visible") setTimeout(resyncFromServer, 200);
-});
-
-setInterval(resyncFromServer, 300_000);
-
 loadUserProgress();
-
