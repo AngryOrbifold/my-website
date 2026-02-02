@@ -398,7 +398,7 @@ function showFinalResults() {
 
     <label style="display:flex; align-items:center; gap:8px; margin-top:20px;">
       <input type="checkbox" id="leaderboardCheckbox">
-      Be visible on the leaderboard
+      Be visible on the NOFRAT leaderboard
     </label>
 
     <p id="leaderboardStatus" style="margin-top:10px; font-weight:bold;"></p>
@@ -566,3 +566,4 @@ finishBtn?.addEventListener("click", async () => {
   showFinalResults();
 });
 loadUserProgress();
+
