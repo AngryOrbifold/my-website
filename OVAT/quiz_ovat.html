@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OVAT33</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #f7f9fc;
+      font-family: Arial, sans-serif;
+      color: #222;
+    }
+    .container {
+      width: 100%;
+      max-width: 1000px;
+      min-height: 60vh;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      margin: 20px auto;
+      box-sizing: border-box;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .question-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+
+    .item-text {
+      text-align: left;
+      font-size: 22px;
+      flex: 1;
+      padding-right: 10px;
+    }
+
+    .item-input {
+      text-align: right;
+    }
+
+    input[type="text"], input[type="email"], input[type="number"] {
+      padding: 8px;
+      font-size: 16px;
+      width: 260px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 14px 48px;
+      background: #0b5cff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .top-bar {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      margin: 25px 0;
+      font-weight: bold;
+      font-size: 22px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1 class="title" style="text-align:center; margin-bottom:20px;">Online Verbal Automatic Test 33</h1>
+  <div style="text-align:center; margin-bottom:30px;">
+    <a href="OVAT33.pdf" style="font-size:18px; font-weight:bold;">Download Items PDF</a>
+  </div>
+
+  <div class="section" style="max-width: 1000px;">
+    <h2 class="title" style="text-align:center; margin-bottom:50px;">Instructions</h2>
+    <p>The test contains four main types of items.</p>
+    <p><strong>Analogies:</strong> the first element has the same relationship to the second as the third has to the fourth.</p>
+    <p><strong>Associations:</strong> a group of words refers to a common idea or object, and you must identify what that idea or object is.</p>
+    <p><strong>Cipher:</strong> the item contains a hidden message that you have to decipher.</p>
+    <p><strong>Sequence:</strong> the words are logically connected in a sequential order.</p>
+    <p>A combination of types is also possible; part of the test is recognizing which kind of item is presented.</p>
+    <p>Some items may have more than one correct answer. Spaces are optional, and answers are not case sensitive.</p>
+    <p>You have two attempts. All answers must be submitted at the same time. After the first attempt, any unsolved items will remain visible so you can try them again.</p>
+  </div>
+
+  <hr style="margin:40px 0; border:0; height:2px; background:#0b5cff;">
+
+  <section id="gameSection" aria-live="polite">
+
+    <div class="top-bar">
+      <span id="attemptsEl">Attempts left: 0</span>
+      <span id="scoreEl">Score: 0</span>
+    </div>
+
+    <div class="question-container">
+
+      <div class="item-row"><div class="item-text">ID 1: Triangle, Square, Pentagon, ?</div><div class="item-input"><input id="ans1" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 2: ka nb ic gd he tf</div><div class="item-input"><input id="ans2" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 3: F is to 32 as C is to ?</div><div class="item-input"><input id="ans3" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 4: Teeth, Mask, PhD</div><div class="item-input"><input id="ans4" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 5: White is to FFFFFF as black is to ?</div><div class="item-input"><input id="ans5" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 6: Hydrogen, 2, Oxygen</div><div class="item-input"><input id="ans6" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 7: enosluplairotcafneves</div><div class="item-input"><input id="ans7" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 8: Chess is to 32 as French deck is to ?</div><div class="item-input"><input id="ans8" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 9: Pocket, Communication, Screen</div><div class="item-input"><input id="ans9" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 10: BlueWhiteRed is to FR as BlackYellowRed is to ?</div><div class="item-input"><input id="ans10" type="text" autocomplete="off"></div></div>
+
+      <div class="item-row"><div class="item-text">ID 11: Stone, Bronze, ?</div><div class="item-input"><input id="ans11" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 12: XX-2X+5IX+4II/2IIx7</div><div class="item-input"><input id="ans12" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 13: Helium, Lithium, Boron, Nitrogen, ?</div><div class="item-input"><input id="ans13" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 14: 10e2t3e6a8s9w1i4m5_7n11r</div><div class="item-input"><input id="ans14" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 15: Arachnid is to onevthreei as Insect is to ?</div><div class="item-input"><input id="ans15" type="text" autocomplete="off"></div></div>
+
+      <div class="item-row"><div class="item-text">ID 16: Point, Line, Plane, Volume, ?</div><div class="item-input"><input id="ans16" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 17: WW2, Rotors, Letters</div><div class="item-input"><input id="ans17" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 18: >> << - << - - 158114175</div><div class="item-input"><input id="ans18" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 19: Desolate is to Antarctica as Biggest is to ?</div><div class="item-input"><input id="ans19" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 20: <strong>23456 W</strong>AIBWNCEGDDKHLOEFYDZW</div><div class="item-input"><input id="ans20" type="text" autocomplete="off"></div></div>
+
+      <div class="item-row"><div class="item-text">ID 21: Sldio, ? , gsa, pamasl</div><div class="item-input"><input id="ans21" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 22: Ca Ad cF Mb hL nS Pb</div><div class="item-input"><input id="ans22" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 23: Helix is to Tension/Compression as Spiral is to ?</div><div class="item-input"><input id="ans23" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 24: Woldwide, Spot, Fou, Summe</div><div class="item-input"><input id="ans24" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 25: Earth5.97, Jupiter1.90, Mars6.42, Mercury3.30, ?</div><div class="item-input"><input id="ans25" type="text" autocomplete="off"></div></div>
+
+      <div class="item-row"><div class="item-text">ID 26: CNTEOIILMNMEPEEVU-SET--NE---</div><div class="item-input"><input id="ans26" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 27: Uppusoti is to Edjecint as Son is to ?</div><div class="item-input"><input id="ans27" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 28: Lime, A127, Chartreuse, C212, Aquamarine, A255C0, ?</div><div class="item-input"><input id="ans28" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 29: -2x2=nogartet 7b=e  -2e 3x4+1c 2x10³cd 2x4a</div><div class="item-input"><input id="ans29" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 30: Acam, Asbe, Cdcl, Dbfr, ?</div><div class="item-input"><input id="ans30" type="text" autocomplete="off"></div></div>
+
+      <div class="item-row"><div class="item-text">ID 31: H 13 18 14 13 is to E 9 13 12 18 7 as E 22 17 2 14 is to ?</div><div class="item-input"><input id="ans31" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 32: Animated, Illiad, Baseball, Unit</div><div class="item-input"><input id="ans32" type="text" autocomplete="off"></div></div>
+      <div class="item-row"><div class="item-text">ID 33: 178D2E97C4BC3 1000010101111100101100101000110010100</div><div class="item-input"><input id="ans33" type="text" autocomplete="off"></div></div>
+
+    </div>
+
+    <div style="margin-top:15px; text-align:center;">
+      <button id="submitBtn" type="button">Submit All</button>
+    </div>
+
+    <p id="status" role="status"></p>
+
+  </section>
+</div>
+<script src="quiz_ovat.js"></script>
+</body>
+</html>
