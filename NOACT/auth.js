@@ -79,12 +79,52 @@ async function login() {
       return;
     }
 
+    if (payload.create_password) {
+      const updRes = await fetch(UPDATE_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          update: {}
+        })
+      });
+
+      try {
+        localStorage.setItem("pwd_ack_" + email, "true");
+      } catch (e) {
+      }
+
+      passwordInput.classList.remove("hidden");
+
+      loginMsg.innerText =
+        "A password has been sent to your email. Check your spam folder if necessary.";
+
+      loginBtn.disabled = false;
+      return;
+    }
+
     if (payload.need_password) {
       passwordInput.type = "text";
       passwordInput.classList.remove("hidden");
       passwordInput.value = "";
 
-      loginMsg.innerText = "A password has been sent to your email. Check your spam folder if necessary.";
+      const ackKey = "pwd_ack_" + email;
+      const alreadyAcked = !!localStorage.getItem(ackKey);
+
+      if (payload.emailed === true && !alreadyAcked) {
+
+        loginMsg.innerText =
+          "A password has been sent to your email. Check your spam folder if necessary.";
+
+        try {
+          localStorage.setItem(ackKey, "true");
+        } catch (e) {
+        }
+
+      } else {
+        loginMsg.innerText = "Enter your password.";
+      }
+
       loginBtn.disabled = false;
       return;
     }
@@ -125,6 +165,11 @@ async function register() {
       loginMsg.innerText = payload?.error || "Failed to register.";
       loginBtn.disabled = false;
       return;
+    }
+
+    try {
+      localStorage.setItem("pwd_ack_" + email, "true");
+    } catch (e) {
     }
 
     usernameInput.classList.add("hidden");
