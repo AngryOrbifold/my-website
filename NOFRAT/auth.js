@@ -66,6 +66,7 @@ async function login() {
       return;
     }
 
+    // ── New user → choose username
     if (payload.user === null) {
       usernameInput.classList.remove("hidden");
       passwordInput.classList.add("hidden");
@@ -74,6 +75,17 @@ async function login() {
 
       usernameInput.focus();
       loginBtn.onclick = register;
+      loginBtn.disabled = false;
+      return;
+    }
+
+    if (payload.need_password) {
+      passwordInput.type = "text";
+      passwordInput.classList.remove("hidden");
+      passwordInput.value = "";
+
+      loginMsg.innerText = "Enter your password.";
+
       loginBtn.disabled = false;
       return;
     }
