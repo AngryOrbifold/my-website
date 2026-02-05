@@ -1,8 +1,8 @@
-name: Update NOFRAT Leaderboard
+name: Update NOAIS Leaderboard
 
 on:
   schedule:
-    - cron: "0 0 */2 * *"  # every 48 hours
+    - cron: "0 0 */3 * *"  # every 72 hours
   workflow_dispatch:      # manual run button
 
 permissions:
@@ -34,7 +34,7 @@ jobs:
         run: pip install supabase
 
       # 4️⃣ Generate leaderboard
-      - name: Generate leaderboard
+      - name: Generate leaderboard noais
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
@@ -46,11 +46,11 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
 
-          git add nofratleaderboard.html
+          git add noaisleaderboard.html
 
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Auto-update NOFRAT leaderboard"
+            git commit -m "Auto-update NOAIS leaderboard"
             git push
           fi
