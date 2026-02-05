@@ -30,6 +30,18 @@ function collectAnswers() {
   return answers;
 }
 
+function showStatus(message, isError = false) {
+  if (!statusEl) return;
+
+  statusEl.textContent = message;
+  statusEl.style.color = isError ? "red" : "green";
+  statusEl.style.fontWeight = "bold";
+
+  setTimeout(() => {
+    statusEl.textContent = "";
+  }, 3000);
+}
+
 function hideSolvedItems() {
   solved.forEach(id => {
     const row = document.getElementById("ans" + id)?.closest(".item-row");
@@ -209,6 +221,8 @@ async function submitAll() {
 
     const data = await res.json();
 
+    showStatus("Answers successfully sent.");
+
     solved = data.solved_ids ?? [];
     attempts = data.attempts ?? attempts;
     finished = data.finished ?? false;
@@ -223,6 +237,7 @@ async function submitAll() {
 
   } catch (err) {
     console.error("Submit error:", err);
+    showStatus("Failed to send answers. Please try again.", true);
   }
 }
 
@@ -237,4 +252,3 @@ if (submitBtn) {
 
 loadProgress();
 updateTopBar();
-
