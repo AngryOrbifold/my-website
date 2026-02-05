@@ -95,7 +95,7 @@ for idx, entry in enumerate(combined):
         f"<td>{idx + 1}</td>"
         f"<td>{entry['name']}</td>"
         f"<td>{entry['total_score']}</td>"
-        f"<td>{iq}</td>"
+        f"<td>{round(iq)}</td>"
         f"</tr>\n"
     )
 
@@ -246,4 +246,5 @@ html_output = f"""<!DOCTYPE html>
 
 # Write final HTML to disk
 with open("noaisleaderboard.html", "w", encoding="utf-8") as f:
+
     f.write(html_output)
