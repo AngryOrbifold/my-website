@@ -167,74 +167,20 @@ async function loadUserProgress() {
   }
 }
 
-async function loadQuestionByIndex(index) {
+function loadQuestionByIndex(index) {
   currentIndex = index;
-
-  spatialContainer.style.display = "none";
-  answerInput.style.display = "block";
-  answerInput.blur();
-
-  const base = "https://qlmlvtohtkiycwtohqwk.supabase.co/storage/v1/object/public/questions3";
-  const filename = `Base-${index}.jpg`;
-  const url = `${base}/${encodeURIComponent(filename)}?cb=${Date.now()}`;
-
-  questionImg.onload = () => {
-    questionImg.style.display = "block";
-    questionImg.style.visibility = "visible";
-    questionImg.alt = "Current question";
-    if (SPATIAL_ITEMS.includes(currentIndex)) {
-      spatialContainer.style.display = "flex";
-      answerInput.style.display = "none";
-      updateSpatialGridFromInputs();
-      setTimeout(updateCanvasSize, 60);
-    } else {
-      answerInput.focus();
-    }
-    console.log("[IMG] loaded", url, "natural:", questionImg.naturalWidth, questionImg.naturalHeight);
-  };
-
-  questionImg.onerror = (ev) => {
-    console.warn("[IMG] error loading", url, ev);
-    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><rect width='100%' height='100%' fill='#f3f3f3'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='#888' font-size='20'>Image unavailable</text></svg>`;
-    questionImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-    questionImg.style.display = "block";
-    questionImg.style.visibility = "visible";
-    questionImg.alt = "Image unavailable";
-    if (SPATIAL_ITEMS.includes(currentIndex)) {
-      spatialContainer.style.display = "flex";
-      answerInput.style.display = "none";
-      updateSpatialGridFromInputs();
-      setTimeout(updateCanvasSize, 60);
-    } else {
-      answerInput.focus();
-    }
-  };
-
-  try {
-    questionImg.style.display = "none";
-    questionImg.style.visibility = "hidden";
-    // quick fetch to detect obvious HTTP errors (CORS may make response opaque on some devices)
-    const headRes = await fetch(url, { method: "GET", cache: "no-store" });
-    if (headRes && headRes.ok) {
-      questionImg.src = url;
-    } else {
-      console.warn("[IMG] fetch returned not ok", headRes && headRes.status);
-      questionImg.src = url; // still try to set src (img may still display even if fetch was blocked)
-    }
-  } catch (err) {
-    console.warn("[IMG] fetch error (may be CORS/blocked):", err);
-    questionImg.src = url;
+  statusEl.innerText = "";
+  questionImg.src = `https://qlmlvtohtkiycwtohqwk.supabase.co/storage/v1/object/public/questions3/Base-${index}.jpg`;
+  if (SPATIAL_ITEMS.includes(index)) {
+    spatialContainer.style.display = "flex";
+    answerInput.style.display = "none";
+    updateSpatialGridFromInputs();
+  } else {
+    spatialContainer.style.display = "none";
+    answerInput.style.display = "block";
+    answerInput.focus();
   }
-  setTimeout(() => {
-    if (questionImg.complete && questionImg.naturalWidth) {
-      questionImg.style.display = "block";
-      questionImg.style.visibility = "visible";
-    }
-    console.log("[IMG] complete:", questionImg.complete, "naturalWidth:", questionImg.naturalWidth);
-  }, 150);
 }
-
-
 
 if (prevBtn) prevBtn.onclick = () => { const prev = findNextUnsolved(currentIndex, false); if (prev) loadQuestionByIndex(prev); };
 if (nextBtn) nextBtn.onclick = () => { const next = findNextUnsolved(currentIndex, true); if (next) loadQuestionByIndex(next); };
@@ -380,5 +326,6 @@ spatialCanvas.addEventListener("touchend", e=>{
 });
 
 loadUserProgress();
+
 
 
