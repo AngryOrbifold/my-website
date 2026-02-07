@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SAITO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #f7f9fc;
+      font-family: Arial, sans-serif;
+      color: #222;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    * { box-sizing: inherit; }
+
+    .container {
+      width: 95%;
+      max-width: 900px;
+      margin: 15px auto;
+      padding: 16px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    h1.title {
+      text-align: center;
+      margin: 10px 0 25px 0;
+      font-size: 22px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      font-size: 16px;
+      font-weight: bold;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .question-container img {
+      width: 100%;
+      max-height: 60vh;
+      border-radius: 8px;
+      border: 4px solid #000;
+      object-fit: contain;
+      margin-bottom: 16px;
+      margin-top: 20px;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 16px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      font-size: 16px;
+      background: #0b5cff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:active {
+      background: #084fc1;
+    }
+
+    .question-navigation {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .question-navigation button {
+      flex: 1 1 45%;
+    }
+
+    .answer-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .spatial-container {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      width: 100%;
+      align-items: center;
+    }
+
+    .spatial-controls {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .spatial-controls label {
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .spatial-canvas-wrapper {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    #spatialCanvas {
+      border: 1px solid #888;
+      background: #fff;
+      touch-action: manipulation;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    #status {
+      margin-top: 12px;
+      text-align: center;
+      font-weight: bold;
+      min-height: 22px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .modal-box {
+      width: 96%;
+      max-width: 420px;
+      padding: 14px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    @media (min-width: 700px) {
+      button {
+        width: auto;
+        min-width: 140px;
+      }
+
+      .question-navigation button {
+        flex: 1;
+      }
+
+      .spatial-controls {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="title">Short Automatic Intelligence Test Online</h1>
+
+    <section id="gameSection" aria-live="polite">
+      <div class="top-bar">
+        <span id="scoreEl">Score: 0</span>
+        <span id="attemptsEl">Attempts left: 0</span>
+      </div>
+
+      <div class="question-container">
+        <img id="questionImg" alt="Current question">
+      </div>
+
+      <div class="question-navigation">
+        <button id="prevBtn" type="button">Previous</button>
+        <button id="nextBtn" type="button">Next</button>
+      </div>
+
+      <div class="answer-container">
+        <input id="answerInput" type="text" placeholder="Your answer…" autocomplete="off">
+
+        <div id="spatialContainer" class="spatial-container" style="display:none;">
+          <div class="spatial-controls">
+            <label>Rows
+              <input id="rowsInput" type="number" min="1" max="6" value="3">
+            </label>
+            <label>Columns
+              <input id="colsInput" type="number" min="1" max="12" value="3">
+            </label>
+            <button id="resetCanvasBtn" type="button">Reset</button>
+          </div>
+
+          <div class="spatial-canvas-wrapper">
+            <canvas id="spatialCanvas" width="300" height="300" aria-label="Spatial answer grid"></canvas>
+          </div>
+        </div>
+
+        <button id="submitBtn" type="button">Submit</button>
+      </div>
+
+      <div class="controls">
+        <button id="finishBtn" type="button">End Test</button>
+      </div>
+
+      <p id="status" role="status"></p>
+    </section>
+  </div>
+  <script src="quiz.js"></script>
+</body>
+</html>
