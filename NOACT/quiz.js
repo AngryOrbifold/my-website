@@ -20,14 +20,15 @@ const saveUsernameBtn = document.getElementById("saveUsernameBtn");
 const cancelUsernameBtn = document.getElementById("cancelUsernameBtn");
 const usernameStatus = document.getElementById("usernameStatus");
 
-const ACTIVE_TAB_KEY = "activeTab";
-const ACTIVE_TAB_TS_KEY = "activeTabTimestamp";
-const LOCK_TIMEOUT = 5000; 
-const HEARTBEAT_INTERVAL = 2000; 
-
 let email = localStorage.getItem("email");
 let username = localStorage.getItem("username") || "";
+
 if (!email) {
+  window.location.href = "login.html";
+}
+
+let password = sessionStorage.getItem("password");
+if (!password) {
   window.location.href = "login.html";
 }
 
@@ -44,75 +45,12 @@ if (savedTheme === "enabled") {
   darkModeBtn.textContent = "Dark Mode";
 }
 
-const APP_CHANNEL = "NOACT_channel";
-
-const TAB_ID = Math.random().toString(36).slice(2);
-const channel = new BroadcastChannel("NOACT_channel");
-
-function now() { return Date.now(); }
-
-function tryClaimLock() {
-  const existingId = localStorage.getItem(ACTIVE_TAB_KEY);
-  const ts = Number(localStorage.getItem(ACTIVE_TAB_TS_KEY)) || 0;
-  const age = now() - ts;
-
-  if (!existingId || age > LOCK_TIMEOUT) {
-    localStorage.setItem(ACTIVE_TAB_KEY, TAB_ID);
-    localStorage.setItem(ACTIVE_TAB_TS_KEY, String(now()));
-    channel.postMessage({ type: "ACTIVE", id: TAB_ID });
-    return true;
-  }
-  return existingId === TAB_ID;
-}
-
-function heartbeat() {
-  if (localStorage.getItem(ACTIVE_TAB_KEY) === TAB_ID) {
-    localStorage.setItem(ACTIVE_TAB_TS_KEY, String(now()));
-  }
-}
-
-function blockUI() {
-  document.body.innerHTML = `
-    <div style="
-      display:flex; align-items:center; justify-content:center;
-      height:100vh; text-align:center; background:#000; color:#fff;
-      font-size:22px; padding:30px;">
-      The test is already open in another tab.<br><br>
-      Please close the other tab and refresh this one.
-    </div>
-  `;
-}
-
-function enforceSingleTab() {
-  if (!tryClaimLock()) blockUI();
-  setInterval(heartbeat, HEARTBEAT_INTERVAL);
-}
-
-channel.onmessage = (msg) => {
-  if (msg.data?.type === "ACTIVE" && msg.data?.id !== TAB_ID) {
-    if (!tryClaimLock()) blockUI();
-  }
-};
-
-window.addEventListener("storage", () => {
-  if (!tryClaimLock()) blockUI();
-});
-
-window.addEventListener("beforeunload", () => {
-  if (localStorage.getItem(ACTIVE_TAB_KEY) === TAB_ID) {
-    localStorage.removeItem(ACTIVE_TAB_KEY);
-    localStorage.removeItem(ACTIVE_TAB_TS_KEY);
-  }
-});
-
-enforceSingleTab();
-
 async function loadNormo() {
   try {
     const r = await fetch('https://qlmlvtohtkiycwtohqwk.supabase.co/storage/v1/object/public/questions/normo.json');
     if (r.ok) normoCache = await r.json();
   } catch (e) {
-    console.error("Could not load normo.json", e);
+    console.error("Could not load norm", e);
   }
 }
 loadNormo();
@@ -138,7 +76,7 @@ async function loadUserProgress() {
     const res = await fetch(UPDATE_USER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email })
+      body: JSON.stringify({ email, password })
     });
 
     if (!res.ok) {
@@ -220,7 +158,7 @@ async function updateDB({ extraUpdate = {}, decrementAttempt = false } = {}) {
     ...extraUpdate
   };
 
-  const payload = { email: cleanEmail, update: updateObj };
+  const payload = { email: cleanEmail, password, update: updateObj };
   if (decrementAttempt) payload.decrement_attempt = true;
 
   try {
@@ -260,7 +198,7 @@ if (submitBtn) submitBtn.onclick = async () => {
     const res = await fetch(GET_ANSWER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: currentIndex, answer: rawAns })
+      body: JSON.stringify({ email, password, question: currentIndex, answer: rawAns })
     });
 
     if (!res.ok) {
@@ -321,7 +259,7 @@ async function loadLeaderboardState() {
     const res = await fetch(UPDATE_USER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email })
+      body: JSON.stringify({ email, password })
     });
     if (!res.ok) return false;
     const payload = await res.json().catch(()=>({}));
@@ -371,7 +309,7 @@ function showFinalResults() {
 
   document.getElementById("certForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-    const email = document.getElementById("email").value;
+    const emailField = document.getElementById("email").value;
     const container = document.getElementById("result");
 
     container.innerHTML = `<p style="font-weight:bold;">Certificate is being generated…</p>`;
@@ -382,7 +320,7 @@ function showFinalResults() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
+          body: JSON.stringify({ email: emailField }),
         }
       );
 
@@ -407,7 +345,7 @@ function showFinalResults() {
       const r = await fetch(UPDATE_USER_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, update: { leaderboard: wantLeaderboard } })
+        body: JSON.stringify({ email, password, update: { leaderboard: wantLeaderboard } })
       });
       if (r.ok) {
         statusMsg.innerText = wantLeaderboard ? "Added to leaderboard!" : "Removed from leaderboard.";
@@ -468,7 +406,7 @@ saveUsernameBtn?.addEventListener("click", async (e) => {
     const res = await fetch(UPDATE_USER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, update: { name: newName } })
+      body: JSON.stringify({ email, password, update: { name: newName } })
     });
 
     if (!res.ok) {
