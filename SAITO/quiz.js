@@ -169,17 +169,61 @@ async function loadUserProgress() {
 
 function loadQuestionByIndex(index) {
   currentIndex = index;
-  questionImg.src = `https://qlmlvtohtkiycwtohqwk.supabase.co/storage/v1/object/public/questions3/Base-${index}.jpg`;
-  if (SPATIAL_ITEMS.includes(index)) {
-    spatialContainer.style.display = "flex";
-    answerInput.style.display = "none";
-    updateSpatialGridFromInputs();
-  } else {
-    spatialContainer.style.display = "none";
-    answerInput.style.display = "block";
-    answerInput.focus();
+  spatialContainer.style.display = "none";
+  answerInput.style.display = "block";
+  answerInput.blur();
+
+  const src = `https://qlmlvtohtkiycwtohqwk.supabase.co/storage/v1/object/public/questions3/Base-${index}.jpg`;
+
+  questionImg.onload = () => {
+    questionImg.style.display = "block";
+    questionImg.style.visibility = "visible";
+    questionImg.alt = "Current question";
+    if (SPATIAL_ITEMS.includes(currentIndex)) {
+      spatialContainer.style.display = "flex";
+      answerInput.style.display = "none";
+      updateSpatialGridFromInputs();
+      setTimeout(updateCanvasSize, 60);
+    } else {
+      answerInput.focus();
+    }
+  };
+
+  questionImg.onerror = () => {
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><rect width='100%' height='100%' fill='#f3f3f3'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='#888' font-size='20'>Image unavailable</text></svg>`;
+    questionImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    questionImg.style.display = "block";
+    questionImg.style.visibility = "visible";
+    questionImg.alt = "Image unavailable";
+    if (SPATIAL_ITEMS.includes(currentIndex)) {
+      spatialContainer.style.display = "flex";
+      answerInput.style.display = "none";
+      updateSpatialGridFromInputs();
+      setTimeout(updateCanvasSize, 60);
+    } else {
+      answerInput.focus();
+    }
+  };
+
+  questionImg.style.display = "none";
+  questionImg.style.visibility = "hidden";
+  questionImg.src = src;
+
+  if (questionImg.complete && questionImg.naturalWidth) {
+    questionImg.style.display = "block";
+    questionImg.style.visibility = "visible";
+    questionImg.alt = "Current question";
+    if (SPATIAL_ITEMS.includes(currentIndex)) {
+      spatialContainer.style.display = "flex";
+      answerInput.style.display = "none";
+      updateSpatialGridFromInputs();
+      setTimeout(updateCanvasSize, 60);
+    } else {
+      answerInput.focus();
+    }
   }
 }
+
 
 if (prevBtn) prevBtn.onclick = () => { const prev = findNextUnsolved(currentIndex, false); if (prev) loadQuestionByIndex(prev); };
 if (nextBtn) nextBtn.onclick = () => { const next = findNextUnsolved(currentIndex, true); if (next) loadQuestionByIndex(next); };
@@ -325,3 +369,4 @@ spatialCanvas.addEventListener("touchend", e=>{
 });
 
 loadUserProgress();
+
