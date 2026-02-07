@@ -167,13 +167,16 @@ async function loadUserProgress() {
   }
 }
 
-function loadQuestionByIndex(index) {
+async function loadQuestionByIndex(index) {
   currentIndex = index;
+
   spatialContainer.style.display = "none";
   answerInput.style.display = "block";
   answerInput.blur();
 
-  const src = `https://qlmlvtohtkiycwtohqwk.supabase.co/storage/v1/object/public/questions3/Base-${index}.jpg`;
+  const base = "https://qlmlvtohtkiycwtohqwk.supabase.co/storage/v1/object/public/questions3";
+  const filename = `Base-${index}.jpg`;
+  const url = `${base}/${encodeURIComponent(filename)}?cb=${Date.now()}`;
 
   questionImg.onload = () => {
     questionImg.style.display = "block";
@@ -187,9 +190,11 @@ function loadQuestionByIndex(index) {
     } else {
       answerInput.focus();
     }
+    console.log("[IMG] loaded", url, "natural:", questionImg.naturalWidth, questionImg.naturalHeight);
   };
 
-  questionImg.onerror = () => {
+  questionImg.onerror = (ev) => {
+    console.warn("[IMG] error loading", url, ev);
     const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400'><rect width='100%' height='100%' fill='#f3f3f3'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='#888' font-size='20'>Image unavailable</text></svg>`;
     questionImg.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
     questionImg.style.display = "block";
@@ -205,24 +210,30 @@ function loadQuestionByIndex(index) {
     }
   };
 
-  questionImg.style.display = "none";
-  questionImg.style.visibility = "hidden";
-  questionImg.src = src;
-
-  if (questionImg.complete && questionImg.naturalWidth) {
-    questionImg.style.display = "block";
-    questionImg.style.visibility = "visible";
-    questionImg.alt = "Current question";
-    if (SPATIAL_ITEMS.includes(currentIndex)) {
-      spatialContainer.style.display = "flex";
-      answerInput.style.display = "none";
-      updateSpatialGridFromInputs();
-      setTimeout(updateCanvasSize, 60);
+  try {
+    questionImg.style.display = "none";
+    questionImg.style.visibility = "hidden";
+    // quick fetch to detect obvious HTTP errors (CORS may make response opaque on some devices)
+    const headRes = await fetch(url, { method: "GET", cache: "no-store" });
+    if (headRes && headRes.ok) {
+      questionImg.src = url;
     } else {
-      answerInput.focus();
+      console.warn("[IMG] fetch returned not ok", headRes && headRes.status);
+      questionImg.src = url; // still try to set src (img may still display even if fetch was blocked)
     }
+  } catch (err) {
+    console.warn("[IMG] fetch error (may be CORS/blocked):", err);
+    questionImg.src = url;
   }
+  setTimeout(() => {
+    if (questionImg.complete && questionImg.naturalWidth) {
+      questionImg.style.display = "block";
+      questionImg.style.visibility = "visible";
+    }
+    console.log("[IMG] complete:", questionImg.complete, "naturalWidth:", questionImg.naturalWidth);
+  }, 150);
 }
+
 
 
 if (prevBtn) prevBtn.onclick = () => { const prev = findNextUnsolved(currentIndex, false); if (prev) loadQuestionByIndex(prev); };
@@ -369,4 +380,5 @@ spatialCanvas.addEventListener("touchend", e=>{
 });
 
 loadUserProgress();
+
 
