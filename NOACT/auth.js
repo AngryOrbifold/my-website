@@ -14,212 +14,216 @@ const startTestBtn = document.getElementById("startTestBtn");
 
 let email = "";
 let username = "";
+let password = "";
 
 function showInstructions() {
-  loginSection.classList.add("hidden");
-  instructionsSection.classList.remove("hidden");
+loginSection.classList.add("hidden");
+instructionsSection.classList.remove("hidden");
 }
 
 function finishLogin(user) {
-  if (!user) {
-    loginMsg.innerText = "Login succeeded but user data missing. Try again.";
-    loginBtn.disabled = false;
-    return;
-  }
+if (!user) {
+loginMsg.innerText = "Login succeeded but user data missing. Try again.";
+loginBtn.disabled = false;
+return;
+}
 
-  username = user.name || "";
+username = user.name || "";
 
-  localStorage.setItem("email", email);
-  localStorage.setItem("username", username);
+localStorage.setItem("email", email);
+localStorage.setItem("username", username);
+sessionStorage.setItem("password", password);
 
-  if (user.started) {
-    location.replace("quiz.html");
-  } else {
-    showInstructions();
-  }
+if (user.started) {
+location.replace("quiz.html");
+} else {
+showInstructions();
+}
 }
 
 async function login() {
-  email = emailInput.value.trim().toLowerCase();
-  const password = passwordInput.value;
+email = emailInput.value.trim().toLowerCase();
+password = passwordInput.value;
 
-  if (!email) {
-    loginMsg.innerText = "Enter email.";
-    return;
-  }
-
-  loginBtn.disabled = true;
-  loginMsg.innerText = "Checking…";
-
-  try {
-    const res = await fetch(LOGIN_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
-    });
-
-    const payload = await res.json();
-
-    if (!res.ok || payload?.error) {
-      loginMsg.innerText = payload?.error || "Login failed.";
-      loginBtn.disabled = false;
-      return;
-    }
-
-    if (payload.create_user) {
-      usernameInput.classList.remove("hidden");
-      passwordInput.classList.add("hidden");
-
-      loginMsg.innerText =
-        "Please choose an username.";
-
-      usernameInput.focus();
-      loginBtn.onclick = register;
-      loginBtn.disabled = false;
-      return;
-    }
-
-    if (payload.create_password) {
-      const updRes = await fetch(UPDATE_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          update: {}
-        })
-      });
-
-      try {
-        localStorage.setItem("pwd_ack_" + email, "true");
-      } catch (e) {
-      }
-
-      passwordInput.classList.remove("hidden");
-
-      loginMsg.innerText =
-        "A password has been sent to your email. Check your spam folder if necessary.";
-
-      loginBtn.disabled = false;
-      return;
-    }
-
-    if (payload.need_password) {
-      passwordInput.type = "text";
-      passwordInput.classList.remove("hidden");
-      passwordInput.value = "";
-
-      const ackKey = "pwd_ack_" + email;
-      const alreadyAcked = !!localStorage.getItem(ackKey);
-
-      if (payload.emailed === true && !alreadyAcked) {
-
-        loginMsg.innerText =
-          "A password has been sent to your email. Check your spam folder if necessary.";
-
-        try {
-          localStorage.setItem(ackKey, "true");
-        } catch (e) {
-        }
-
-      } else {
-        loginMsg.innerText = "Enter your password.";
-      }
-
-      loginBtn.disabled = false;
-      return;
-    }
-
-    finishLogin(payload.user);
-
-  } catch (err) {
-    console.error(err);
-    loginMsg.innerText = "Network error.";
-    loginBtn.disabled = false;
-  }
+if (!email) {
+loginMsg.innerText = "Enter email.";
+return;
 }
 
-async function register() {
-  username = usernameInput.value.trim();
+loginBtn.disabled = true;
+loginMsg.innerText = "Checking…";
 
-  if (!username) {
-    loginMsg.innerText = "Username required.";
-    return;
-  }
+try {
+const res = await fetch(LOGIN_URL, {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({ email, password })
+});
 
-  loginBtn.disabled = true;
-  loginMsg.innerText = "Creating account…";
+const payload = await res.json();
+
+if (!res.ok || payload?.error) {
+  loginMsg.innerText = payload?.error || "Login failed.";
+  loginBtn.disabled = false;
+  return;
+}
+
+if (payload.create_user) {
+  usernameInput.classList.remove("hidden");
+  passwordInput.classList.add("hidden");
+  loginMsg.innerText = "Please choose an username.";
+  usernameInput.focus();
+  loginBtn.onclick = register;
+  loginBtn.disabled = false;
+  return;
+}
+
+if (payload.create_password) {
+  const updRes = await fetch(UPDATE_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email,
+      update: {}
+    })
+  });
 
   try {
-    const res = await fetch(UPDATE_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        update: { name: username }
-      })
-    });
+    localStorage.setItem("pwd_ack_" + email, "true");
+  } catch (e) {
+  }
 
-    const payload = await res.json();
+  passwordInput.classList.remove("hidden");
 
-    if (!res.ok || payload?.error) {
-      loginMsg.innerText = payload?.error || "Failed to register.";
-      loginBtn.disabled = false;
-      return;
-    }
+  loginMsg.innerText = "A password has been sent to your email. Check your spam folder if necessary.";
+
+  loginBtn.disabled = false;
+  return;
+}
+
+if (payload.need_password) {
+  passwordInput.type = "text";
+  passwordInput.classList.remove("hidden");
+  passwordInput.value = "";
+
+  const ackKey = "pwd_ack_" + email;
+  const alreadyAcked = !!localStorage.getItem(ackKey);
+
+  if (payload.emailed === true && !alreadyAcked) {
+
+    loginMsg.innerText =
+      "A password has been sent to your email. Check your spam folder if necessary.";
 
     try {
-      localStorage.setItem("pwd_ack_" + email, "true");
+      localStorage.setItem(ackKey, "true");
     } catch (e) {
     }
 
-    usernameInput.classList.add("hidden");
+  } else {
 
-    loginMsg.innerText ="A password has been sent to your email. Check your spam folder if necessary.";
+    loginMsg.innerText =
+      "A password has been sent to your email. Check your spam folder if necessary.";
 
-    passwordInput.classList.remove("hidden");
-    passwordInput.value = "";
-
-    loginBtn.onclick = login;
-    loginBtn.disabled = false;
-
-  } catch (err) {
-    console.error(err);
-    loginMsg.innerText = "Network error.";
-    loginBtn.disabled = false;
   }
+
+  loginBtn.disabled = false;
+  return;
+}
+finishLogin(payload.user);
+
+
+} catch (err) {
+console.error(err);
+loginMsg.innerText = "Network error.";
+loginBtn.disabled = false;
+}
+}
+
+async function register() {
+username = usernameInput.value.trim();
+
+if (!username) {
+loginMsg.innerText = "Username required.";
+return;
+}
+
+loginBtn.disabled = true;
+loginMsg.innerText = "Creating account…";
+
+try {
+const res = await fetch(UPDATE_URL, {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({
+email,
+update: { name: username }
+})
+});
+
+const payload = await res.json();
+
+if (!res.ok || payload?.error) {
+  loginMsg.innerText = payload?.error || "Failed to register.";
+  loginBtn.disabled = false;
+  return;
+}
+
+try {
+  localStorage.setItem("pwd_ack_" + email, "true");
+} catch (e) {
+}
+
+usernameInput.classList.add("hidden");
+
+loginMsg.innerText ="A password has been sent to your email. Check your spam folder if necessary.";
+
+passwordInput.classList.remove("hidden");
+passwordInput.value = "";
+
+loginBtn.onclick = login;
+loginBtn.disabled = false;
+
+
+} catch (err) {
+console.error(err);
+loginMsg.innerText = "Network error.";
+loginBtn.disabled = false;
+}
 }
 
 startTestBtn?.addEventListener("click", async () => {
-  startTestBtn.disabled = true;
-  startTestBtn.innerText = "Starting…";
+startTestBtn.disabled = true;
+startTestBtn.innerText = "Starting…";
 
-  try {
-    const res = await fetch(UPDATE_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        update: { started: true }
-      })
-    });
+try {
+const res = await fetch(UPDATE_URL, {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({
+email,
+password,
+update: { started: true }
+})
+});
 
-    const payload = await res.json();
+const payload = await res.json();
 
-    if (!res.ok || payload?.error) {
-      loginMsg.innerText = payload?.error || "Failed to start test.";
-      startTestBtn.disabled = false;
-      startTestBtn.innerText = "Start Test";
-      return;
-    }
+if (!res.ok || payload?.error) {
+  loginMsg.innerText = payload?.error || "Failed to start test.";
+  startTestBtn.disabled = false;
+  startTestBtn.innerText = "Start Test";
+  return;
+}
 
-    location.replace("quiz.html");
+location.replace("quiz.html");
 
-  } catch (err) {
-    console.error(err);
-    loginMsg.innerText = "Network error.";
-    startTestBtn.disabled = false;
-    startTestBtn.innerText = "Start Test";
-  }
+
+} catch (err) {
+console.error(err);
+loginMsg.innerText = "Network error.";
+startTestBtn.disabled = false;
+startTestBtn.innerText = "Start Test";
+}
 });
 
 loginBtn.onclick = login;
