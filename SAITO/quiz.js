@@ -6,7 +6,6 @@ const SPATIAL_ITEMS = [4, 7, 15, 24, 27, 30];
 const scoreEl = document.getElementById("scoreEl");
 const attemptsEl = document.getElementById("attemptsEl");
 const questionImg = document.getElementById("questionImg");
-const statusEl = document.getElementById("status");
 const answerInput = document.getElementById("answerInput");
 const submitBtn = document.getElementById("submitBtn");
 const prevBtn = document.getElementById("prevBtn");
@@ -17,6 +16,7 @@ const spatialContainer = document.getElementById("spatialContainer");
 const spatialCanvas = document.getElementById("spatialCanvas");
 const rowsInput = document.getElementById("rowsInput");
 const colsInput = document.getElementById("colsInput");
+const resetCanvasBtn = document.getElementById("resetCanvasBtn");
 
 let spatialGrid = [];
 let CELL_SIZE = 40;
@@ -145,7 +145,7 @@ async function loadUserProgress() {
     });
 
     if (!res.ok) {
-      statusEl.innerText = "Failed to load user data.";
+      showStatus("Failed to load user data", "crimson");
       return;
     }
 
@@ -157,19 +157,18 @@ async function loadUserProgress() {
     updateTopBar();
 
     if (user?.finished === true || solved.length >= TOTAL_ITEMS || attempts <= 0) {
-      showFinalResults();
+      endGame();
       return;
     }
 
     loadQuestionByIndex(findNextUnsolved(currentIndex, true));
   } catch {
-    statusEl.innerText = "Network error loading user.";
+    showStatus("Network error loading user", "crimson");
   }
 }
 
 function loadQuestionByIndex(index) {
   currentIndex = index;
-  statusEl.innerText = "";
   questionImg.src = `https://qlmlvtohtkiycwtohqwk.supabase.co/storage/v1/object/public/questions3/Base-${index}.jpg`;
   if (SPATIAL_ITEMS.includes(index)) {
     spatialContainer.style.display = "flex";
@@ -185,7 +184,7 @@ function loadQuestionByIndex(index) {
 if (prevBtn) prevBtn.onclick = () => { const prev = findNextUnsolved(currentIndex, false); if (prev) loadQuestionByIndex(prev); };
 if (nextBtn) nextBtn.onclick = () => { const next = findNextUnsolved(currentIndex, true); if (next) loadQuestionByIndex(next); };
 
-async function updateDB({ extraUpdate = {}, decrementAttempt = false } = {}) {
+async function updateDB({ extraUpdate = {}, decrementAttempt = false, markFinished=false } = {}) {
   const cleanEmail = String(email || "").trim().toLowerCase();
   if (!cleanEmail) return;
 
@@ -194,6 +193,7 @@ async function updateDB({ extraUpdate = {}, decrementAttempt = false } = {}) {
     : [];
 
   const updateObj = { solved_ids: solvedNums, score: solvedNums.length, ...extraUpdate };
+  if(markFinished) updateObj.finished = true;
 
   const payload = { email: cleanEmail, update: updateObj };
   if (decrementAttempt) payload.decrement_attempt = true;
@@ -208,8 +208,7 @@ async function updateDB({ extraUpdate = {}, decrementAttempt = false } = {}) {
     const body = await res.json().catch(() => ({}));
 
     if (!res.ok) {
-      statusEl.innerText = "Could not save progress";
-      console.error("Supabase error:", body);
+      showStatus("Could not save progress", "crimson");
       return;
     }
 
@@ -221,10 +220,22 @@ async function updateDB({ extraUpdate = {}, decrementAttempt = false } = {}) {
       attempts = u.attempts ?? attempts;
       updateTopBar();
     }
-  } catch (err) {
-    statusEl.innerText = "Network error saving progress";
-    console.error("UpdateDB error:", err);
+  } catch {
+    showStatus("Network error saving progress", "crimson");
   }
+}
+
+function showStatus(message, color = "black", duration = 1500) {
+  const modal = document.getElementById("statusModal");
+  const text = document.getElementById("statusModalText");
+  text.innerText = message;
+  text.style.color = color;
+  modal.classList.remove("hidden");
+  modal.classList.add("show");
+  setTimeout(() => {
+    modal.classList.remove("show");
+    modal.classList.add("hidden");
+  }, duration);
 }
 
 if (submitBtn) submitBtn.onclick = async () => {
@@ -238,11 +249,11 @@ if (submitBtn) submitBtn.onclick = async () => {
     const res = await fetch(QUIZ_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: currentIndex, answer: rawAns }) // only question & answer
+      body: JSON.stringify({ question: currentIndex, answer: rawAns })
     });
 
     if (!res.ok) {
-      statusEl.innerText = "Error checking answer";
+      showStatus("Error checking answer", "crimson");
       return;
     }
 
@@ -252,25 +263,21 @@ if (submitBtn) submitBtn.onclick = async () => {
     if (correct) {
       if (!solved.includes(currentIndex)) solved.push(currentIndex);
       await updateDB({});
-      statusEl.style.color = "#2a7a2a";
-      statusEl.innerText = "Correct";
+      showStatus("Correct", "#2a7a2a", 1000);
       answerInput.value = "";
       setTimeout(() => {
-        statusEl.innerText = "";
-        loadQuestionByIndex(findNextUnsolved(currentIndex, true));
+        if (solved.length >= TOTAL_ITEMS) endGame();
+        else loadQuestionByIndex(findNextUnsolved(currentIndex, true));
       }, 1000);
       return;
+    } else {
+      showStatus("Incorrect", "crimson", 2000);
+      await updateDB({ decrementAttempt: true });
+      if (attempts <= 0) endGame();
+      answerInput.value = "";
     }
-
-    statusEl.style.color = "crimson";
-    statusEl.innerText = "Incorrect";
-    setTimeout(() => (statusEl.innerText = ""), 2000);
-
-    await updateDB({ decrementAttempt: true });
-    if (attempts <= 0) endGame();
-    answerInput.value = "";
   } catch {
-    statusEl.innerText = "Network/server error";
+    showStatus("Network/server error", "crimson");
   }
 };
 
@@ -280,25 +287,33 @@ function updateTopBar() {
   const iqVal = (normoCache && normoCache[solved.length]) ? normoCache[solved.length] : "N/A";
   let iqEl = document.getElementById("iqEl");
   if (!iqEl) { iqEl = document.createElement("span"); iqEl.id="iqEl"; scoreEl.parentNode.appendChild(iqEl); }
-  if (solved.length==0){iqEl.innerText = `IQ: N/A (Wechsler Scale);`}
+  if (solved.length==0){iqEl.innerText = `IQ: N/A (Wechsler Scale)`;}
   else{iqEl.innerText = `IQ: ${iqVal} (Wechsler Scale)`;}
 }
 
-function showFinalResults() {
-  const iq = normoCache?.[solved.length] ?? "N/A";
-  document.querySelector(".container").innerHTML = `<h2>Test Completed</h2><p><strong>Raw score:</strong> ${solved.length} / ${TOTAL_ITEMS}</p><p><strong>Estimated IQ (Wechsler Scale):</strong> ${iq}</p><p>Thank you for your participation in the project.</p><p>M.-A. Nydegger</p>`;
+async function endGame() {
+  attempts = 0;
+  await updateDB({ markFinished:true });
+  showFinalResults();
 }
 
-async function endGame() {
-  attempts=0;
-  await updateDB({extraUpdate:{finished:true}});
-  showFinalResults();
+function showFinalResults() {
+  let iq = normoCache?.[solved.length] ?? "N/A";
+  if (solved.length === TOTAL_ITEMS) {
+    iq = iq + " or higher";
+  }
+  document.querySelector(".container").innerHTML = `
+    <h2>Test Completed</h2>
+    <p><strong>Raw score:</strong> ${solved.length} / ${TOTAL_ITEMS}</p>
+    <p><strong>Estimated IQ (Wechsler Scale):</strong> ${iq}</p>
+    <p>Thank you for your participation in the project.</p>
+    <p>M.-A. Nydegger</p>
+  `;
 }
 
 finishBtn?.addEventListener("click", async () => {
   if(!window.confirm("Are you sure you want to finish the test?")) return;
-  await updateDB({extraUpdate:{finished:true}});
-  showFinalResults();
+  await endGame();
 });
 
 let touchStartX=0;
