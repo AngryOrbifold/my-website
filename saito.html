@@ -13,6 +13,11 @@
     font-family: Arial, sans-serif;
     line-height: 1.6;
     color: #222;
+    box-sizing: border-box;
+  }
+  
+  *, *::before, *::after {
+    box-sizing: inherit;
   }
   
   body {
@@ -22,6 +27,7 @@
   .wrapper {
     max-width: 1000px;
     margin: 0 auto;
+    padding: 0 12px;
   }
   
   h1 {
@@ -46,7 +52,7 @@
   
   .buttons-row {
     display: flex;
-    justify-content: center;   /* centered on desktop */
+    justify-content: center;  
     flex-wrap: wrap;
     gap: 10px;
   }
@@ -65,6 +71,8 @@
     transition: background-color 0.2s ease;
     margin: 6px;
     text-align: center;
+    white-space: nowrap;
+    box-sizing: border-box;
   }
   
   .button:hover {
@@ -87,7 +95,6 @@
     border: 1px solid #bbb;
     border-radius: 6px;
     margin: 8px 0;
-    box-sizing: border-box;
   }
   
   table {
@@ -105,20 +112,25 @@
   tr:hover {
     background-color: #f2f2f2;
   }
-  
   @media (max-width: 700px) {
   
     body {
       padding: 8px;
     }
   
-    /* stack buttons on phone */
+    .wrapper {
+      padding: 0 12px; 
+    }
+
     .buttons-row {
       flex-direction: column;
+      align-items: center;
+      gap: 12px;
     }
   
     .button {
-      width: 100%;
+      width: 100%;      
+      max-width: 300px;  
     }
   
     table {
@@ -128,6 +140,7 @@
     }
   }
   </style>
+
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XHMB3NM73"></script>
@@ -155,8 +168,6 @@
     <p>Candidates need not be authenticated to take SAITO, verifying an email address is sufficient.</p>
 
     <p>SAITO follows the same format as NOACT and NOAIS, but in a shorter, condensed version.</p>
-
-    <p><strong>Note:</strong> This test is an online application that performs well on smartphones, tablets, and desktop browsers.</p>
   </div>
 
   <hr>
