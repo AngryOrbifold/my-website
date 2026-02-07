@@ -98,8 +98,7 @@
     tr:hover {
       background-color: #f2f2f2;
     }
-
-    /* MOBILE IMPROVEMENTS */
+    
     @media (max-width: 700px) {
       body {
         padding: 8px;
@@ -109,10 +108,21 @@
         text-align: left;
       }
 
+      .buttons-row {
+        display: flex;
+        justify-content: center;   /* CENTER ON DESKTOP */
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      
       .button {
-        display: block;
-        width: 100%;
-        margin: 8px 0;
+        padding: 14px 20px;
+        font-size: 18px;
+        border-radius: 8px;
+        color: white;
+        background-color: #0070ba;
+        transition: background-color 0.2s ease;
+        text-align: center;
       }
 
       .nav-buttons {
@@ -170,15 +180,19 @@
 
     <p>You can proceed to the test using the link below:</p>
 
-    <a class="button" href="/SAITO/login.html">SAITO Login Page</a>
+    <div class="buttons-row">
+      <a class="button" href="/SAITO/login.html">SAITO Login Page</a>
+    </div>
   </div>
 
   <hr>
 
-  <div class="section nav-buttons">
-    <a class="button" href="authProcedure.html">Authentication</a>
-    <a class="button" href="stats.html">Statistics</a>
-    <a class="button" href="index.html">Back to main page</a>
+  <div class="section">
+    <div class="buttons-row">
+      <a class="button" href="authProcedure.html">Authentication</a>
+      <a class="button" href="stats.html">Statistics</a>
+      <a class="button" href="index.html">Back to main page</a>
+    </div>
   </div>
 
 </div>
