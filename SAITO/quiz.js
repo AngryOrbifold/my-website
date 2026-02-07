@@ -169,7 +169,6 @@ async function loadUserProgress() {
 
 function loadQuestionByIndex(index) {
   currentIndex = index;
-  statusEl.innerText = "";
   questionImg.src = `https://qlmlvtohtkiycwtohqwk.supabase.co/storage/v1/object/public/questions3/Base-${index}.jpg`;
   if (SPATIAL_ITEMS.includes(index)) {
     spatialContainer.style.display = "flex";
@@ -326,6 +325,7 @@ spatialCanvas.addEventListener("touchend", e=>{
 });
 
 loadUserProgress();
+
 
 
 
