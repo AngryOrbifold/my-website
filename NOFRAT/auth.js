@@ -1,5 +1,5 @@
 const LOGIN_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/login2";
-const UPDATE_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/update_user2";
+const UPDATE_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/update_user2test";
 
 const loginSection = document.getElementById("loginSection");
 const instructionsSection = document.getElementById("instructionsSection");
@@ -14,6 +14,7 @@ const startTestBtn = document.getElementById("startTestBtn");
 
 let email = "";
 let username = "";
+let password = sessionStorage.getItem("password") || "";
 
 function showInstructions() {
   loginSection.classList.add("hidden");
@@ -90,6 +91,8 @@ async function login() {
       return;
     }
 
+    sessionStorage.setItem("password", password);
+
     finishLogin(payload.user);
 
   } catch (err) {
@@ -160,6 +163,7 @@ startTestBtn?.addEventListener("click", async () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email,
+        password,
         update: { started: true }
       })
     });

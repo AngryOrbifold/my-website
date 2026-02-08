@@ -103,7 +103,9 @@ const usernameStatus = document.getElementById("usernameStatus");
 
 let email = localStorage.getItem("email");
 let username = localStorage.getItem("username") || "";
-if (!email) {
+let password = sessionStorage.getItem("password");
+
+if (!email || !password) {
   window.location.href = "login.html";
 }
 
@@ -174,7 +176,7 @@ async function loadUserProgress() {
     const res = await fetch(UPDATE_USER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email })
+      body: JSON.stringify({ email, password })
     });
 
     if (!res.ok) {
@@ -267,7 +269,7 @@ async function updateDB({ extraUpdate = {}, decrementAttempt = false } = {}) {
     ...extraUpdate
   };
 
-  const payload = { email: cleanEmail, update: updateObj };
+  const payload = { email: cleanEmail, password, update: updateObj };
   if (decrementAttempt) payload.decrement_attempt = true;
 
   try {
@@ -314,7 +316,7 @@ if (submitBtn) submitBtn.onclick = async () => {
     const res = await fetch(GET_ANSWER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: currentIndex, answer: rawAns })
+      body: JSON.stringify({ email, password, question: currentIndex, answer: rawAns })
     });
 
     if (!res.ok) {
@@ -375,7 +377,7 @@ async function loadLeaderboardState() {
     const res = await fetch(UPDATE_USER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email })
+      body: JSON.stringify({ email, password })
     });
     if (!res.ok) return false;
     const payload = await res.json().catch(()=>({}));
@@ -566,4 +568,3 @@ finishBtn?.addEventListener("click", async () => {
   showFinalResults();
 });
 loadUserProgress();
-
