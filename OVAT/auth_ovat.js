@@ -15,6 +15,8 @@ function finishLogin(user) {
   }
 
   localStorage.setItem("email", email);
+  sessionStorage.setItem("password", password);
+
   location.replace("quiz_ovat.html");
 }
 

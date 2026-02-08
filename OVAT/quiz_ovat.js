@@ -8,7 +8,9 @@ const statusEl   = document.getElementById("status");
 const submitBtn  = document.getElementById("submitBtn");
 
 let email = localStorage.getItem("email");
-if (!email) {
+let password = sessionStorage.getItem("password");
+
+if (!email || !password) {
   window.location.href = "login_ovat.html";
 }
 
@@ -72,7 +74,7 @@ async function loadLeaderboardState() {
     const res = await fetch(GET_ANSWER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, load: true })
+      body: JSON.stringify({ email, password, load: true })
     });
     if (!res.ok) return false;
     const data = await res.json();
@@ -96,7 +98,7 @@ async function initLeaderboardCheckbox() {
       const r = await fetch(GET_ANSWER_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, update: { leaderboard: wantLeaderboard } })
+        body: JSON.stringify({ email, password, update: { leaderboard: wantLeaderboard } })
       });
       if (r.ok) {
         statusMsg.innerText = wantLeaderboard
@@ -177,7 +179,7 @@ async function loadProgress() {
     const res = await fetch(GET_ANSWER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, load: true })
+      body: JSON.stringify({ email, password,load: true })
     });
 
     if (!res.ok) return;
@@ -205,6 +207,7 @@ async function submitAll() {
 
   const payload = {
     email,
+    password,
     answers: collectAnswers()
   };
 
