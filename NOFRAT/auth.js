@@ -1,5 +1,5 @@
 const LOGIN_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/login2";
-const UPDATE_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/update_user2test";
+const UPDATE_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/update_user2";
 
 const loginSection = document.getElementById("loginSection");
 const instructionsSection = document.getElementById("instructionsSection");
@@ -185,5 +185,6 @@ startTestBtn?.addEventListener("click", async () => {
     startTestBtn.innerText = "Start Test";
   }
 });
+
 
 loginBtn.onclick = login;
