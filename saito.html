@@ -2,146 +2,113 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SAITO</title>
-
   <style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: #f9f9f9;
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    color: #222;
-    box-sizing: border-box;
-  }
-  
-  *, *::before, *::after {
-    box-sizing: inherit;
-  }
-  
-  body {
-    padding: 12px;
-  }
-  
-  .wrapper {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 0 12px;
-  }
-  
-  h1 {
-    font-size: clamp(22px, 5vw, 34px);
-    margin: 16px 0 24px 0;
-    text-align: center;
-  }
-  
-  h2 {
-    margin-top: 40px;
-  }
-  
-  p {
-    margin: 10px auto;
-    font-size: clamp(15px, 4vw, 18px);
-    text-align: left;
-  }
-  
-  a {
-    text-decoration: none;
-  }
-  
-  .buttons-row {
-    display: flex;
-    justify-content: center;  
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  
-  .section {
-    margin: 30px auto;
-  }
-  
-  .button {
-    display: inline-block;
-    padding: 14px 20px;
-    font-size: 18px;
-    border-radius: 8px;
-    color: white;
-    background-color: #0070ba;
-    transition: background-color 0.2s ease;
-    margin: 6px;
-    text-align: center;
-    white-space: nowrap;
-    box-sizing: border-box;
-  }
-  
-  .button:hover {
-    background-color: #005c99;
-  }
-  
-  hr {
-    border: none;
-    height: 1px;
-    background-color: #ccc;
-    margin: 40px auto;
-    width: 90%;
-  }
-  
-  input[type="email"] {
-    font-size: 16px;
-    width: 100%;
-    max-width: 320px;
-    padding: 12px;
-    border: 1px solid #bbb;
-    border-radius: 6px;
-    margin: 8px 0;
-  }
-  
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    font-size: 15px;
-  }
-  
-  th, td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-  }
-  
-  tr:hover {
-    background-color: #f2f2f2;
-  }
-  @media (max-width: 700px) {
-  
     body {
-      padding: 8px;
-    }
-  
-    .wrapper {
-      padding: 0 12px; 
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 30px;
+      text-align: center;
+      line-height: 1.6;
     }
 
-    .buttons-row {
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
+    h1 {
+      font-size: 36px;
+      margin-bottom: 30px;
     }
-  
+
+    h2 {
+      margin-top: 60px;
+    }
+
+    p {
+      max-width: 1000px;
+      margin: 10px auto;
+      font-size: 18px;
+      text-align: justify;
+    }
+
+    a {
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    .section {
+      margin: 50px auto;
+    }
+
     .button {
-      width: 100%;      
-      max-width: 300px;  
+      display: inline-block;
+      padding: 12px 28px;
+      font-size: 20px;
+      border-radius: 8px;
+      color: white;
+      background-color: #0070ba;
+      transition: background-color 0.3s ease;
+      margin: 5px;
     }
-  
+
+    .button:hover {
+      background-color: #005c99;
+    }
+
+    hr {
+      border: none;
+      height: 1px;
+      background-color: #ccc;
+      margin: 60px auto;
+      width: 80%;
+    }
+
+    .paypal-button {
+      display: inline-block;
+      padding: 12px 28px;
+      font-size: 20px;
+      border-radius: 8px;
+      color: white;
+      background-color: #0070ba;
+      transition: background-color 0.3s ease;
+      margin: 5px;
+      min-width: 150px;
+    }
+
+    .paypal-button:hover {
+      background-color: #005c99;
+    }
+
+    input[type="email"] {
+      font-size: 18px;
+      width: 280px;
+      height: 35px; 
+      padding: 8px 10px; 
+      border: 1px solid #bbb;
+      border-radius: 6px;
+      margin: 8px;
+    }
+
     table {
-      display: block;
-      overflow-x: auto;
-      white-space: nowrap;
+      border-collapse: collapse;
+      width: 100%;
+      font-family: sans-serif;
     }
-  }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px 16px;
+      text-align: center;
+    }
+
+    label {
+      font-size: 18px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    tr:hover {
+      background-color: #f2f2f2;
+    }
   </style>
-
-
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XHMB3NM73"></script>
   <script>
@@ -150,53 +117,34 @@
     gtag('js', new Date());
     gtag('config', 'G-3XHMB3NM73');
   </script>
-
   <link rel="icon" href="favicon.png">
 </head>
-
 <body>
-
-<div class="wrapper">
-
   <h1>Short Automatic Intelligence Test Online</h1>
 
-  <div class="section">
+  <div class="section" style="max-width: 1000px;">
     <p>SAITO is an untimed, computerized, high range Intelligence test consisting of 30 items covering numerical, abstract, verbal, logical, and spatial reasoning.</p>
-
     <p>SAITO is a demonstration and practice test designed for individuals who are unfamiliar with high range tests or who are unsure whether to authenticate and take the other tests available on this website.</p>
-
     <p>Candidates need not be authenticated to take SAITO, verifying an email address is sufficient.</p>
-
-    <p>SAITO follows the same format as NOACT and NOAIS, but in a shorter, condensed version.</p>
+    <p>SAITO follows the same format as NOACT and NOAIS but in a shorter and condensed version.</p>
   </div>
 
   <hr>
 
-  <div class="section">
+  <div class="section" style="max-width: 1000px;">
     <p>Participation is free of charge. Please do not share or discuss test items with others. The use of AI tools to solve, analyze, or check answers is not permitted.</p>
-
-    <p>Please do not retake the test using another email address, as this defeats the purpose of the assessment.</p>
-
+    <p>Please do not retake the test using another email address, doing this is cheating and defeats the purpose of the assessment.</p>
     <p>You may use calculators and dictionaries, including online versions.</p>
-
     <p>You can proceed to the test using the link below:</p>
-
-    <div class="buttons-row">
-      <a class="button" href="/SAITO/login.html">SAITO Login Page</a>
-    </div>
+    <a class="button" href="/SAITO/login.html">SAITO Login Page</a>
   </div>
-
+  
   <hr>
-
+  
   <div class="section">
-    <div class="buttons-row">
-      <a class="button" href="authProcedure.html">Authentication</a>
-      <a class="button" href="stats.html">Statistics</a>
-      <a class="button" href="index.html">Back to main page</a>
-    </div>
+    <a class="button" href="authProcedure.html">Authentication</a>
+    <a class="button" href="stats.html">Statistics</a>
+    <a class="button" href="index.html">Back to main page</a><br><br>
   </div>
-
-</div>
-
 </body>
 </html>
