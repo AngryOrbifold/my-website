@@ -95,7 +95,7 @@ if (payload.create_password) {
 
   passwordInput.classList.remove("hidden");
 
-  loginMsg.innerText = "A password has been sent to your email. Check your spam folder if necessary.";
+  loginMsg.innerText = "Enter your password.";
 
   loginBtn.disabled = false;
   return;
@@ -227,4 +227,5 @@ startTestBtn.innerText = "Start Test";
 });
 
 loginBtn.onclick = login;
+
 
