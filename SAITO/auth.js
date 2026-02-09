@@ -20,7 +20,7 @@ function finishLogin(user) {
 }
 
 async function login() {
-  email = emailInput.value.trim().toLowerCase();
+  email = emailInput.value.trim();
   const password = passwordInput.value;
 
   if (!email) {
@@ -66,5 +66,6 @@ async function login() {
     loginBtn.disabled = false;
   }
 }
+
 
 loginBtn.onclick = login;
