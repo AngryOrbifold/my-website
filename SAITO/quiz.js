@@ -185,7 +185,7 @@ if (prevBtn) prevBtn.onclick = () => { const prev = findNextUnsolved(currentInde
 if (nextBtn) nextBtn.onclick = () => { const next = findNextUnsolved(currentIndex, true); if (next) loadQuestionByIndex(next); };
 
 async function updateDB({ extraUpdate = {}, decrementAttempt = false, markFinished=false } = {}) {
-  const cleanEmail = String(email || "").trim().toLowerCase();
+  const cleanEmail = String(email || "").trim();
   if (!cleanEmail) return;
 
   const solvedNums = Array.isArray(solved)
@@ -325,6 +325,7 @@ spatialCanvas.addEventListener("touchend", e=>{
 });
 
 loadUserProgress();
+
 
 
 
