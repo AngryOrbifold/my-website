@@ -109,21 +109,16 @@ if (payload.need_password) {
   const ackKey = "pwd_ack_" + email;
   const alreadyAcked = !!localStorage.getItem(ackKey);
 
-  if (payload.emailed === true && !alreadyAcked) {
-
+  if (alreadyAcked) {
+    loginMsg.innerText = "Enter your password.";
+  } else {
     loginMsg.innerText =
-      "Enter your password.";
-
+      "A password has been sent to your email. Check your spam folder if necessary.";
     try {
       localStorage.setItem(ackKey, "true");
     } catch (e) {
+      // ignore storage errors
     }
-
-  } else {
-
-    loginMsg.innerText =
-      "A password has been sent to your email. Check your spam folder if necessary.";
-
   }
 
   loginBtn.disabled = false;
@@ -227,6 +222,7 @@ startTestBtn.innerText = "Start Test";
 });
 
 loginBtn.onclick = login;
+
 
 
 
