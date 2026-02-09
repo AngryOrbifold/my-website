@@ -42,7 +42,7 @@ showInstructions();
 }
 
 async function login() {
-email = emailInput.value.trim().toLowerCase();
+email = emailInput.value.trim();
 password = passwordInput.value;
 
 if (!email) {
@@ -227,3 +227,4 @@ startTestBtn.innerText = "Start Test";
 });
 
 loginBtn.onclick = login;
+
