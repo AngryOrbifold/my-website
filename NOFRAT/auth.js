@@ -42,7 +42,7 @@ function finishLogin(user) {
 
 async function login() {
   email = emailInput.value.trim();
-  const password = passwordInput.value;
+  password = passwordInput.value;
 
   if (!email) {
     loginMsg.innerText = "Enter email.";
@@ -188,4 +188,5 @@ startTestBtn?.addEventListener("click", async () => {
 
 
 loginBtn.onclick = login;
+
 
