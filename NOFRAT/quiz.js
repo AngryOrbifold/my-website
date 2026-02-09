@@ -255,7 +255,7 @@ async function updateDB({ extraUpdate = {}, decrementAttempt = false } = {}) {
     if (!isNaN(maybe)) iq = Number(maybe);
   }
 
-  const cleanEmail = String(email || "").trim().toLowerCase();
+  const cleanEmail = String(email || "").trim();
   if (!cleanEmail) return;
 
   const solvedNums = Array.isArray(solved)
@@ -567,4 +567,5 @@ finishBtn?.addEventListener("click", async () => {
   });
   showFinalResults();
 });
+
 loadUserProgress();
