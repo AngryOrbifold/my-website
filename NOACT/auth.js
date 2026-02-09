@@ -95,7 +95,7 @@ if (payload.create_password) {
 
   passwordInput.classList.remove("hidden");
 
-  loginMsg.innerText = "Enter your password.";
+  loginMsg.innerText = "A password has been sent to your email. Check your spam folder if necessary..";
 
   loginBtn.disabled = false;
   return;
@@ -112,7 +112,7 @@ if (payload.need_password) {
   if (payload.emailed === true && !alreadyAcked) {
 
     loginMsg.innerText =
-      "A password has been sent to your email. Check your spam folder if necessary.";
+      "Enter your password.";
 
     try {
       localStorage.setItem(ackKey, "true");
@@ -227,5 +227,6 @@ startTestBtn.innerText = "Start Test";
 });
 
 loginBtn.onclick = login;
+
 
 
