@@ -7,6 +7,11 @@ const loginBtn = document.getElementById("loginBtn");
 
 let email = "";
 
+function looksLikeEmail(str) {
+  // Simple but practical email check
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str);
+}
+
 function finishLogin(user) {
   if (!user) {
     loginMsg.innerText = "Login succeeded but user data missing.";
@@ -25,6 +30,11 @@ async function login() {
 
   if (!email) {
     loginMsg.innerText = "Enter email.";
+    return;
+  }
+  
+  if (!looksLikeEmail(email)) {
+    loginMsg.innerText = "Please enter a valid email address.";
     return;
   }
 
@@ -69,3 +79,4 @@ async function login() {
 
 
 loginBtn.onclick = login;
+
