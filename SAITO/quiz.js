@@ -101,6 +101,7 @@ let attempts = TOTAL_ATTEMPTS;
 let currentIndex = 0;
 let normoCache = null;
 
+// ─── TAB BLOCKING ───────────────────────────────────────
 const APP_CHANNEL = "SAITO_channel";
 const channel = new BroadcastChannel(APP_CHANNEL);
 const TAB_ID = Math.random().toString(36).slice(2);
@@ -114,6 +115,7 @@ function blockUI() {
   document.body.innerHTML = `<div style="display:flex; align-items:center; justify-content:center; height:100vh; text-align:center; background:#000; color:#fff; font-size:22px; padding:30px;">The test is already open in another tab.<br><br>Please close the other tab and refresh this one.</div>`;
 }
 
+// ─── LOAD NORMS ───────────────────────────────────────
 async function loadNormSaito() {
   try {
     const r = await fetch('https://qlmlvtohtkiycwtohqwk.supabase.co/storage/v1/object/public/questions3/normsaito.json');
@@ -136,6 +138,7 @@ function findNextUnsolved(start, forward = true) {
   return null;
 }
 
+// ─── FETCH HELPER WITH FORCE LOGOUT ─────────────────────
 async function fetchQuizAPI(payload) {
   try {
     const res = await fetch(QUIZ_URL, {
@@ -148,7 +151,6 @@ async function fetchQuizAPI(payload) {
 
     if (body?.force_logout) {
       localStorage.removeItem("email");
-      localStorage.removeItem("saito_user");
       alert("Your account was blocked. You have been logged out.");
       window.location.href = "login.html";
       return null;
@@ -161,6 +163,7 @@ async function fetchQuizAPI(payload) {
   }
 }
 
+// ─── LOAD USER ─────────────────────────────────────────
 async function loadUserProgress() {
   const payload = { email };
   const body = await fetchQuizAPI(payload);
@@ -193,6 +196,7 @@ function loadQuestionByIndex(index) {
   }
 }
 
+// ─── UPDATE DB ─────────────────────────────────────────
 async function updateDB({ extraUpdate = {}, decrementAttempt = false, markFinished=false } = {}) {
   const solvedNums = Array.isArray(solved)
     ? solved.map(x => Number.isFinite(Number(x)) ? Number(x) : x)
@@ -217,6 +221,7 @@ async function updateDB({ extraUpdate = {}, decrementAttempt = false, markFinish
   }
 }
 
+// ─── STATUS MODAL ─────────────────────────────────────────
 function showStatus(message, color = "black", duration = 1500) {
   const modal = document.getElementById("statusModal");
   const text = document.getElementById("statusModalText");
@@ -230,7 +235,8 @@ function showStatus(message, color = "black", duration = 1500) {
   }, duration);
 }
 
-if (submitBtn) submitBtn.onclick = async () => {
+// ─── SUBMIT BUTTON ──────────────────────────────────────
+submitBtn?.addEventListener("click", async () => {
   let rawAns = SPATIAL_ITEMS.includes(currentIndex)
     ? serializeSpatialAnswer()
     : answerInput.value;
@@ -257,8 +263,20 @@ if (submitBtn) submitBtn.onclick = async () => {
     if (attempts <= 0) endGame();
     answerInput.value = "";
   }
-};
+});
 
+// ─── PREV / NEXT BUTTONS ───────────────────────────────
+prevBtn?.addEventListener("click", () => {
+  const prev = findNextUnsolved(currentIndex, false);
+  if (prev) loadQuestionByIndex(prev);
+});
+
+nextBtn?.addEventListener("click", () => {
+  const next = findNextUnsolved(currentIndex, true);
+  if (next) loadQuestionByIndex(next);
+});
+
+// ─── TOP BAR ───────────────────────────────────────────
 function updateTopBar() {
   scoreEl.innerText = `Score: ${solved.length}`;
   attemptsEl.innerText = `Attempts left: ${attempts}`;
@@ -268,6 +286,7 @@ function updateTopBar() {
   iqEl.innerText = solved.length===0 ? `IQ: N/A (Wechsler Scale)` : `IQ: ${iqVal} (Wechsler Scale)`;
 }
 
+// ─── END GAME ──────────────────────────────────────────
 async function endGame() {
   attempts = 0;
   await updateDB({ markFinished:true });
@@ -286,11 +305,13 @@ function showFinalResults() {
   `;
 }
 
+// ─── FINISH BUTTON ─────────────────────────────────────
 finishBtn?.addEventListener("click", async () => {
   if(!window.confirm("Are you sure you want to finish the test?")) return;
   await endGame();
 });
 
+// ─── TOUCH SWIPES ──────────────────────────────────────
 let touchStartX=0;
 spatialCanvas.addEventListener("touchstart", e=>{touchStartX=e.touches[0].clientX;});
 spatialCanvas.addEventListener("touchend", e=>{
@@ -299,4 +320,5 @@ spatialCanvas.addEventListener("touchend", e=>{
   if(dx<-50) nextBtn?.click();
 });
 
+// ─── INITIAL LOAD ─────────────────────────────────────
 loadUserProgress();
