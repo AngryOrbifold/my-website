@@ -136,35 +136,47 @@ function findNextUnsolved(start, forward = true) {
   return null;
 }
 
-async function loadUserProgress() {
+async function fetchQuizAPI(payload) {
   try {
     const res = await fetch(QUIZ_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email })
+      body: JSON.stringify(payload)
     });
 
-    if (!res.ok) {
-      showStatus("Failed to load user data", "crimson");
-      return;
+    const body = await res.json().catch(() => ({}));
+
+    if (body?.force_logout) {
+      localStorage.removeItem("email");
+      localStorage.removeItem("saito_user");
+      alert("Your account was blocked. You have been logged out.");
+      window.location.href = "login.html";
+      return null;
     }
 
-    const payload = await res.json().catch(() => ({}));
-    const user = payload.user ?? payload;
-
-    solved = Array.isArray(user?.solved_ids) ? user.solved_ids : [];
-    attempts = user?.attempts ?? TOTAL_ATTEMPTS;
-    updateTopBar();
-
-    if (user?.finished === true || solved.length >= TOTAL_ITEMS || attempts <= 0) {
-      endGame();
-      return;
-    }
-
-    loadQuestionByIndex(findNextUnsolved(currentIndex, true));
+    return body;
   } catch {
-    showStatus("Network error loading user", "crimson");
+    showStatus("Network error", "crimson");
+    return null;
   }
+}
+
+async function loadUserProgress() {
+  const payload = { email };
+  const body = await fetchQuizAPI(payload);
+  if (!body) return;
+
+  const user = body.user ?? body;
+  solved = Array.isArray(user?.solved_ids) ? user.solved_ids : [];
+  attempts = user?.attempts ?? TOTAL_ATTEMPTS;
+  updateTopBar();
+
+  if (user?.finished === true || solved.length >= TOTAL_ITEMS || attempts <= 0) {
+    endGame();
+    return;
+  }
+
+  loadQuestionByIndex(findNextUnsolved(currentIndex, true));
 }
 
 function loadQuestionByIndex(index) {
@@ -181,13 +193,7 @@ function loadQuestionByIndex(index) {
   }
 }
 
-if (prevBtn) prevBtn.onclick = () => { const prev = findNextUnsolved(currentIndex, false); if (prev) loadQuestionByIndex(prev); };
-if (nextBtn) nextBtn.onclick = () => { const next = findNextUnsolved(currentIndex, true); if (next) loadQuestionByIndex(next); };
-
 async function updateDB({ extraUpdate = {}, decrementAttempt = false, markFinished=false } = {}) {
-  const cleanEmail = String(email || "").trim();
-  if (!cleanEmail) return;
-
   const solvedNums = Array.isArray(solved)
     ? solved.map(x => Number.isFinite(Number(x)) ? Number(x) : x)
     : [];
@@ -195,33 +201,19 @@ async function updateDB({ extraUpdate = {}, decrementAttempt = false, markFinish
   const updateObj = { solved_ids: solvedNums, score: solvedNums.length, ...extraUpdate };
   if(markFinished) updateObj.finished = true;
 
-  const payload = { email: cleanEmail, update: updateObj };
+  const payload = { email, update: updateObj };
   if (decrementAttempt) payload.decrement_attempt = true;
 
-  try {
-    const res = await fetch(QUIZ_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
+  const body = await fetchQuizAPI(payload);
+  if (!body) return;
 
-    const body = await res.json().catch(() => ({}));
-
-    if (!res.ok) {
-      showStatus("Could not save progress", "crimson");
-      return;
-    }
-
-    if (body?.user) {
-      const u = body.user;
-      solved = Array.isArray(u.solved_ids)
-        ? u.solved_ids.map(x => Number.isFinite(Number(x)) ? Number(x) : x)
-        : solved;
-      attempts = u.attempts ?? attempts;
-      updateTopBar();
-    }
-  } catch {
-    showStatus("Network error saving progress", "crimson");
+  if (body?.user) {
+    const u = body.user;
+    solved = Array.isArray(u.solved_ids)
+      ? u.solved_ids.map(x => Number.isFinite(Number(x)) ? Number(x) : x)
+      : solved;
+    attempts = u.attempts ?? attempts;
+    updateTopBar();
   }
 }
 
@@ -245,39 +237,25 @@ if (submitBtn) submitBtn.onclick = async () => {
 
   if (!rawAns?.trim()) return;
 
-  try {
-    const res = await fetch(QUIZ_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: currentIndex, answer: rawAns })
-    });
+  const body = await fetchQuizAPI({ question: currentIndex, answer: rawAns });
+  if (!body) return;
 
-    if (!res.ok) {
-      showStatus("Error checking answer", "crimson");
-      return;
-    }
+  const correct = body?.correct === true;
 
-    const payload = await res.json().catch(() => ({}));
-    const correct = payload?.correct === true;
-
-    if (correct) {
-      if (!solved.includes(currentIndex)) solved.push(currentIndex);
-      await updateDB({});
-      showStatus("Correct", "#2a7a2a", 1000);
-      answerInput.value = "";
-      setTimeout(() => {
-        if (solved.length >= TOTAL_ITEMS) endGame();
-        else loadQuestionByIndex(findNextUnsolved(currentIndex, true));
-      }, 1000);
-      return;
-    } else {
-      showStatus("Incorrect", "crimson", 2000);
-      await updateDB({ decrementAttempt: true });
-      if (attempts <= 0) endGame();
-      answerInput.value = "";
-    }
-  } catch {
-    showStatus("Network/server error", "crimson");
+  if (correct) {
+    if (!solved.includes(currentIndex)) solved.push(currentIndex);
+    await updateDB({});
+    showStatus("Correct", "#2a7a2a", 1000);
+    answerInput.value = "";
+    setTimeout(() => {
+      if (solved.length >= TOTAL_ITEMS) endGame();
+      else loadQuestionByIndex(findNextUnsolved(currentIndex, true));
+    }, 1000);
+  } else {
+    showStatus("Incorrect", "crimson", 2000);
+    await updateDB({ decrementAttempt: true });
+    if (attempts <= 0) endGame();
+    answerInput.value = "";
   }
 };
 
@@ -287,8 +265,7 @@ function updateTopBar() {
   const iqVal = (normoCache && normoCache[solved.length]) ? normoCache[solved.length] : "N/A";
   let iqEl = document.getElementById("iqEl");
   if (!iqEl) { iqEl = document.createElement("span"); iqEl.id="iqEl"; scoreEl.parentNode.appendChild(iqEl); }
-  if (solved.length==0){iqEl.innerText = `IQ: N/A (Wechsler Scale)`;}
-  else{iqEl.innerText = `IQ: ${iqVal} (Wechsler Scale)`;}
+  iqEl.innerText = solved.length===0 ? `IQ: N/A (Wechsler Scale)` : `IQ: ${iqVal} (Wechsler Scale)`;
 }
 
 async function endGame() {
@@ -299,9 +276,7 @@ async function endGame() {
 
 function showFinalResults() {
   let iq = normoCache?.[solved.length] ?? "N/A";
-  if (solved.length === TOTAL_ITEMS) {
-    iq = iq + " or higher";
-  }
+  if (solved.length === TOTAL_ITEMS) iq += " or higher";
   document.querySelector(".container").innerHTML = `
     <h2>Test Completed</h2>
     <p><strong>Raw score:</strong> ${solved.length} / ${TOTAL_ITEMS}</p>
@@ -325,9 +300,3 @@ spatialCanvas.addEventListener("touchend", e=>{
 });
 
 loadUserProgress();
-
-
-
-
-
-
