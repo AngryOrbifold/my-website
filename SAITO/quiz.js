@@ -1,6 +1,6 @@
 const QUIZ_URL = "https://qlmlvtohtkiycwtohqwk.supabase.co/functions/v1/quiz_saito";
 const TOTAL_ITEMS = 30;
-const TOTAL_ATTEMPTS = 16;
+const TOTAL_ATTEMPTS = 18;
 const SPATIAL_ITEMS = [4, 7, 15, 24, 27, 30];
 
 const scoreEl = document.getElementById("scoreEl");
@@ -322,3 +322,4 @@ spatialCanvas.addEventListener("touchend", e=>{
 
 // ─── INITIAL LOAD ─────────────────────────────────────
 loadUserProgress();
+
