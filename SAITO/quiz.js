@@ -43,6 +43,20 @@ function drawSpatialGrid() {
     }
   }
 }
+function collectDeviceInfo() {
+  const ua = navigator.userAgent;
+
+  return {
+    date: new Date().toISOString(),
+    browser: ua,
+    platform: navigator.platform,
+    screen: `${window.screen.width}x${window.screen.height}`,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    language: navigator.language,
+    cpu: navigator.hardwareConcurrency || null,
+    memory: navigator.deviceMemory || null
+  };
+}
 
 function updateCanvasSize() {
   if (!spatialGrid.length) return;
@@ -205,7 +219,7 @@ async function updateDB({ extraUpdate = {}, decrementAttempt = false, markFinish
   const updateObj = { solved_ids: solvedNums, score: solvedNums.length, ...extraUpdate };
   if(markFinished) updateObj.finished = true;
 
-  const payload = { email, update: updateObj };
+  const payload = { email, update: updateObj, device_info: collectDeviceInfo() };
   if (decrementAttempt) payload.decrement_attempt = true;
 
   const body = await fetchQuizAPI(payload);
@@ -322,4 +336,5 @@ spatialCanvas.addEventListener("touchend", e=>{
 
 // ─── INITIAL LOAD ─────────────────────────────────────
 loadUserProgress();
+
 
