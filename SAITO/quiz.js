@@ -46,11 +46,15 @@ function drawSpatialGrid() {
 function collectDeviceInfo() {
   const ua = navigator.userAgent;
 
+  const w = window.screen.width;
+  const h = window.screen.height;
+  const min = Math.min(w, h);
+  const max = Math.max(w, h);
+
   return {
-    date: new Date().toISOString(),
     browser: ua,
     platform: navigator.platform,
-    screen: `${window.screen.width}x${window.screen.height}`,
+    screen: `${min}x${max}`, // normalized
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     language: navigator.language,
     cpu: navigator.hardwareConcurrency || null,
@@ -336,5 +340,6 @@ spatialCanvas.addEventListener("touchend", e=>{
 
 // ─── INITIAL LOAD ─────────────────────────────────────
 loadUserProgress();
+
 
 
