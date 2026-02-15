@@ -409,13 +409,9 @@ function showFinalResults() {
       <button id="changeUsernameBtn">Change Username</button>
     </div>
 
-    <div class="section"; margin-top:20px;">
-      <p>You can see your certificate by inputing your email adress in the field below:</p>
-    </div>
-
     <form id="certForm" style="margin-top: 20px;">
       <label>Email:</label>
-      <input type="email" id="email" required />
+      <input type="email" id="email" value="${email}" readonly />
       <button type="submit" class="button">Show Certificate</button>
     </form>
 
@@ -569,3 +565,4 @@ finishBtn?.addEventListener("click", async () => {
 });
 
 loadUserProgress();
+
