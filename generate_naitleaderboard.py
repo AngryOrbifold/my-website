@@ -174,10 +174,6 @@ for row in public_entries_raw:
 
 entries.sort(key=lambda r: (-r["score"], r["duration"]))
 
-# -------------------------
-# Build HTML
-# -------------------------
-
 rows_html = ""
 for idx, row in enumerate(entries, start=1):
     rows_html += (
@@ -185,7 +181,6 @@ for idx, row in enumerate(entries, start=1):
         f"<td>{row['name']}</td>"
         f"<td>{row['score']}</td>"
         f"<td>{row['iq']}</td>"
-        f"<td>{row['c_val']}</td>"
         f"<td>{row['contest_rank']}</td></tr>\n"
     )
 
@@ -314,7 +309,6 @@ html_output = f"""
           <th>Name</th>
           <th>Raw score</th>
           <th>IQ (Wechsler scale)</th>
-          <th class="orange-header">Contest start / last update</th>
           <th class="orange-header">Contest rank</th>
         </tr>
       </thead>
@@ -341,6 +335,7 @@ html_output = f"""
 
 with open("naitleaderboard.html", "w", encoding="utf-8") as f:
     f.write(html_output)
+
 
 
 
