@@ -2,7 +2,7 @@ name: Update NAIT Leaderboard
 
 on:
   schedule:
-    - cron: "0 0 */2 * *"  # every 48 hours
+    - cron: "0 0 */5 * *"  # every 72 hours
   workflow_dispatch:  # manual run button
 
 permissions:
@@ -41,3 +41,4 @@ jobs:
           git commit -m "Auto-update leaderboard" || echo "No changes"
 
           git push
+
