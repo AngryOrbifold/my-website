@@ -2,7 +2,7 @@ name: Update NOFRAT Leaderboard
 
 on:
   schedule:
-    - cron: "0 0 */2 * *"  # every 48 hours
+    - cron: "0 0 */3 * *"
   workflow_dispatch:      # manual run button
 
 permissions:
@@ -54,3 +54,4 @@ jobs:
             git commit -m "Auto-update NOFRAT leaderboard"
             git push
           fi
+
