@@ -325,7 +325,7 @@ html_output = f"""
   </div>
 
   <div class="section">
-    <p>The leaderboard is refreshed every 48 hours, showcasing the current scores of participants who opted to be listed.</p>
+    <p>The leaderboard is refreshed every 5 days, showcasing the current scores of participants who opted to be listed.</p>
   </div>
   
   <div class="section">
@@ -341,6 +341,7 @@ html_output = f"""
 
 with open("naitleaderboard.html", "w", encoding="utf-8") as f:
     f.write(html_output)
+
 
 
 
