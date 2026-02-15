@@ -127,13 +127,12 @@ function endQuiz(standardScore, rawScore) {
     <p id="leaderboardStatus" style="margin-top:10px; font-weight:bold;"></p>
 
     <div class="section"; margin-top:20px;">
-      <p>You can see your NOAIS certificate by inputting your email adress in the field below:</p>
+      <p>You can only see your NOAIS certificate if you have also completed NOFRAT !</p>
     </div>
-
     <form id="certForm" style="margin-top: 20px;">
       <label>Email:</label>
-      <input type="email" id="email" required />
-      <button type="submit" class="button">Show Certificate</button>
+      <input type="email" id="email" value="${email}" readonly />
+      <button type="submit" class="button">Show NOAIS Certificate</button>
     </form>
 
     <div id="result" style="margin-top: 20px;"></div>
@@ -254,4 +253,5 @@ if (submitBtn) {
 }
 
 loadProgress();
+
 updateTopBar();
