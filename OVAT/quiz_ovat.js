@@ -148,7 +148,7 @@ function endQuiz(standardScore, rawScore) {
     <form id="certForm" style="margin-top: 20px;">
       <label>Email:</label>
       <input type="email" id="email" value="${email}" readonly />
-      <button type="submit" class="button">Show NOAIS Certificate</button>
+      <button type="submit" class="button" style="margin-top: 10px;">Show NOAIS Certificate</button>
     </form>
 
     <div id="result" style="margin-top: 20px;"></div>
@@ -271,3 +271,4 @@ if (submitBtn) {
 loadProgress();
 
 updateTopBar();
+
