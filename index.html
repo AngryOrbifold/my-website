@@ -147,6 +147,59 @@
     .news-text {
       color: #444;
     }
+    .form-container {
+      max-width: 600px;
+      margin: 20px auto 0 auto;
+      background: #eeeeee;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      text-align: left;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      font-size: 18px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #0070ba;
+      box-shadow: 0 0 4px rgba(0,112,186,0.3);
+    }
+
+    .form-submit {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .test-inline {
+      display: flex;
+      gap: 15px;
+      align-items: flex-end;
+    }
+
+    .test-inline .form-group {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    .test-inline .score-group {
+      max-width: 160px;
+    }
   </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XHMB3NM73"></script>
@@ -185,10 +238,51 @@
 
   <h2>NAIT Contest</h2>
 
-  <div class="section" style="max-width: 1000px;">
+  <div class="section" id="nait-section">
     <p>Authenticated candidates who have <strong>finished two of my tests</strong>, excluding SAITO, may enter the NAIT contest free of charge.</p>
-    <p>Contact <a href="mailto:orbifoldanswers@ikmail.com">email</a> to enter the contest.</p>
     <a class="button" href="https://nsl36.netlify.app/competition2025">Contest Information</a>
+    <p>Contest entry Form:</p>
+    <div class="form-container">
+      <form id="nait-form" action="https://formspree.io/f/xykdjolj" method="POST">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="test-inline">
+          <div class="form-group">
+            <label for="test1">First Test Completed</label>
+            <input type="text" id="test1" name="test1" required>
+          </div>
+
+          <div class="form-group score-group">
+            <label for="score1">Raw Score</label>
+            <input type="number" id="score1" name="score1" required>
+          </div>
+        </div>
+
+        <br>
+
+        <div class="test-inline">
+          <div class="form-group">
+            <label for="test2">Second Test Completed</label>
+            <input type="text" id="test2" name="test2" required>
+          </div>
+
+          <div class="form-group score-group">
+            <label for="score2">Raw Score</label>
+            <input type="number" id="score2" name="score2" required>
+          </div>
+        </div>
+
+        <div class="form-submit">
+          <button type="submit" class="button">
+            Submit Contest Entry
+          </button>
+        </div>
+
+      </form>
+    </div>
   </div>
 
   <hr>
@@ -282,37 +376,65 @@
   <p style="text-align: left; font-size:0.9em; font-style:italic;">Project by Marc-André Nydegger 2025-2026</p>
 
   <script>
-  fetch("news.txt")
-    .then(response => response.text())
-    .then(text => {
-      const container = document.getElementById("news-container");
-      container.innerHTML = ""; 
+    fetch("news.txt")
+      .then(response => response.text())
+      .then(text => {
+        const container = document.getElementById("news-container");
+        container.innerHTML = ""; 
 
-      const lines = text.split("\n").filter(line => line.trim() !== "");
+        const lines = text.split("\n").filter(line => line.trim() !== "");
 
-      lines.forEach(line => {
-        const div = document.createElement("div");
-        div.className = "news-item";
+        lines.forEach(line => {
+          const div = document.createElement("div");
+          div.className = "news-item";
 
-        const parts = line.split("-");
+          const parts = line.split("-");
 
-        div.innerHTML = `
-          <span class="news-date">${parts[0].trim()}</span>
-          <span class="news-text">${parts.slice(1).join("-").trim()}</span>
-        `;
+          div.innerHTML = `
+            <span class="news-date">${parts[0].trim()}</span>
+            <span class="news-text">${parts.slice(1).join("-").trim()}</span>
+          `;
 
-        container.appendChild(div);
+          container.appendChild(div);
+        });
+      })
+      .catch(err => {
+        document.getElementById("news-container").innerHTML =
+          "Could not load news.";
+        console.error(err);
       });
-    })
-    .catch(err => {
-      document.getElementById("news-container").innerHTML =
-        "Could not load news.";
-      console.error(err);
+  </script>
+  <script>
+    const form = document.getElementById('nait-form');
+    const section = document.getElementById('nait-section');
+
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const data = new FormData(form);
+
+      const response = await fetch(form.action, {
+        method: form.method,
+        body: data,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        form.reset();
+
+        section.innerHTML = `
+          <div style="max-width:800px;margin:0 auto;padding:30px;background:#eeeeee;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.08);">
+            <h2>Submission Received</h2>
+            <p>Your contest entry has been successfully submitted.</p>
+          </div>
+        `;
+      } else {
+        alert("There was an issue submitting the form. Please try again.");
+      }
     });
   </script>
 </body>
 
 </html>
-
-
-
