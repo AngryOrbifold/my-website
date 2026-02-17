@@ -32,16 +32,32 @@ function collectAnswers() {
   return answers;
 }
 
-function showStatus(message, isError = false) {
-  if (!statusEl) return;
+function showBigPopup(message, isError = false) {
+  let overlay = document.getElementById("bigPopupOverlay");
 
-  statusEl.textContent = message;
-  statusEl.style.color = isError ? "red" : "green";
-  statusEl.style.fontWeight = "bold";
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.id = "bigPopupOverlay";
+    overlay.className = "big-popup-overlay";
+
+    const box = document.createElement("div");
+    box.id = "bigPopupBox";
+    box.className = "big-popup";
+
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+  }
+
+  const box = document.getElementById("bigPopupBox");
+  box.textContent = message;
+
+  box.style.background = isError ? "#d93025" : "#0b5cff";
+
+  overlay.classList.add("show");
 
   setTimeout(() => {
-    statusEl.textContent = "";
-  }, 3000);
+    overlay.classList.remove("show");
+  }, 5000);
 }
 
 function hideSolvedItems() {
@@ -223,7 +239,7 @@ async function submitAll() {
 
     const data = await res.json();
 
-    showStatus("Answers successfully sent.");
+    showBigPopup("Answers sent");
 
     solved = data.solved_ids ?? [];
     attempts = data.attempts ?? attempts;
@@ -239,7 +255,7 @@ async function submitAll() {
 
   } catch (err) {
     console.error("Submit error:", err);
-    showStatus("Failed to send answers. Please try again.", true);
+    showBigPopup("Failed to send answers", true);
   }
 }
 
