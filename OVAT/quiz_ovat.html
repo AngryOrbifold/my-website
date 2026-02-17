@@ -82,6 +82,81 @@
       font-weight: bold;
       font-size: 22px;
     }
+    .big-popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .big-popup-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .big-popup {
+      background: #0b5cff;
+      color: white;
+      padding: 50px 80px;
+      border-radius: 16px;
+      font-size: 36px;
+      font-weight: bold;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+        margin: 10px;
+      }
+
+      .item-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+
+      .item-text {
+        font-size: 16px;
+        padding-right: 0;
+      }
+
+      .item-input {
+        width: 100%;
+        text-align: left;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="number"] {
+        width: 100%;
+        font-size: 14px;
+        padding: 6px;
+      }
+
+      button {
+        width: 100%;
+        font-size: 16px;
+        padding: 12px;
+      }
+
+      .top-bar {
+        flex-direction: column;
+        gap: 8px;
+        font-size: 16px;
+      }
+
+      .big-popup {
+        font-size: 22px;
+        padding: 30px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -157,15 +232,13 @@
 
     </div>
 
-    <p id="status" role="status" style="font-weight: bold; font-size: 40px;"></p>
-
     <div style="margin-top:15px; text-align:center;">
       <button id="submitBtn" type="button">Submit All</button>
     </div>
 
   </section>
 </div>
-<script src="quiz_ovat.js?v=1"></script>
+<script src="quiz_ovat.js?v=2"></script>
 </body>
 
 </html>
