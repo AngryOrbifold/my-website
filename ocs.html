@@ -133,7 +133,7 @@
   
   <form id="certForm" style="margin-top: 20px;">
     <label>Email:</label>
-    <input type="text" id="device_id" required />
+    <input type="text" id="EMAIL" required />
     <button type="submit" class="button">Show OCS Certificate</button>
   </form>
   
@@ -144,7 +144,7 @@
     document.getElementById("certForm").addEventListener("submit", async (e) => {
       e.preventDefault();
   
-      const device_id = document.getElementById("device_id").value.trim();
+      const EMAIL = document.getElementById("EMAIL").value.trim();
       const container = document.getElementById("result");
   
       container.innerHTML = `<p style="font-weight:bold;">Certificate is being generated…</p>`;
@@ -155,12 +155,12 @@
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ device_id }),
+            body: JSON.stringify({ EMAIL }),
           }
         );
   
         if (!res.ok) {
-          container.innerHTML = `<p style="color:red;">Certificate not available or wrong device ID.</p>`;
+          container.innerHTML = `<p style="color:red;">Certificate not available or wrong email.</p>`;
           return;
         }
   
