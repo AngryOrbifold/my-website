@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEAITO – Login</title>
+
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #f7f9fc;
+      color: #222;
+    }
+
+    .login-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 680px;
+      padding: 22px 16px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    .login-box h1 {
+      font-size: 22px;
+      margin-bottom: 18px;
+      line-height: 1.3;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 14px;
+      font-size: 16px;
+      margin-bottom: 14px;
+      border-radius: 8px;
+      border: 1px solid #bbb;
+      box-sizing: border-box;
+    }
+
+    .login-input:focus {
+      border-color: #0b5cff;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      font-size: 17px;
+      background: #0b5cff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    button:active {
+      background: #084fc1;
+    }
+
+    #loginMsg {
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 15px;
+      color: red;
+    }
+
+    .instructions p {
+      font-size: 16px;
+      line-height: 1.5;
+      text-align: left;
+      margin-bottom: 14px;
+    }
+
+    .hidden {
+      display: none;
+    }
+    @media (min-width: 600px) {
+      button {
+        width: auto;
+        min-width: 160px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="login-wrapper">
+  <div class="login-box">
+
+    <h1>Nydegger Extreme Automatic Intelligence Test Online</h1>
+
+    <div id="loginSection">
+      <input id="email" class="login-input" type="email" placeholder="Email" required>
+      <input  id="password"  class="login-input hidden"  type="password"  placeholder="Password"  autocomplete="new-password"  readonly  inputmode="text"  onfocus="this.removeAttribute('readonly')">
+      <input id="username" class="login-input hidden" placeholder="Username">
+      <button id="loginBtn">Login</button>
+      <p id="loginMsg"></p>
+    </div>
+
+    <section id="instructionsSection" class="hidden instructions">
+      <p>
+        <strong>Instructions:</strong><br>
+        Items are presented in roughly increasing order of difficulty, but you may answer them in any order you choose.<br>
+        You will answer each item as it appears; there is no option to submit all answers at once.<br>
+        Each item allows four attempts. Every incorrect answer uses one attempt.<br>
+        An item becomes unavailable once all attempts have been used.<br>
+        The test ends when there are no remaining items to answer or when you click the "End Test" button.<br>
+        Answers are not case-sensitive; some items have more than one correct answer.<br>
+        For spatial items, you will be provided with a canvas on which you must draw your answer.<br>
+        All spatial answers are matrices composed of black and white cells.  
+        Place your finger on a cell and long-press / right-click to change its color.
+      </p>
+
+      <button id="startTestBtn">Start Test</button>
+    </section>
+
+  </div>
+</div>
+
+<script src="auth.js?v=1"></script>
+</body>
+</html>
