@@ -158,7 +158,11 @@
             body: JSON.stringify({ EMAIL }),
           }
         );
-  
+
+        if (res.status === 429) {
+          container.innerHTML = `            <p style="color:red;">              Too many requests.            </p>          `;
+          return;
+        }
         if (!res.ok) {
           container.innerHTML = `<p style="color:red;">Certificate not available or wrong email.</p>`;
           return;
