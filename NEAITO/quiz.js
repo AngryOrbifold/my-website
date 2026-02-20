@@ -53,21 +53,22 @@ rowsInput.addEventListener("change", updateSpatialGridFromInputs);
 colsInput.addEventListener("change", updateSpatialGridFromInputs);
 resetCanvasBtn.addEventListener("click", () => updateSpatialGridFromInputs());
 
-spatialCanvas.addEventListener("contextmenu", (e) => {
-  e.preventDefault();
+function toggleCellFromEvent(x, y) {
   const rect = spatialCanvas.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
   const rows = spatialGrid.length;
   const cols = spatialGrid[0].length;
-  const cellW = spatialCanvas.width / cols;
-  const cellH = spatialCanvas.height / rows;
-  const c = Math.floor(x / cellW);
-  const r = Math.floor(y / cellH);
+  const c = Math.floor((x - rect.left) / (spatialCanvas.width / cols));
+  const r = Math.floor((y - rect.top) / (spatialCanvas.height / rows));
   if (r >= 0 && r < rows && c >= 0 && c < cols) {
     spatialGrid[r][c] ^= 1;
     drawSpatialGrid();
   }
+}
+
+spatialCanvas.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  const touch = e.touches[0];
+  toggleCellFromEvent(touch.clientX, touch.clientY);
 });
 
 function serializeSpatialAnswer() {
@@ -643,5 +644,6 @@ finishBtn?.addEventListener("click", async () => {
   await updateDB({ extraUpdate: { finished: true } });
   showFinalResults();
 });
+
 
 loadUserProgress();
