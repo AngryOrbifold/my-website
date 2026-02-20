@@ -71,6 +71,11 @@ spatialCanvas.addEventListener("touchstart", (e) => {
   toggleCellFromEvent(touch.clientX, touch.clientY);
 });
 
+spatialCanvas.addEventListener("contextmenu", (e) => {
+  e.preventDefault();
+  toggleCellFromEvent(e.clientX, e.clientY);
+});
+
 function serializeSpatialAnswer() {
   const rows = spatialGrid.length;
   const cols = spatialGrid[0].length;
@@ -647,3 +652,4 @@ finishBtn?.addEventListener("click", async () => {
 
 
 loadUserProgress();
+
