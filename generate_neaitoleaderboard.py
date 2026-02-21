@@ -9,7 +9,7 @@ supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
 # Fetch leaderboard entries (only sort by score in DB)
 res = (
-    supabase.table("data_neaito_")
+    supabase.table("data_neaito")
     .select("name, score, attempts")
     .eq("leaderboard", True)
     .order("score", desc=True)  # primary sort
