@@ -200,6 +200,21 @@
     .test-inline .score-group {
       max-width: 160px;
     }
+
+    .slideshow-container {
+      max-width: 800px;
+      margin: 30px auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      background: #ffffff;
+    }
+
+    .slideshow-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
   </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-3XHMB3NM73"></script>
@@ -233,6 +248,14 @@
     Loading news...
     </div>
   </div>
+
+  <hr>
+  <h2>Selected Item Showcase</h2>
+
+  <div class="slideshow-container">
+    <img id="slideshow-image" src="" alt="Slideshow image">
+  </div>
+
 
   <hr>
 
@@ -334,7 +357,7 @@
       </div>
       <div class="test-row">
           <a class="button" href="ocs.html">OCS</a>
-          <p>Visit this page to see and download your Overall Cognitive Score certificate if you have completed NOACT and SAT36.</p>
+          <p>Visit this page to see and download your Overall Cognitive Score certificate if you have completed most of the tests listed above.</p>
       </div>
   </div>
 
@@ -435,6 +458,80 @@
       }
     });
   </script>
-</body>
-</html>
+  <script>
+    const totalImages = 70;
+    const imagePath = "images/";
+    const imageExtension = ".jpg";
+    const intervalTime = 300000; // 5 minutes
 
+    const imgElement = document.getElementById("slideshow-image");
+
+    function generateImages() {
+      const arr = [];
+      for (let i = 1; i <= totalImages; i++) {
+        arr.push(`${imagePath}slide-${i}${imageExtension}`);
+      }
+      return arr;
+    }
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    let images;
+    let currentIndex;
+    let startTimestamp;
+
+    const savedImages = localStorage.getItem("slideshowImages");
+    const savedIndex = localStorage.getItem("slideshowIndex");
+    const savedStart = localStorage.getItem("slideshowStart");
+
+    if (savedImages && savedIndex && savedStart) {
+      images = JSON.parse(savedImages);
+      currentIndex = parseInt(savedIndex);
+      startTimestamp = parseInt(savedStart);
+    } else {
+      images = generateImages();
+      shuffle(images);
+      currentIndex = 0;
+      startTimestamp = Date.now();
+
+      localStorage.setItem("slideshowImages", JSON.stringify(images));
+      localStorage.setItem("slideshowIndex", currentIndex);
+      localStorage.setItem("slideshowStart", startTimestamp);
+    }
+
+    function showImage(index) {
+      imgElement.src = images[index];
+    }
+
+    function updateSlideshow() {
+      const elapsed = Date.now() - startTimestamp;
+      const steps = Math.floor(elapsed / intervalTime);
+
+      currentIndex = steps % images.length;
+
+      if (steps >= images.length) {
+        shuffle(images);
+        startTimestamp = Date.now();
+        currentIndex = 0;
+
+        localStorage.setItem("slideshowImages", JSON.stringify(images));
+        localStorage.setItem("slideshowStart", startTimestamp);
+      }
+
+      localStorage.setItem("slideshowIndex", currentIndex);
+
+      showImage(currentIndex);
+    }
+
+    updateSlideshow();
+
+    setInterval(updateSlideshow, 60000); 
+  </script>
+</body>
+
+</html>
